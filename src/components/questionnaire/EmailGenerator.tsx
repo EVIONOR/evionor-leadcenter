@@ -33,9 +33,9 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
 
   // Termék URL mapping
   const productUrls: { [key: string]: string } = {
-    "Charge Amps HALO": "https://evionor.hu/termek/charge-amps-halo/",
-    "AMINA 1 (nincs kilógó kábel)": "https://evionor.hu/termek/amina-1/",
-    "EASEE CHARGE UP": "https://evionor.hu/termek/easee-charge-up/",
+    "Charge Amps Halo": "https://evionor.hu/termek/charge-amps-halo/",
+    "Amina 1 (nincs kilógó kábel)": "https://evionor.hu/termek/amina-1/",
+    "Easee Charge Up": "https://evionor.hu/termek/easee-charge-up/",
     "Zaptec Go": "https://evionor.hu/termek/zaptec-go/",
     "Zaptec Go 2": "https://evionor.hu/termek/zaptec-go-2/"
   };
@@ -81,7 +81,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
   // Intelligens sablon ajánlás
   const recommendedTemplate = chargerTemplates.find(template => {
     if (data.solarIntegration !== "nem") return template.id === "template4";
-    if (data.phases === "3") return template.id === "template3a";
+    if (data.phases === "3") return template.id === "template3";
     if (data.needsApp) return template.id === "template1";
     return template.id === "template2";
   });

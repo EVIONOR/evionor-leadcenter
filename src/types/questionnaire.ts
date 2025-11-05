@@ -54,7 +54,7 @@ export const chargerTemplates: ChargerTemplate[] = [
     hasApp: true,
     location: "indoor",
     hasSolar: false,
-    products: ["Charge Amps HALO"],
+    products: ["Charge Amps Halo"],
     basePrice: 198000
   },
   {
@@ -64,17 +64,27 @@ export const chargerTemplates: ChargerTemplate[] = [
     hasApp: false,
     location: "outdoor",
     hasSolar: false,
-    products: ["AMINA 1 (nincs kilógó kábel)"],
+    products: ["Amina 1 (nincs kilógó kábel)"],
     basePrice: 195000
   },
   {
-    id: "template3a",
-    name: "3 fázis - Standard - EASEE CHARGE UP",
+    id: "template3",
+    name: "3 fázis - Standard",
     phase: "3",
     hasApp: true,
     location: "any",
     hasSolar: false,
-    products: ["EASEE CHARGE UP"],
+    products: ["Easee Charge Up", "Zaptec Go"],
+    basePrice: 359000
+  },
+  {
+    id: "template3a",
+    name: "3 fázis - Standard - Easee Charge Up",
+    phase: "3",
+    hasApp: true,
+    location: "any",
+    hasSolar: false,
+    products: ["Easee Charge Up"],
     basePrice: 359000
   },
   {
