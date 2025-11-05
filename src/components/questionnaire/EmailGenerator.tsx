@@ -333,6 +333,9 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                         <td style="padding: 16px 0 16px 20px; color: #0071e3; font-size: 22px; font-weight: 700; text-align: right;">${formatPrice(grandTotal)}</td>
                     </tr>
                 </table>
+                <div style="text-align: center; margin-top: 24px;">
+                    <a href="https://evionor.hu/webshop/" style="display: inline-block; background: linear-gradient(135deg, #0071e3 0%, #005bb5 100%); color: #ffffff; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3);">Kosárba</a>
+                </div>
                 ${data.needsInstallation ? `
                 <p style="margin: 20px 0 0 0; color: #6b7280; font-size: 13px; line-height: 1.6;">
                     <strong>Telepítési díj tartalmazza:</strong> Szakszerű telepítést, bekötést, beüzemelést és átadást. 
