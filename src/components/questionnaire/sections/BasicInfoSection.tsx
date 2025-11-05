@@ -20,7 +20,22 @@ const carBrands = [
   "Nissan Leaf", "Nissan Ariya",
   "Renault Zoe", "Renault Megane E-Tech",
   "Peugeot e-208", "Peugeot e-2008",
-  "Fiat 500e", "MG4 Electric", "MG ZS EV",
+  "Fiat 500e",
+  // Kínai márkák
+  "BYD Atto 3", "BYD Han", "BYD Tang", "BYD Dolphin", "BYD Seal",
+  "NIO ET5", "NIO ET7", "NIO ES6", "NIO ES8", "NIO EL6",
+  "XPeng P7", "XPeng G9", "XPeng P5",
+  "MG4 Electric", "MG ZS EV", "MG5 Electric", "MG Marvel R",
+  "Ora Funky Cat", "Ora Good Cat",
+  "Hongqi E-HS9", "Hongqi E-QM5",
+  "Aiways U5", "Aiways U6",
+  "Lynk & Co 01",
+  "Polestar 2", "Polestar 3", "Polestar 4",
+  "Zeekr 001", "Zeekr X",
+  "Seres 3",
+  "Maxus Euniq 6",
+  "Skywell ET5",
+  "Voyah Free",
   "Egyéb"
 ];
 
