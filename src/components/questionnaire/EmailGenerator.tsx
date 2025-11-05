@@ -67,7 +67,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
   // Intelligens sablon ajánlás
   const recommendedTemplate = chargerTemplates.find(template => {
     if (data.solarIntegration !== "nem") return template.id === "template4";
-    if (data.phases === "3") return template.id === "template3";
+    if (data.phases === "3") return template.id === "template3a";
     if (data.needsApp) return template.id === "template1";
     return template.id === "template2";
   });
