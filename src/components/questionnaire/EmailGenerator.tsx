@@ -31,6 +31,20 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
   const [generatedEmail, setGeneratedEmail] = useState("");
   const [senderName, setSenderName] = useState<string>("Nagy István");
 
+  // Termék URL mapping
+  const productUrls: { [key: string]: string } = {
+    "Charge Amps HALO": "https://evionor.hu/termek/charge-amps-halo/",
+    "AMINA 1 (nincs kilógó kábel)": "https://evionor.hu/termek/amina-1/",
+    "EASEE CHARGE UP": "https://evionor.hu/termek/easee-charge-up/",
+    "Zaptec Go": "https://evionor.hu/termek/zaptec-go/",
+    "Zaptec Go 2": "https://evionor.hu/termek/zaptec-go-2/"
+  };
+
+  // Termék URL lekérése
+  const getProductUrl = (productName: string): string => {
+    return productUrls[productName] || "https://evionor.hu/webshop/";
+  };
+
   // Ár keresés a termék névből
   const findProductPrice = (productName: string): number => {
     // Normalizáljuk a neveket összehasonlításhoz
@@ -177,12 +191,13 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                 
                 ${selectedTemplate.products.map((product, index) => {
                   const price = findProductPrice(product);
+                  const productUrl = getProductUrl(product);
                   return `
                     ${index > 0 ? '<div style="text-align: center; margin: 16px 0;"><span style="display: inline-block; padding: 8px 24px; background: linear-gradient(135deg, #0071e3 0%, #005bb5 100%); color: white; font-weight: 600; font-size: 14px; border-radius: 20px;">VAGY</span></div>' : ''}
                     <div style="padding: 16px; background-color: white; border-radius: 8px; margin-bottom: ${index < selectedTemplate.products.length - 1 ? '0' : '20px'}; border: 1px solid #e5e7eb;">
                         <table style="width: 100%; border-collapse: collapse;">
                             <tr>
-                                <td style="padding: 0; color: #111827; font-size: 16px; font-weight: 600; width: 65%;">${product}</td>
+                                <td style="padding: 0; width: 65%;"><a href="${productUrl}" style="color: #111827; font-size: 16px; font-weight: 600; text-decoration: none; border-bottom: 2px solid #0071e3; transition: color 0.2s;" onMouseOver="this.style.color='#0071e3'" onMouseOut="this.style.color='#111827'">${product}</a></td>
                                 <td style="padding: 0 0 0 20px; color: #0071e3; font-size: 18px; font-weight: 700; text-align: right;">${formatPrice(price)}</td>
                             </tr>
                         </table>
