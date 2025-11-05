@@ -103,8 +103,8 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
             <p style="margin: 0 0 40px 0; color: #374151; font-size: 15px; line-height: 1.6;">Köszönjük érdeklődését! Az Ön által megadott adatok alapján az alábbi ajánlatot készítettük.</p>
 
             <!-- Client Data Section -->
-            <div style="margin-bottom: 40px;">
-                <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 600; padding-bottom: 12px; border-bottom: 2px solid #e5e7eb;">Ügyfél adatok</h2>
+            <div style="margin-bottom: 24px; background-color: #f3f4f6; padding: 24px; border-radius: 12px; border: 2px solid #e5e7eb;">
+                <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 12px;">Ügyfél adatok</h2>
                 <table style="width: 100%; border-collapse: collapse;">
                     <tr>
                         <td style="padding: 12px 0; color: #6b7280; font-size: 14px; width: 40%;">Jármű</td>
@@ -126,15 +126,15 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
             </div>
 
             <!-- Charger Section -->
-            <div style="margin-bottom: 40px; background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%); padding: 24px; border-radius: 12px; border: 1px solid #e5e7eb;">
-                <h2 style="margin: 0 0 16px 0; color: #111827; font-size: 18px; font-weight: 600;">Ajánlott töltők</h2>
-                <h3 style="margin: 0 0 24px 0; color: #667eea; font-size: 20px; font-weight: 600;">${selectedTemplate.name}</h3>
+            <div style="margin-bottom: 24px; background-color: #f3f4f6; padding: 24px; border-radius: 12px; border: 2px solid #e5e7eb;">
+                <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 12px;">Ajánlott töltők</h2>
+                <p style="margin: 0 0 20px 0; color: #667eea; font-size: 16px; font-weight: 600;">${selectedTemplate.name}</p>
                 
                 ${selectedTemplate.products.map((product, index) => {
                   const price = findProductPrice(product);
                   return `
                     ${index > 0 ? '<div style="text-align: center; margin: 16px 0;"><span style="display: inline-block; padding: 8px 24px; background-color: #667eea; color: white; font-weight: 600; font-size: 14px; border-radius: 20px;">VAGY</span></div>' : ''}
-                    <div style="padding: 16px; background-color: white; border-radius: 8px; margin-bottom: ${index < selectedTemplate.products.length - 1 ? '0' : '20px'};">
+                    <div style="padding: 16px; background-color: white; border-radius: 8px; margin-bottom: ${index < selectedTemplate.products.length - 1 ? '0' : '20px'}; border: 1px solid #e5e7eb;">
                         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
                             <p style="margin: 0; color: #111827; font-size: 16px; font-weight: 600; flex: 1;">${product}</p>
                             <p style="margin: 0; color: #667eea; font-size: 18px; font-weight: 700;">${formatPrice(price)}</p>
@@ -143,7 +143,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                   `;
                 }).join('')}
                 
-                <div style="margin-top: 20px;">
+                <div style="margin-top: 20px; padding: 16px; background-color: white; border-radius: 8px; border: 1px solid #e5e7eb;">
                     <p style="margin: 0 0 12px 0; color: #374151; font-size: 14px; font-weight: 600;">Jellemzők:</p>
                     <ul style="margin: 0; padding: 0 0 0 20px; color: #374151; font-size: 14px; line-height: 1.8;">
                         <li>${data.phases} fázis</li>
@@ -157,8 +157,21 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
             </div>
 
             <!-- Installation Section -->
-            <div style="margin-bottom: 40px;">
-                <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 600; padding-bottom: 12px; border-bottom: 2px solid #e5e7eb;">Telepítési specifikáció</h2>
+            <div style="margin-bottom: 24px; background-color: #f3f4f6; padding: 24px; border-radius: 12px; border: 2px solid #e5e7eb;">
+                <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 12px;">Telepítés</h2>
+                
+                <div style="padding: 16px; background-color: white; border-radius: 8px; margin-bottom: 16px; border: 1px solid #e5e7eb;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                        <div style="flex: 1;">
+                            <p style="margin: 0 0 8px 0; color: #111827; font-size: 16px; font-weight: 600;">Telepítési díj (${data.distanceFromBox}m)</p>
+                            <p style="margin: 0; color: #6b7280; font-size: 13px;">
+                                ${distance <= 10 ? 'Telepítés 10 méterig' : distance <= 20 ? 'Telepítés 20 méterig' : `Telepítés ${distance} méterig`}
+                            </p>
+                        </div>
+                        <p style="margin: 0; color: #667eea; font-size: 18px; font-weight: 700;">${formatPrice(installationPrice)}</p>
+                    </div>
+                </div>
+
                 <table style="width: 100%; border-collapse: collapse;">
                     <tr>
                         <td style="padding: 12px 0; color: #6b7280; font-size: 14px; width: 40%;">Telepítési hely</td>
@@ -170,13 +183,12 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                     </tr>
                 </table>
                 
-                ${data.needsBackplate || data.needsPole || data.distanceFromBox || data.needsElectricalPlanning || data.overvoltageProtection ? `
-                <div style="margin-top: 20px; padding: 16px; background-color: #f9fafb; border-radius: 8px;">
+                ${data.needsBackplate || data.needsPole || data.needsElectricalPlanning || data.overvoltageProtection ? `
+                <div style="margin-top: 16px; padding: 16px; background-color: white; border-radius: 8px; border: 1px solid #e5e7eb;">
                     <p style="margin: 0 0 8px 0; color: #374151; font-size: 14px; font-weight: 600;">További követelmények:</p>
                     <ul style="margin: 0; padding: 0 0 0 20px; color: #374151; font-size: 14px; line-height: 1.8;">
                         ${data.needsBackplate ? "<li>Hátlap szükséges</li>" : ""}
                         ${data.needsPole ? "<li>Oszlop szükséges</li>" : ""}
-                        ${data.distanceFromBox ? `<li>Távolság a doboztól: ${data.distanceFromBox} méter</li>` : ""}
                         ${data.needsElectricalPlanning ? "<li>Villamos tervezés szükséges</li>" : ""}
                         ${data.overvoltageProtection ? "<li>Túlfeszültség védelem</li>" : ""}
                     </ul>
@@ -184,7 +196,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                 ` : ""}
                 
                 ${data.groundworkWallPenetration ? `
-                <div style="margin-top: 20px; padding: 16px; background-color: #fef3c7; border-radius: 8px; border-left: 4px solid #f59e0b;">
+                <div style="margin-top: 16px; padding: 16px; background-color: #fef3c7; border-radius: 8px; border-left: 4px solid #f59e0b;">
                     <p style="margin: 0 0 8px 0; color: #92400e; font-size: 14px; font-weight: 600;">Földmunka/Faláttörés:</p>
                     <p style="margin: 0; color: #78350f; font-size: 14px; line-height: 1.6;">${data.groundworkWallPenetration}</p>
                 </div>
@@ -193,8 +205,8 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
 
             ${selectedAdditionals.length > 0 ? `
             <!-- Accessories Section -->
-            <div style="margin-bottom: 40px;">
-                <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 600; padding-bottom: 12px; border-bottom: 2px solid #e5e7eb;">Kiegészítők</h2>
+            <div style="margin-bottom: 24px; background-color: #f3f4f6; padding: 24px; border-radius: 12px; border: 2px solid #e5e7eb;">
+                <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 12px;">Kiegészítők</h2>
                 <table style="width: 100%; border-collapse: collapse;">
                     ${selectedAdditionals.map(item => `
                     <tr>
@@ -202,17 +214,31 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                         <td style="padding: 12px 0; color: #111827; font-size: 14px; font-weight: 500; text-align: right;">${formatPrice(additionalItemPrices[item] || 0)}</td>
                     </tr>
                     `).join("")}
-                    <tr style="border-top: 2px solid #e5e7eb;">
-                        <td style="padding: 16px 0; color: #111827; font-size: 15px; font-weight: 600;">Kiegészítők összesen:</td>
-                        <td style="padding: 16px 0; color: #667eea; font-size: 16px; font-weight: 700; text-align: right;">${formatPrice(additionalTotal)}</td>
-                    </tr>
                 </table>
             </div>
             ` : ""}
 
+            <!-- Standard Installation Description -->
+            <div style="margin-bottom: 24px; background-color: #f3f4f6; padding: 24px; border-radius: 12px; border: 2px solid #e5e7eb;">
+                <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 12px;">Sztenderd telepítés</h2>
+                <div style="padding: 16px; background-color: white; border-radius: 8px; border: 1px solid #e5e7eb;">
+                    <p style="margin: 0 0 12px 0; color: #374151; font-size: 14px; line-height: 1.8;">
+                        A telepítés magában foglalja:
+                    </p>
+                    <ul style="margin: 0; padding: 0 0 0 20px; color: #374151; font-size: 14px; line-height: 1.8;">
+                        <li>Le Grand Fi relé beépítése</li>
+                        <li>Kismegszakító meglévő villamosszekrénybe szerelése szakszerűen</li>
+                        <li>Kültéri vagy beltéri kábelezés kialakítása igény szerint a töltőállomásig</li>
+                        <li>Vésés, csövezés és faláttörési munkálatok szükség szerint</li>
+                        <li>Töltőállomás szakszerű felszerelése és beüzemelése</li>
+                        <li>Átadás és használatba vétel</li>
+                    </ul>
+                </div>
+            </div>
+
             <!-- Installation Price Section -->
-            <div style="margin-bottom: 40px; background-color: #f9fafb; padding: 24px; border-radius: 12px;">
-                <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 600; padding-bottom: 12px; border-bottom: 2px solid #e5e7eb;">Árkalkuláció</h2>
+            <div style="margin-bottom: 40px; background-color: #f3f4f6; padding: 24px; border-radius: 12px; border: 2px solid #667eea;">
+                <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 12px;">Árkalkuláció</h2>
                 <table style="width: 100%; border-collapse: collapse;">
                     <tr>
                         <td style="padding: 12px 0; color: #374151; font-size: 14px;">Töltő berendezés</td>
