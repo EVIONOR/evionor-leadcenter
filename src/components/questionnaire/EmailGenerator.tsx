@@ -75,7 +75,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
     if (isCompanyName(name)) {
       return "Tisztelt Ügyfelünk!";
     }
-    return `Tisztelt ${name},`;
+    return `Tisztelt ${name}!`;
   };
 
   // Intelligens sablon ajánlás
