@@ -282,7 +282,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
             ${selectedAdditionals.length > 0 ? `
             <!-- Accessories Section -->
             <div style="margin-bottom: 24px; background-color: #f3f4f6; padding: 24px; border-radius: 12px; border: 2px solid #e5e7eb;">
-                <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 12px;">Kiegészítők</h2>
+                <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 12px;">Kiegészítők (opcionális)</h2>
                 <table style="width: 100%; border-collapse: collapse;">
                     ${selectedAdditionals.map(item => `
                     <tr>
@@ -348,9 +348,14 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
             <div style="margin-bottom: 40px; background-color: #f9fafb; padding: 24px; border-radius: 12px;">
                 <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 600;">Folyamat</h2>
                 <ol style="margin: 0; padding: 0 0 0 20px; color: #374151; font-size: 14px; line-height: 2;">
+                    ${data.needsInstallation ? `
                     <li>Webshop megrendelés leadása</li>
                     <li>Telepítés ütemezése</li>
                     <li>Szakszerű kivitelezés 10 munkanapon belül</li>
+                    ` : `
+                    <li>Webshop megrendelés leadása</li>
+                    <li>Szállítás 5 munkanapon belül</li>
+                    `}
                 </ol>
             </div>
 
