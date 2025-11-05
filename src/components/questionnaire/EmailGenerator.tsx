@@ -80,7 +80,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
       return sum + (additionalItemPrices[item] || 0);
     }, 0);
 
-    const grandTotal = chargerPrice + installationPrice + additionalTotal;
+    const grandTotal = chargerPrice + installationPrice;
 
     const email = `
 <!DOCTYPE html>
@@ -291,12 +291,6 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                         <td style="padding: 12px 0; color: #374151; font-size: 14px;">Telepítés (${data.distanceFromBox}m)</td>
                         <td style="padding: 12px 0 12px 20px; color: #111827; font-size: 14px; font-weight: 500; text-align: right;">${formatPrice(installationPrice)}</td>
                     </tr>
-                    ${selectedAdditionals.length > 0 ? `
-                    <tr>
-                        <td style="padding: 12px 0; color: #374151; font-size: 14px;">Kiegészítők</td>
-                        <td style="padding: 12px 0 12px 20px; color: #111827; font-size: 14px; font-weight: 500; text-align: right;">${formatPrice(additionalTotal)}</td>
-                    </tr>
-                    ` : ""}
                     <tr style="border-top: 2px solid #0071e3;">
                         <td style="padding: 16px 0; color: #111827; font-size: 18px; font-weight: 700;">Végösszeg:</td>
                         <td style="padding: 16px 0 16px 20px; color: #0071e3; font-size: 22px; font-weight: 700; text-align: right;">${formatPrice(grandTotal)}</td>
