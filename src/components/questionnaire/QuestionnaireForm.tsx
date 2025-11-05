@@ -14,7 +14,8 @@ import { EmailGenerator } from "./EmailGenerator";
 import { ArrowRight, ArrowLeft } from "lucide-react";
 
 const formSchema = z.object({
-  carType: z.string().min(1, "Kötelező mező"),
+  carBrand: z.string().min(1, "Kötelező mező"),
+  carModel: z.string().min(1, "Kötelező mező"),
   zipCode: z.string().min(4, "Érvényes irányítószám szükséges").max(4),
   city: z.string().min(1, "A város automatikusan kitöltődik"),
   phases: z.enum(["1", "3"]),
@@ -49,7 +50,8 @@ export const QuestionnaireForm = () => {
   const form = useForm<QuestionnaireData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      carType: "",
+      carBrand: "",
+      carModel: "",
       zipCode: "",
       city: "",
       phases: "1",

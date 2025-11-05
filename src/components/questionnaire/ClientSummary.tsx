@@ -20,8 +20,8 @@ export const ClientSummary = ({ data }: ClientSummaryProps) => {
           <h3 className="text-lg font-semibold text-primary mb-3">Alapadatok</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <p className="text-sm text-muted-foreground">Autó típus</p>
-              <p className="font-medium">{data.carType}</p>
+              <p className="text-sm text-muted-foreground">Autó</p>
+              <p className="font-medium">{data.carBrand} {data.carModel}</p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Helyszín</p>

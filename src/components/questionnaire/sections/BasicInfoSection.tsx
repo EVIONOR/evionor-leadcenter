@@ -4,42 +4,15 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { QuestionnaireData } from "@/types/questionnaire";
 import { getCityByZip } from "@/data/hungarianCities";
+import { carBrands, getModelsByBrand } from "@/data/carBrands";
 
 interface BasicInfoSectionProps {
   form: UseFormReturn<QuestionnaireData>;
 }
 
-const carBrands = [
-  "Tesla Model 3", "Tesla Model Y", "Tesla Model S", "Tesla Model X",
-  "Volkswagen ID.3", "Volkswagen ID.4", "Volkswagen ID.5",
-  "BMW i4", "BMW iX", "BMW i3",
-  "Mercedes EQA", "Mercedes EQB", "Mercedes EQC", "Mercedes EQS",
-  "Audi e-tron", "Audi Q4 e-tron", "Audi e-tron GT",
-  "Hyundai IONIQ 5", "Hyundai IONIQ 6", "Hyundai Kona Electric",
-  "Kia EV6", "Kia Niro EV", "Kia e-Soul",
-  "Nissan Leaf", "Nissan Ariya",
-  "Renault Zoe", "Renault Megane E-Tech",
-  "Peugeot e-208", "Peugeot e-2008",
-  "Fiat 500e",
-  // Kínai márkák
-  "BYD Atto 3", "BYD Han", "BYD Tang", "BYD Dolphin", "BYD Seal",
-  "NIO ET5", "NIO ET7", "NIO ES6", "NIO ES8", "NIO EL6",
-  "XPeng P7", "XPeng G9", "XPeng P5",
-  "MG4 Electric", "MG ZS EV", "MG5 Electric", "MG Marvel R",
-  "Ora Funky Cat", "Ora Good Cat",
-  "Hongqi E-HS9", "Hongqi E-QM5",
-  "Aiways U5", "Aiways U6",
-  "Lynk & Co 01",
-  "Polestar 2", "Polestar 3", "Polestar 4",
-  "Zeekr 001", "Zeekr X",
-  "Seres 3",
-  "Maxus Euniq 6",
-  "Skywell ET5",
-  "Voyah Free",
-  "Egyéb"
-];
-
 export const BasicInfoSection = ({ form }: BasicInfoSectionProps) => {
+  const selectedBrand = form.watch("carBrand");
+  const availableModels = selectedBrand ? getModelsByBrand(selectedBrand) : [];
   return (
     <div className="space-y-6">
       <div className="border-b pb-2">
@@ -47,30 +20,70 @@ export const BasicInfoSection = ({ form }: BasicInfoSectionProps) => {
         <p className="text-sm text-muted-foreground mt-1">Általános információk a telepítésről</p>
       </div>
 
-      <FormField
-        control={form.control}
-        name="carType"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Milyen autója van? *</FormLabel>
-            <Select onValueChange={field.onChange} defaultValue={field.value}>
-              <FormControl>
-                <SelectTrigger>
-                  <SelectValue placeholder="Válasszon autót" />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent className="max-h-[300px]">
-                {carBrands.map((brand) => (
-                  <SelectItem key={brand} value={brand}>
-                    {brand}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <FormField
+          control={form.control}
+          name="carBrand"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Autó márka *</FormLabel>
+              <Select 
+                onValueChange={(value) => {
+                  field.onChange(value);
+                  form.setValue("carModel", "");
+                }} 
+                defaultValue={field.value}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Válasszon márkát" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent className="max-h-[300px]">
+                  {carBrands.map((brand) => (
+                    <SelectItem key={brand.brand} value={brand.brand}>
+                      {brand.brand}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="carModel"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Autó típus *</FormLabel>
+              <Select 
+                onValueChange={field.onChange} 
+                defaultValue={field.value}
+                disabled={!selectedBrand}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder={selectedBrand ? "Válasszon típust" : "Először válasszon márkát"} />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent className="max-h-[300px]">
+                  {availableModels.map((model) => (
+                    <SelectItem key={model} value={model}>
+                      {model}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormDescription>
+                {!selectedBrand && "Először válasszon autó márkát"}
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <FormField
