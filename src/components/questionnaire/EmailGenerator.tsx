@@ -304,11 +304,11 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                     </p>
                     <ul style="margin: 0; padding: 0 0 0 20px; color: #374151; font-size: 14px; line-height: 1.8;">
                         <li>Le Grand Fi relé beépítése</li>
-                        <li>Kismegszakító meglévő villamosszekrénybe szerelése szakszerűen</li>
+                        <li>Le Grand Kismegszakító szerelése meglévő villamosszekrénybe</li>
                         <li>Kültéri vagy beltéri kábelezés kialakítása igény szerint a töltőállomásig</li>
                         <li>Vésés, csövezés és faláttörési munkálatok szükség szerint</li>
-                        <li>Töltőállomás szakszerű felszerelése és beüzemelése</li>
-                        <li>Átadás és használatba vétel</li>
+                        <li>Töltőállomás szakszerű felszerelése</li>
+                        <li>Beüzemelés és átadás</li>
                     </ul>
                 </div>
             </div>
