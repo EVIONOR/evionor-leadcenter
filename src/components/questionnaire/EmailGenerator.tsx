@@ -40,9 +40,24 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
     if (!selectedTemplate) return;
 
     // Számítsuk ki az összegeket
+    const chargerPrice = selectedTemplate.basePrice || 0;
+    
+    // Telepítési ár a távolság alapján
+    const distance = parseFloat(data.distanceFromBox) || 0;
+    let installationPrice = 0;
+    if (distance <= 10) {
+      installationPrice = 249000;
+    } else if (distance <= 20) {
+      installationPrice = 299000;
+    } else {
+      installationPrice = 299000 + ((distance - 20) * 15000); // 20m felett további 15k/méter
+    }
+
     const additionalTotal = selectedAdditionals.reduce((sum, item) => {
       return sum + (additionalItemPrices[item] || 0);
     }, 0);
+
+    const grandTotal = chargerPrice + installationPrice + additionalTotal;
 
     const email = `
 <!DOCTYPE html>
@@ -164,6 +179,35 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                 </table>
             </div>
             ` : ""}
+
+            <!-- Installation Price Section -->
+            <div style="margin-bottom: 40px; background-color: #f9fafb; padding: 24px; border-radius: 12px;">
+                <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 600; padding-bottom: 12px; border-bottom: 2px solid #e5e7eb;">Árkalkuláció</h2>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                        <td style="padding: 12px 0; color: #374151; font-size: 14px;">Töltő berendezés</td>
+                        <td style="padding: 12px 0; color: #111827; font-size: 14px; font-weight: 500; text-align: right;">${formatPrice(chargerPrice)}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px 0; color: #374151; font-size: 14px;">Telepítés (${data.distanceFromBox}m)</td>
+                        <td style="padding: 12px 0; color: #111827; font-size: 14px; font-weight: 500; text-align: right;">${formatPrice(installationPrice)}</td>
+                    </tr>
+                    ${selectedAdditionals.length > 0 ? `
+                    <tr>
+                        <td style="padding: 12px 0; color: #374151; font-size: 14px;">Kiegészítők</td>
+                        <td style="padding: 12px 0; color: #111827; font-size: 14px; font-weight: 500; text-align: right;">${formatPrice(additionalTotal)}</td>
+                    </tr>
+                    ` : ""}
+                    <tr style="border-top: 2px solid #667eea;">
+                        <td style="padding: 16px 0; color: #111827; font-size: 18px; font-weight: 700;">Végösszeg:</td>
+                        <td style="padding: 16px 0; color: #667eea; font-size: 22px; font-weight: 700; text-align: right;">${formatPrice(grandTotal)}</td>
+                    </tr>
+                </table>
+                <p style="margin: 20px 0 0 0; color: #6b7280; font-size: 13px; line-height: 1.6;">
+                    <strong>Telepítési díj tartalmazza:</strong> Szakszerű telepítést, bekötést, beüzemelést és átadást. 
+                    ${distance > 20 ? `20m feletti vezetékvezeték esetén méterenként +${formatPrice(15000)} felár.` : ""}
+                </p>
+            </div>
 
             <!-- Process Section -->
             <div style="margin-bottom: 40px; background-color: #f9fafb; padding: 24px; border-radius: 12px;">
