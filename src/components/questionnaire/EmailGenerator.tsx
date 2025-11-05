@@ -329,6 +329,9 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                     <strong>Telepítési díj tartalmazza:</strong> Szakszerű telepítést, bekötést, beüzemelést és átadást. 
                     ${distance > 20 ? `20m feletti vezetékvezeték esetén méterenként +${formatPrice(15000)} felár.` : ""}
                 </p>
+                <p style="margin: 12px 0 0 0; color: #9ca3af; font-size: 11px; font-style: italic;">
+                    Az árak bruttó árak, a 27% ÁFÁ-t tartalmazzák.
+                </p>
             </div>
 
             <!-- Process Section -->
