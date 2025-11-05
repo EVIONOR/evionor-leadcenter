@@ -15,9 +15,11 @@ interface EmailGeneratorProps {
 const additionalItems = [
   "RFID Tag",
   "Terhelésmenedzsment rendszer",
-  "Extra kábel (5m/10m)",
-  "Töltő védődoboz",
-  "Kábeltartó",
+  "Szabadon álló oszlop",
+  "Fali hátlap kábeltartóval",
+  "Töltőkábel (3m / 5m / 7m / 10m)",
+  "Kábel akasztó",
+  "Type 2-es fejtartó",
 ];
 
 export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
