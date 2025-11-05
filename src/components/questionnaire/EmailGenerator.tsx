@@ -33,11 +33,11 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
 
   // Termék URL mapping
   const productUrls: { [key: string]: string } = {
-    "Charge Amps Halo": "https://evionor.hu/termek/charge-amps-halo/",
-    "Amina 1 (nincs kilógó kábel)": "https://evionor.hu/termek/amina-1/",
-    "Easee Charge Up": "https://evionor.hu/termek/easee-charge-up/",
-    "Zaptec Go": "https://evionor.hu/termek/zaptec-go/",
-    "Zaptec Go 2": "https://evionor.hu/termek/zaptec-go-2/"
+    "Charge Amps Halo": "https://evionor.hu/collections/all/products/charge-amps-halo-7-4kw-ev-tolto",
+    "Amina 1 (nincs kilógó kábel)": "https://evionor.hu/collections/all/products/amina-1-evtlt?_pos=1&_fid=bb7a6be86&_ss=c",
+    "Easee Charge Up": "https://evionor.hu/collections/all/products/easee-charge-up-evtlt",
+    "Zaptec Go": "https://evionor.hu/collections/all/products/zaptec-go-evtlt",
+    "Zaptec Go 2": "https://evionor.hu/collections/all/products/zaptec-go-2"
   };
 
   // Termék URL lekérése
