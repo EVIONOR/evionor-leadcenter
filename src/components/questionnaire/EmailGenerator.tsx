@@ -122,24 +122,9 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
     <div style="max-width: 600px; margin: 40px auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);">
         
         <!-- Header -->
-        <div style="background: linear-gradient(135deg, #0071e3 0%, #005bb5 100%); padding: 40px 32px; text-align: center;">
-            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 20px;">
-                <tr>
-                    <td align="center">
-                        <table cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 12px;">
-                            <tr>
-                                <td style="padding: 24px 60px;">
-                                    <a href="https://evionor.hu" target="_blank" style="display: block; text-decoration: none;">
-                                        <img src="https://evionor.hu/images/evionor-logo-new.png" alt="Evionor Logo" width="180" style="height: auto; display: block; border: 0;" />
-                                    </a>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-            <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 600; letter-spacing: -0.5px;">Töltő Telepítési Ajánlat</h1>
-            <p style="margin: 12px 0 0 0; color: rgba(255, 255, 255, 0.9); font-size: 15px;">Személyre szabott megoldás az Ön igényeihez</p>
+        <div style="background: linear-gradient(135deg, #0071e3 0%, #005bb5 100%); padding: 16px 32px; text-align: center;">
+            <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 600; letter-spacing: -0.5px;">Töltő Telepítési Ajánlat</h1>
+            <p style="margin: 8px 0 0 0; color: rgba(255, 255, 255, 0.9); font-size: 14px;">Személyre szabott megoldás az Ön igényeihez</p>
         </div>
 
         <!-- Content -->
