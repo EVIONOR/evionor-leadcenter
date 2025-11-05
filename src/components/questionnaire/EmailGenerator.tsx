@@ -274,11 +274,9 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
             <div style="margin-bottom: 40px; background-color: #f9fafb; padding: 24px; border-radius: 12px;">
                 <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 600;">Folyamat</h2>
                 <ol style="margin: 0; padding: 0 0 0 20px; color: #374151; font-size: 14px; line-height: 2;">
-                    <li>Webshop vásárlás / ajánlat elfogadása</li>
-                    <li>Helyszíni felmérés egyeztetése</li>
+                    <li>Webshop megrendelés leadása</li>
                     <li>Telepítés ütemezése</li>
-                    <li>Szakszerű kivitelezés</li>
-                    <li>Átadás és használatba vétel</li>
+                    <li>Szakszerű kivitelezés 10 munkanapon belül</li>
                 </ol>
             </div>
 
