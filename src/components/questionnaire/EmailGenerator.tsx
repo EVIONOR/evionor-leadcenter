@@ -49,6 +49,21 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
     return product?.price || 0;
   };
 
+  // Eldönti, hogy a név cég-e vagy ember
+  const isCompanyName = (name: string): boolean => {
+    const companyIndicators = ['kft', 'bt', 'zrt', 'nyrt', 'ltd', 'inc', 'corp', 'gmbh', 'kkt', 'ev'];
+    const lowerName = name.toLowerCase();
+    return companyIndicators.some(indicator => lowerName.includes(indicator)) || name.includes('.');
+  };
+
+  // Megszólítás generálása
+  const getGreeting = (name: string): string => {
+    if (isCompanyName(name)) {
+      return "Tisztelt Ügyfelünk!";
+    }
+    return `Tisztelt ${name},`;
+  };
+
   // Intelligens sablon ajánlás
   const recommendedTemplate = chargerTemplates.find(template => {
     if (data.solarIntegration !== "nem") return template.id === "template4";
@@ -117,7 +132,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
         <div style="padding: 40px 32px;">
             
             <!-- Intro -->
-            <p style="margin: 0 0 32px 0; color: #374151; font-size: 15px; line-height: 1.6;">Tisztelt ${data.contactName},</p>
+            <p style="margin: 0 0 32px 0; color: #374151; font-size: 15px; line-height: 1.6;">${getGreeting(data.contactName)}</p>
             <p style="margin: 0 0 40px 0; color: #374151; font-size: 15px; line-height: 1.6;">Köszönjük érdeklődését! Az Ön által megadott adatok alapján az alábbi ajánlatot készítettük.</p>
 
             <!-- Client Data Section -->
