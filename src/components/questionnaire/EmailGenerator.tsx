@@ -235,7 +235,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                         </tr>
                     </table>
                     <p style="margin: 16px 0 0 0; padding: 12px; background-color: #fef3c7; border-left: 3px solid #f59e0b; color: #78350f; font-size: 13px; line-height: 1.6;">
-                        <strong>Megjegyzés:</strong> A végszámla helyszíni munkavégzés alapján kerül kiállításra, megrendelő által aláírt munkalap alapján.
+                        <strong>Megjegyzés:</strong> Amennyiben igény szerinti többlet munkavégzés illetve anyagköltség merül fel a végszámla helyszínen elvégzett munka alapján kerül kiállításra, megrendelő által aláírt munkalap alapján.
                     </p>
                 </div>
 
