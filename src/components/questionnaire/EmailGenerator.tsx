@@ -128,7 +128,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
             <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 16px;">
                 <tr>
                     <td align="center">
-                        <table cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 16px; display: inline-block;" bgcolor="#ffffff">
+                        <table cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 24px; display: inline-block;" bgcolor="#ffffff">
                             <tr>
                                 <td style="padding: 16px 32px; background-color: #ffffff;" bgcolor="#ffffff">
                                     <a href="https://evionor.hu" target="_blank" style="display: block; text-decoration: none;">
