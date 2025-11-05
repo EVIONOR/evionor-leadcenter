@@ -11,7 +11,7 @@ import { InstallationSection } from "./sections/InstallationSection";
 import { ChargerSpecsSection } from "./sections/ChargerSpecsSection";
 import { ClientSummary } from "./ClientSummary";
 import { EmailGenerator } from "./EmailGenerator";
-import { ArrowRight, ArrowLeft } from "lucide-react";
+import { ArrowRight, ArrowLeft, TestTube } from "lucide-react";
 
 const formSchema = z.object({
   carBrand: z.string().min(1, "Kötelező mező"),
@@ -82,6 +82,43 @@ export const QuestionnaireForm = () => {
     },
   });
 
+  const loadTestData = () => {
+    const testData: QuestionnaireData = {
+      carBrand: "Tesla",
+      carModel: "Model 3",
+      customCar: "",
+      zipCode: "1011",
+      city: "Budapest",
+      phases: "3",
+      amperage: "32",
+      installLocation: "Garázs",
+      buildingType: "családi_ház",
+      needsElectricalPlanning: false,
+      indoorOutdoor: "beltér",
+      mountingSurface: "beton",
+      needsBackplate: false,
+      needsPole: false,
+      distanceFromBox: "5",
+      spaceInBox: "igen",
+      groundworkWallPenetration: "",
+      otherComments: "Teszt megjegyzés",
+      solarIntegration: "nem",
+      loadManagement: true,
+      builtInCable: true,
+      needsApp: true,
+      infrastructureDevelopment: false,
+      infrastructureDetails: "",
+      overvoltageProtection: true,
+      networkExpansion: false,
+      expansionPhase: "",
+      expansionAmperage: "",
+    };
+
+    Object.keys(testData).forEach((key) => {
+      form.setValue(key as keyof QuestionnaireData, testData[key as keyof QuestionnaireData]);
+    });
+  };
+
   const onSubmit = (data: QuestionnaireData) => {
     setFormData(data);
     setStep("summary");
@@ -123,10 +160,24 @@ export const QuestionnaireForm = () => {
     <div className="container max-w-4xl mx-auto py-8 px-4">
       <Card className="shadow-lg">
         <CardHeader className="space-y-1 bg-gradient-to-r from-primary/5 to-secondary/5 border-b">
-          <CardTitle className="text-3xl font-bold">Töltőtelepítés Kérdőív</CardTitle>
-          <CardDescription className="text-base">
-            Kérjük, töltse ki az alábbi kérdőívet, hogy pontos ajánlatot készíthessünk az Ön számára.
-          </CardDescription>
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              <CardTitle className="text-3xl font-bold">Töltőtelepítés Kérdőív</CardTitle>
+              <CardDescription className="text-base">
+                Kérjük, töltse ki az alábbi kérdőívet, hogy pontos ajánlatot készíthessünk az Ön számára.
+              </CardDescription>
+            </div>
+            <Button 
+              type="button" 
+              variant="outline" 
+              size="sm" 
+              onClick={loadTestData}
+              className="flex items-center gap-2"
+            >
+              <TestTube className="h-4 w-4" />
+              Teszt adatok
+            </Button>
+          </div>
         </CardHeader>
         <CardContent className="pt-6">
           <Form {...form}>
