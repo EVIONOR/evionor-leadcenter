@@ -225,6 +225,33 @@ export const InstallationSection = ({ form }: InstallationSectionProps) => {
 
       <FormField
         control={form.control}
+        name="overvoltageProtection"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Túlfeszültség védelem *</FormLabel>
+            <FormControl>
+              <RadioGroup
+                onValueChange={(value) => field.onChange(value === "true")}
+                defaultValue={field.value ? "true" : "false"}
+                className="flex gap-4"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="true" id="overvoltage-yes" />
+                  <label htmlFor="overvoltage-yes" className="cursor-pointer">Igen</label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="false" id="overvoltage-no" />
+                  <label htmlFor="overvoltage-no" className="cursor-pointer">Nem</label>
+                </div>
+              </RadioGroup>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      <FormField
+        control={form.control}
         name="networkExpansion"
         render={({ field }) => (
           <FormItem>
