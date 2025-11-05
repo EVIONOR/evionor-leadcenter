@@ -208,7 +208,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
             <h3 className="text-lg font-semibold mb-3">Válasszon töltő sablont</h3>
             {recommendedTemplate && (
               <div className="mb-3 p-3 bg-secondary/20 rounded-lg border border-secondary">
-                <p className="text-sm font-medium text-secondary-foreground">
+                <p className="text-sm font-medium text-foreground">
                   ⭐ Ajánlott: {recommendedTemplate.name}
                 </p>
               </div>
