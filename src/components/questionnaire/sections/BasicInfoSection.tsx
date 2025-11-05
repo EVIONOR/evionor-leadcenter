@@ -3,7 +3,7 @@ import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessa
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { QuestionnaireData } from "@/types/questionnaire";
-import { getCityByZip } from "@/data/hungarianCities";
+import { getCityByZip } from "@/data/hungarianCitiesComplete";
 import { carBrands, getModelsByBrand } from "@/data/carBrands";
 
 interface BasicInfoSectionProps {
