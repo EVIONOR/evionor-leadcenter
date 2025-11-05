@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Copy, Mail } from "lucide-react";
 import { toast } from "sonner";
-import { additionalItemPrices, formatPrice } from "@/data/priceList";
+import { additionalItemPrices, formatPrice, priceList } from "@/data/priceList";
 
 interface EmailGeneratorProps {
   data: QuestionnaireData;
@@ -28,6 +28,24 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
   const [selectedAdditionals, setSelectedAdditionals] = useState<string[]>([]);
   const [generatedEmail, setGeneratedEmail] = useState("");
 
+  // Ár keresés a termék névből
+  const findProductPrice = (productName: string): number => {
+    // Normalizáljuk a neveket összehasonlításhoz
+    const normalizedSearch = productName.toLowerCase()
+      .replace(/\s+/g, ' ')
+      .replace('+ load balance', '')
+      .replace('+ solar load balancing', '')
+      .trim();
+    
+    const product = priceList.find(p => {
+      const normalizedProductName = p.name.toLowerCase().replace(/\s+/g, ' ');
+      return normalizedProductName.includes(normalizedSearch.split(' ')[0]) && 
+             normalizedProductName.includes(normalizedSearch.split(' ')[1] || '');
+    });
+    
+    return product?.price || 0;
+  };
+
   // Intelligens sablon ajánlás
   const recommendedTemplate = chargerTemplates.find(template => {
     if (data.solarIntegration !== "nem") return template.id === "template4";
@@ -40,7 +58,8 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
     if (!selectedTemplate) return;
 
     // Számítsuk ki az összegeket
-    const chargerPrice = selectedTemplate.basePrice || 0;
+    const chargerPrices = selectedTemplate.products.map(product => findProductPrice(product));
+    const chargerPrice = chargerPrices.length > 0 ? chargerPrices[0] : (selectedTemplate.basePrice || 0);
     
     // Telepítési ár a távolság alapján
     const distance = parseFloat(data.distanceFromBox) || 0;
@@ -108,10 +127,21 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
 
             <!-- Charger Section -->
             <div style="margin-bottom: 40px; background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%); padding: 24px; border-radius: 12px; border: 1px solid #e5e7eb;">
-                <h2 style="margin: 0 0 16px 0; color: #111827; font-size: 18px; font-weight: 600;">Ajánlott töltő</h2>
-                <h3 style="margin: 0 0 8px 0; color: #667eea; font-size: 20px; font-weight: 600;">${selectedTemplate.name}</h3>
-                <p style="margin: 0 0 12px 0; color: #6b7280; font-size: 14px;">${selectedTemplate.products.join(", ")}</p>
-                ${selectedTemplate.basePrice ? `<p style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 700;">Ár: ${formatPrice(selectedTemplate.basePrice)}</p>` : ""}
+                <h2 style="margin: 0 0 16px 0; color: #111827; font-size: 18px; font-weight: 600;">Ajánlott töltők</h2>
+                <h3 style="margin: 0 0 24px 0; color: #667eea; font-size: 20px; font-weight: 600;">${selectedTemplate.name}</h3>
+                
+                ${selectedTemplate.products.map((product, index) => {
+                  const price = findProductPrice(product);
+                  return `
+                    ${index > 0 ? '<div style="text-align: center; margin: 16px 0;"><span style="display: inline-block; padding: 8px 24px; background-color: #667eea; color: white; font-weight: 600; font-size: 14px; border-radius: 20px;">VAGY</span></div>' : ''}
+                    <div style="padding: 16px; background-color: white; border-radius: 8px; margin-bottom: ${index < selectedTemplate.products.length - 1 ? '0' : '20px'};">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                            <p style="margin: 0; color: #111827; font-size: 16px; font-weight: 600; flex: 1;">${product}</p>
+                            <p style="margin: 0; color: #667eea; font-size: 18px; font-weight: 700;">${formatPrice(price)}</p>
+                        </div>
+                    </div>
+                  `;
+                }).join('')}
                 
                 <div style="margin-top: 20px;">
                     <p style="margin: 0 0 12px 0; color: #374151; font-size: 14px; font-weight: 600;">Jellemzők:</p>
