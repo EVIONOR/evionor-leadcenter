@@ -124,13 +124,13 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
     <div style="max-width: 600px; margin: 40px auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);">
         
         <!-- Header -->
-        <div style="background: linear-gradient(135deg, #0071e3 0%, #005bb5 100%); padding: 16px 32px; text-align: center;">
-            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 16px;">
+        <div style="background: linear-gradient(135deg, #0071e3 0%, #005bb5 100%); padding: 24px 32px; text-align: center;">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 24px;">
                 <tr>
                     <td align="center">
                         <table cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 24px; display: inline-block;" bgcolor="#ffffff">
                             <tr>
-                                <td style="padding: 16px 32px; background-color: #ffffff; border-radius: 24px;" bgcolor="#ffffff">
+                                <td style="padding: 20px 32px; background-color: #ffffff; border-radius: 24px;" bgcolor="#ffffff">
                                     <a href="https://evionor.hu" target="_blank" style="display: block; text-decoration: none;">
                                         <img src="https://evionor.hu/cdn/shop/files/evionor-logo.png?v=1761743181" alt="Evionor Logo" width="240" style="height: auto; display: block; border: 0; background-color: #ffffff;" />
                                     </a>
