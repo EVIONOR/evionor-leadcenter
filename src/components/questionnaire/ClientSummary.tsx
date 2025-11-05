@@ -15,6 +15,27 @@ export const ClientSummary = ({ data }: ClientSummaryProps) => {
         <CardDescription>Kitöltött kérdőív adatai</CardDescription>
       </CardHeader>
       <CardContent className="pt-6 space-y-6">
+        {/* Kapcsolattartó adatok */}
+        <div>
+          <h3 className="text-lg font-semibold text-primary mb-3">Kapcsolattartó</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <p className="text-sm text-muted-foreground">Név</p>
+              <p className="font-medium">{data.contactName}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">E-mail cím</p>
+              <p className="font-medium">{data.email}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Telefonszám</p>
+              <p className="font-medium">{data.phoneNumber}</p>
+            </div>
+          </div>
+        </div>
+
+        <Separator />
+
         {/* Alapadatok */}
         <div>
           <h3 className="text-lg font-semibold text-primary mb-3">Alapadatok</h3>

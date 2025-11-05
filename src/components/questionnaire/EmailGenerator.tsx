@@ -114,7 +114,19 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                 <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 12px;">Ügyfél adatok</h2>
                 <table style="width: 100%; border-collapse: collapse;">
                     <tr>
-                        <td style="padding: 12px 0; color: #6b7280; font-size: 14px; width: 40%;">Jármű</td>
+                        <td style="padding: 12px 0; color: #6b7280; font-size: 14px; width: 40%;">Kapcsolattartó</td>
+                        <td style="padding: 12px 0; color: #111827; font-size: 14px; font-weight: 500;">${data.contactName}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px 0; color: #6b7280; font-size: 14px;">E-mail</td>
+                        <td style="padding: 12px 0; color: #111827; font-size: 14px; font-weight: 500;">${data.email}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px 0; color: #6b7280; font-size: 14px;">Telefonszám</td>
+                        <td style="padding: 12px 0; color: #111827; font-size: 14px; font-weight: 500;">${data.phoneNumber}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px 0; color: #6b7280; font-size: 14px;">Jármű</td>
                         <td style="padding: 12px 0; color: #111827; font-size: 14px; font-weight: 500;">${data.customCar ? data.customCar : `${data.carBrand} ${data.carModel}`}</td>
                     </tr>
                     <tr>

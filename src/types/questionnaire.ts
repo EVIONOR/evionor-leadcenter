@@ -1,5 +1,8 @@
 export interface QuestionnaireData {
   // Alapadatok
+  contactName: string;
+  email: string;
+  phoneNumber: string;
   carBrand: string;
   carModel: string;
   customCar: string;

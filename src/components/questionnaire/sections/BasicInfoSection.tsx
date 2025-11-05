@@ -22,6 +22,50 @@ export const BasicInfoSection = ({ form }: BasicInfoSectionProps) => {
         <p className="text-sm text-muted-foreground mt-1">Általános információk a telepítésről</p>
       </div>
 
+      <FormField
+        control={form.control}
+        name="contactName"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Kapcsolattartó neve *</FormLabel>
+            <FormControl>
+              <Input placeholder="pl. Kovács János" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>E-mail cím *</FormLabel>
+              <FormControl>
+                <Input type="email" placeholder="pl. kovacs.janos@email.com" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="phoneNumber"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Telefonszám *</FormLabel>
+              <FormControl>
+                <Input type="tel" placeholder="pl. +36 20 123 4567" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <FormField
           control={form.control}

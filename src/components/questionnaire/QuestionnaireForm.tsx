@@ -14,6 +14,9 @@ import { EmailGenerator } from "./EmailGenerator";
 import { ArrowRight, ArrowLeft, TestTube } from "lucide-react";
 
 const formSchema = z.object({
+  contactName: z.string().trim().min(1, "Kötelező mező").max(100, "Maximum 100 karakter"),
+  email: z.string().trim().email("Érvényes email cím szükséges").max(255, "Maximum 255 karakter"),
+  phoneNumber: z.string().trim().min(1, "Kötelező mező").regex(/^[\d\s+()-]+$/, "Érvényes telefonszám formátum szükséges"),
   carBrand: z.string().min(1, "Kötelező mező"),
   carModel: z.string().min(1, "Kötelező mező"),
   customCar: z.string().optional(),
@@ -51,6 +54,9 @@ export const QuestionnaireForm = () => {
   const form = useForm<QuestionnaireData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      contactName: "",
+      email: "",
+      phoneNumber: "",
       carBrand: "",
       carModel: "",
       customCar: "",
@@ -84,6 +90,9 @@ export const QuestionnaireForm = () => {
 
   const loadTestData = () => {
     const testData: QuestionnaireData = {
+      contactName: "Teszt Felhasználó",
+      email: "teszt@example.com",
+      phoneNumber: "+36 20 123 4567",
       carBrand: "Tesla",
       carModel: "Model 3",
       customCar: "",
