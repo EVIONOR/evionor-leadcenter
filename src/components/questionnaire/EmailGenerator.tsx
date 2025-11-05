@@ -9,6 +9,7 @@ import { Copy, Mail } from "lucide-react";
 import { toast } from "sonner";
 import { additionalItemPrices, formatPrice, priceList } from "@/data/priceList";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 
 interface EmailGeneratorProps {
   data: QuestionnaireData;
@@ -29,6 +30,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
   const [selectedAdditionals, setSelectedAdditionals] = useState<string[]>([]);
   const [generatedEmail, setGeneratedEmail] = useState("");
   const [senderName, setSenderName] = useState<string>("Nagy István");
+  const [clientName, setClientName] = useState<string>("");
 
   // Ár keresés a termék névből
   const findProductPrice = (productName: string): number => {
@@ -104,7 +106,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
         <div style="padding: 40px 32px;">
             
             <!-- Intro -->
-            <p style="margin: 0 0 32px 0; color: #374151; font-size: 15px; line-height: 1.6;">Tisztelt Ügyfél,</p>
+            <p style="margin: 0 0 32px 0; color: #374151; font-size: 15px; line-height: 1.6;">Tisztelt ${clientName || 'Ügyfél'},</p>
             <p style="margin: 0 0 40px 0; color: #374151; font-size: 15px; line-height: 1.6;">Köszönjük érdeklődését! Az Ön által megadott adatok alapján az alábbi ajánlatot készítettük.</p>
 
             <!-- Client Data Section -->
@@ -326,25 +328,55 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
     toast.success("Email vágólapra másolva!");
   };
 
-  const copyForGmail = () => {
-    // Gmail formátumban másolás - tiszta HTML
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = generatedEmail;
-    
-    // Kiválasztjuk a body tartalmat
-    const bodyContent = tempDiv.querySelector('body');
-    if (bodyContent) {
-      // Létrehozunk egy selection-t és kimásoljuk
-      const range = document.createRange();
-      range.selectNodeContents(bodyContent);
-      const selection = window.getSelection();
-      if (selection) {
-        selection.removeAllRanges();
-        selection.addRange(range);
-        document.execCommand('copy');
-        selection.removeAllRanges();
-        toast.success("Email Gmail formátumban vágólapra másolva! Beilleszthető a Gmail-be.");
+  const copyForGmail = async () => {
+    try {
+      // Gmail formátumban másolás - tiszta HTML
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = generatedEmail;
+      
+      // Kiválasztjuk a body tartalmat
+      const bodyContent = tempDiv.querySelector('body');
+      if (bodyContent) {
+        // Létrehozunk egy láthatatlan, szerkeszthető div-et
+        const hiddenDiv = document.createElement('div');
+        hiddenDiv.contentEditable = 'true';
+        hiddenDiv.style.position = 'fixed';
+        hiddenDiv.style.left = '-9999px';
+        hiddenDiv.innerHTML = bodyContent.innerHTML;
+        document.body.appendChild(hiddenDiv);
+        
+        // Kiválasztjuk a tartalmat
+        const range = document.createRange();
+        range.selectNodeContents(hiddenDiv);
+        const selection = window.getSelection();
+        if (selection) {
+          selection.removeAllRanges();
+          selection.addRange(range);
+          
+          // Modern clipboard API használata
+          try {
+            await navigator.clipboard.write([
+              new ClipboardItem({
+                'text/html': new Blob([bodyContent.innerHTML], { type: 'text/html' }),
+                'text/plain': new Blob([bodyContent.innerText], { type: 'text/plain' })
+              })
+            ]);
+            toast.success("Email Gmail formátumban vágólapra másolva! Beilleszthető a Gmail-be.");
+          } catch (clipboardError) {
+            // Fallback régebbi böngészőkhöz
+            document.execCommand('copy');
+            toast.success("Email Gmail formátumban vágólapra másolva! Beilleszthető a Gmail-be.");
+          }
+          
+          selection.removeAllRanges();
+        }
+        
+        // Töröljük a temp div-et
+        document.body.removeChild(hiddenDiv);
       }
+    } catch (error) {
+      console.error('Másolási hiba:', error);
+      toast.error("Hiba történt a másolás során. Próbálja újra!");
     }
   };
 
@@ -356,6 +388,20 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
           <CardDescription>Válasszon sablont és kiegészítőket az ajánlathoz</CardDescription>
         </CardHeader>
         <CardContent className="pt-6 space-y-6">
+          {/* Ügyfél neve */}
+          <div>
+            <h3 className="text-lg font-semibold mb-3">Ügyfél neve</h3>
+            <Input 
+              type="text"
+              placeholder="Pl. Kovács János"
+              value={clientName}
+              onChange={(e) => setClientName(e.target.value)}
+              className="w-full"
+            />
+          </div>
+
+          <Separator />
+
           {/* Ajánlatküldő neve */}
           <div>
             <h3 className="text-lg font-semibold mb-3">Ajánlatküldő neve</h3>
