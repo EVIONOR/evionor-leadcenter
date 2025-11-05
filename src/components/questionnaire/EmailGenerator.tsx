@@ -183,14 +183,16 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                     </tr>
                 </table>
                 
-                ${data.needsBackplate || data.needsPole || data.needsElectricalPlanning || data.overvoltageProtection ? `
+                ${data.needsBackplate || data.needsPole || data.needsElectricalPlanning || data.overvoltageProtection || data.infrastructureDevelopment || data.networkExpansion ? `
                 <div style="margin-top: 16px; padding: 16px; background-color: white; border-radius: 8px; border: 1px solid #e5e7eb;">
-                    <p style="margin: 0 0 8px 0; color: #374151; font-size: 14px; font-weight: 600;">További követelmények:</p>
+                    <p style="margin: 0 0 8px 0; color: #374151; font-size: 14px; font-weight: 600;">További telepítési követelmények:</p>
                     <ul style="margin: 0; padding: 0 0 0 20px; color: #374151; font-size: 14px; line-height: 1.8;">
                         ${data.needsBackplate ? "<li>Hátlap szükséges</li>" : ""}
                         ${data.needsPole ? "<li>Oszlop szükséges</li>" : ""}
                         ${data.needsElectricalPlanning ? "<li>Villamos tervezés szükséges</li>" : ""}
                         ${data.overvoltageProtection ? "<li>Túlfeszültség védelem</li>" : ""}
+                        ${data.infrastructureDevelopment && data.infrastructureDetails ? `<li>Infrastruktúra fejlesztés: ${data.infrastructureDetails}</li>` : ""}
+                        ${data.networkExpansion ? `<li>Hálózatbővítés: ${data.expansionPhase} fázis, ${data.expansionAmperage} A</li>` : ""}
                     </ul>
                 </div>
                 ` : ""}
@@ -233,6 +235,9 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                         <li>Töltőállomás szakszerű felszerelése és beüzemelése</li>
                         <li>Átadás és használatba vétel</li>
                     </ul>
+                    <p style="margin: 16px 0 0 0; padding: 12px; background-color: #fef3c7; border-left: 3px solid #f59e0b; color: #78350f; font-size: 13px; line-height: 1.6;">
+                        <strong>Megjegyzés:</strong> A végszámla helyszíni munkavégzés alapján kerül kiállításra, megrendelő által aláírt munkalap alapján.
+                    </p>
                 </div>
             </div>
 
@@ -311,6 +316,28 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
   const copyToClipboard = () => {
     navigator.clipboard.writeText(generatedEmail);
     toast.success("Email vágólapra másolva!");
+  };
+
+  const copyForGmail = () => {
+    // Gmail formátumban másolás - tiszta HTML
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = generatedEmail;
+    
+    // Kiválasztjuk a body tartalmat
+    const bodyContent = tempDiv.querySelector('body');
+    if (bodyContent) {
+      // Létrehozunk egy selection-t és kimásoljuk
+      const range = document.createRange();
+      range.selectNodeContents(bodyContent);
+      const selection = window.getSelection();
+      if (selection) {
+        selection.removeAllRanges();
+        selection.addRange(range);
+        document.execCommand('copy');
+        selection.removeAllRanges();
+        toast.success("Email Gmail formátumban vágólapra másolva! Beilleszthető a Gmail-be.");
+      }
+    }
   };
 
   return (
@@ -408,13 +435,19 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
           <CardHeader className="bg-gradient-to-r from-secondary/5 to-primary/5 border-b">
             <div className="flex items-center justify-between">
               <CardTitle className="text-xl">Generált email előnézet</CardTitle>
-              <Button variant="outline" size="sm" onClick={copyToClipboard}>
-                <Copy className="mr-2 h-4 w-4" />
-                HTML másolása
-              </Button>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm" onClick={copyForGmail}>
+                  <Copy className="mr-2 h-4 w-4" />
+                  Gmail másolás
+                </Button>
+                <Button variant="outline" size="sm" onClick={copyToClipboard}>
+                  <Copy className="mr-2 h-4 w-4" />
+                  HTML másolása
+                </Button>
+              </div>
             </div>
             <CardDescription className="mt-2">
-              Az alábbi előnézet mutatja, hogy néz majd ki az email. A "HTML másolása" gombbal másolhatod a teljes HTML kódot.
+              Az alábbi előnézet mutatja, hogy néz majd ki az email. A "Gmail másolás" gombbal közvetlenül beilleszthető Gmail-be, a "HTML másolása" gombbal a teljes HTML kódot kapod.
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">

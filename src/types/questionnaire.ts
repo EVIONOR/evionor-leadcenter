@@ -71,7 +71,7 @@ export const chargerTemplates: ChargerTemplate[] = [
     hasApp: true,
     location: "any",
     hasSolar: false,
-    products: ["EASEE CHARGE UP", "ZAPTEC GO + LOAD BALANCE"],
+    products: ["EASEE CHARGE UP", "Zaptec Go"],
     basePrice: 359000
   },
   {
@@ -81,7 +81,7 @@ export const chargerTemplates: ChargerTemplate[] = [
     hasApp: true,
     location: "any",
     hasSolar: true,
-    products: ["Zaptec GO 2 + SOLAR LOAD BALANCING"],
+    products: ["Zaptec Go 2"],
     basePrice: 505000
   }
 ];
