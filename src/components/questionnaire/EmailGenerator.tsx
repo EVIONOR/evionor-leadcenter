@@ -90,7 +90,10 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
     <div style="max-width: 600px; margin: 40px auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);">
         
         <!-- Header -->
-        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 32px; text-align: center;">
+        <div style="background: linear-gradient(135deg, #0071e3 0%, #005bb5 100%); padding: 40px 32px; text-align: center;">
+            <div style="margin-bottom: 20px;">
+                <img src="https://i.ibb.co/placeholder-evionor-logo.png" alt="Evionor" style="height: 50px; width: auto;" />
+            </div>
             <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 600; letter-spacing: -0.5px;">Töltő Telepítési Ajánlat</h1>
             <p style="margin: 12px 0 0 0; color: rgba(255, 255, 255, 0.9); font-size: 15px;">Személyre szabott megoldás az Ön igényeihez</p>
         </div>
@@ -128,16 +131,16 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
             <!-- Charger Section -->
             <div style="margin-bottom: 24px; background-color: #f3f4f6; padding: 24px; border-radius: 12px; border: 2px solid #e5e7eb;">
                 <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 12px;">Ajánlott töltők</h2>
-                <p style="margin: 0 0 20px 0; color: #667eea; font-size: 16px; font-weight: 600;">${selectedTemplate.name}</p>
+                <p style="margin: 0 0 20px 0; color: #0071e3; font-size: 16px; font-weight: 600;">${selectedTemplate.name}</p>
                 
                 ${selectedTemplate.products.map((product, index) => {
                   const price = findProductPrice(product);
                   return `
-                    ${index > 0 ? '<div style="text-align: center; margin: 16px 0;"><span style="display: inline-block; padding: 8px 24px; background-color: #667eea; color: white; font-weight: 600; font-size: 14px; border-radius: 20px;">VAGY</span></div>' : ''}
+                    ${index > 0 ? '<div style="text-align: center; margin: 16px 0;"><span style="display: inline-block; padding: 8px 24px; background: linear-gradient(135deg, #0071e3 0%, #005bb5 100%); color: white; font-weight: 600; font-size: 14px; border-radius: 20px;">VAGY</span></div>' : ''}
                     <div style="padding: 16px; background-color: white; border-radius: 8px; margin-bottom: ${index < selectedTemplate.products.length - 1 ? '0' : '20px'}; border: 1px solid #e5e7eb;">
                         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
                             <p style="margin: 0; color: #111827; font-size: 16px; font-weight: 600; flex: 1;">${product}</p>
-                            <p style="margin: 0; color: #667eea; font-size: 18px; font-weight: 700;">${formatPrice(price)}</p>
+                            <p style="margin: 0; color: #0071e3; font-size: 18px; font-weight: 700;">${formatPrice(price)}</p>
                         </div>
                     </div>
                   `;
@@ -168,7 +171,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                                 ${distance <= 10 ? 'Telepítés 10 méterig' : distance <= 20 ? 'Telepítés 20 méterig' : `Telepítés ${distance} méterig`}
                             </p>
                         </div>
-                        <p style="margin: 0; color: #667eea; font-size: 18px; font-weight: 700;">${formatPrice(installationPrice)}</p>
+                        <p style="margin: 0; color: #0071e3; font-size: 18px; font-weight: 700;">${formatPrice(installationPrice)}</p>
                     </div>
                 </div>
 
@@ -242,7 +245,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
             </div>
 
             <!-- Installation Price Section -->
-            <div style="margin-bottom: 40px; background-color: #f3f4f6; padding: 24px; border-radius: 12px; border: 2px solid #667eea;">
+            <div style="margin-bottom: 40px; background-color: #f3f4f6; padding: 24px; border-radius: 12px; border: 2px solid #0071e3;">
                 <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 12px;">Árkalkuláció</h2>
                 <table style="width: 100%; border-collapse: collapse;">
                     <tr>
@@ -259,9 +262,9 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                         <td style="padding: 12px 0; color: #111827; font-size: 14px; font-weight: 500; text-align: right;">${formatPrice(additionalTotal)}</td>
                     </tr>
                     ` : ""}
-                    <tr style="border-top: 2px solid #667eea;">
+                    <tr style="border-top: 2px solid #0071e3;">
                         <td style="padding: 16px 0; color: #111827; font-size: 18px; font-weight: 700;">Végösszeg:</td>
-                        <td style="padding: 16px 0; color: #667eea; font-size: 22px; font-weight: 700; text-align: right;">${formatPrice(grandTotal)}</td>
+                        <td style="padding: 16px 0; color: #0071e3; font-size: 22px; font-weight: 700; text-align: right;">${formatPrice(grandTotal)}</td>
                     </tr>
                 </table>
                 <p style="margin: 20px 0 0 0; color: #6b7280; font-size: 13px; line-height: 1.6;">
