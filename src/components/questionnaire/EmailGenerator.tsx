@@ -323,56 +323,40 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
     toast.success("Email sikeresen generálva!");
   };
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(generatedEmail);
-    toast.success("Email vágólapra másolva!");
-  };
-
-  const copyForGmail = async () => {
+  const copyToClipboard = async () => {
     try {
-      // Gmail formátumban másolás - tiszta HTML
-      const tempDiv = document.createElement('div');
-      tempDiv.innerHTML = generatedEmail;
-      
-      // Kiválasztjuk a body tartalmat
-      const bodyContent = tempDiv.querySelector('body');
-      if (bodyContent) {
-        // Létrehozunk egy láthatatlan, szerkeszthető div-et
-        const hiddenDiv = document.createElement('div');
-        hiddenDiv.contentEditable = 'true';
-        hiddenDiv.style.position = 'fixed';
-        hiddenDiv.style.left = '-9999px';
-        hiddenDiv.innerHTML = bodyContent.innerHTML;
-        document.body.appendChild(hiddenDiv);
+      // Az iframe tartalmat jelöljük ki és másoljuk
+      const iframe = document.querySelector('iframe[title="Email előnézet"]') as HTMLIFrameElement;
+      if (iframe?.contentWindow) {
+        const iframeDocument = iframe.contentWindow.document;
+        const bodyContent = iframeDocument.body;
         
-        // Kiválasztjuk a tartalmat
-        const range = document.createRange();
-        range.selectNodeContents(hiddenDiv);
-        const selection = window.getSelection();
-        if (selection) {
-          selection.removeAllRanges();
-          selection.addRange(range);
+        if (bodyContent) {
+          // Kijelöljük a teljes tartalmat
+          const range = iframeDocument.createRange();
+          range.selectNodeContents(bodyContent);
           
-          // Modern clipboard API használata
-          try {
-            await navigator.clipboard.write([
-              new ClipboardItem({
-                'text/html': new Blob([bodyContent.innerHTML], { type: 'text/html' }),
-                'text/plain': new Blob([bodyContent.innerText], { type: 'text/plain' })
-              })
-            ]);
-            toast.success("Email Gmail formátumban vágólapra másolva! Beilleszthető a Gmail-be.");
-          } catch (clipboardError) {
-            // Fallback régebbi böngészőkhöz
-            document.execCommand('copy');
-            toast.success("Email Gmail formátumban vágólapra másolva! Beilleszthető a Gmail-be.");
+          const selection = iframe.contentWindow.getSelection();
+          if (selection) {
+            selection.removeAllRanges();
+            selection.addRange(range);
+            
+            // Modern clipboard API használata HTML formátumban
+            try {
+              await navigator.clipboard.write([
+                new ClipboardItem({
+                  'text/html': new Blob([bodyContent.innerHTML], { type: 'text/html' }),
+                  'text/plain': new Blob([bodyContent.innerText], { type: 'text/plain' })
+                })
+              ]);
+              toast.success("Email kijelölve és vágólapra másolva!");
+            } catch (clipboardError) {
+              // Fallback régebbi böngészőkhöz
+              iframe.contentWindow.document.execCommand('copy');
+              toast.success("Email kijelölve és vágólapra másolva!");
+            }
           }
-          
-          selection.removeAllRanges();
         }
-        
-        // Töröljük a temp div-et
-        document.body.removeChild(hiddenDiv);
       }
     } catch (error) {
       console.error('Másolási hiba:', error);
@@ -505,19 +489,13 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
           <CardHeader className="bg-gradient-to-r from-secondary/5 to-primary/5 border-b">
             <div className="flex items-center justify-between">
               <CardTitle className="text-xl">Generált email előnézet</CardTitle>
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm" onClick={copyForGmail}>
-                  <Copy className="mr-2 h-4 w-4" />
-                  Gmail másolás
-                </Button>
-                <Button variant="outline" size="sm" onClick={copyToClipboard}>
-                  <Copy className="mr-2 h-4 w-4" />
-                  HTML másolása
-                </Button>
-              </div>
+              <Button variant="outline" size="sm" onClick={copyToClipboard}>
+                <Copy className="mr-2 h-4 w-4" />
+                Email másolása
+              </Button>
             </div>
             <CardDescription className="mt-2">
-              Az alábbi előnézet mutatja, hogy néz majd ki az email. A "Gmail másolás" gombbal közvetlenül beilleszthető Gmail-be, a "HTML másolása" gombbal a teljes HTML kódot kapod.
+              Az alábbi előnézet mutatja, hogy néz majd ki az email. Az "Email másolása" gombbal kijelölöd és vágólapra másolod a teljes emailt, amit be tudsz illeszteni Gmail-be vagy bármilyen email kliensbe.
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
