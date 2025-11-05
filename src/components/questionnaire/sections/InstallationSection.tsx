@@ -11,6 +11,8 @@ interface InstallationSectionProps {
 }
 
 export const InstallationSection = ({ form }: InstallationSectionProps) => {
+  const networkExpansion = form.watch("networkExpansion");
+
   return (
     <div className="space-y-6">
       <div className="border-b pb-2">
@@ -220,6 +222,65 @@ export const InstallationSection = ({ form }: InstallationSectionProps) => {
           </FormItem>
         )}
       />
+
+      <FormField
+        control={form.control}
+        name="networkExpansion"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Hálózat bővítés *</FormLabel>
+            <FormControl>
+              <RadioGroup
+                onValueChange={(value) => field.onChange(value === "true")}
+                defaultValue={field.value ? "true" : "false"}
+                className="flex gap-4"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="true" id="expansion-yes" />
+                  <label htmlFor="expansion-yes" className="cursor-pointer">Igen</label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="false" id="expansion-no" />
+                  <label htmlFor="expansion-no" className="cursor-pointer">Nem</label>
+                </div>
+              </RadioGroup>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      {networkExpansion && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <FormField
+            control={form.control}
+            name="expansionPhase"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Bővítés - Fázis</FormLabel>
+                <FormControl>
+                  <Input placeholder="pl. 3" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="expansionAmperage"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Bővítés - Amper</FormLabel>
+                <FormControl>
+                  <Input type="number" placeholder="pl. 63" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+      )}
     </div>
   );
 };
