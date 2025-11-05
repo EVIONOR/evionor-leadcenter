@@ -47,7 +47,7 @@ Az Ön által megadott adatok alapján az alábbi ajánlatot készítettük:
 ÜGYFÉL ADATOK
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Jármű: ${data.carBrand} ${data.carModel}
+Jármű: ${data.customCar ? data.customCar : `${data.carBrand} ${data.carModel}`}
 Helyszín: ${data.city}, ${data.zipCode}
 Épület típus: ${data.buildingType.replace("_", " ")}
 Elektromos rendszer: ${data.phases} fázis, ${data.amperage} A

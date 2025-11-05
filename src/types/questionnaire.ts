@@ -2,6 +2,7 @@ export interface QuestionnaireData {
   // Alapadatok
   carBrand: string;
   carModel: string;
+  customCar: string;
   zipCode: string;
   city: string;
   phases: "1" | "3";

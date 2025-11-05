@@ -16,6 +16,7 @@ import { ArrowRight, ArrowLeft } from "lucide-react";
 const formSchema = z.object({
   carBrand: z.string().min(1, "Kötelező mező"),
   carModel: z.string().min(1, "Kötelező mező"),
+  customCar: z.string().optional(),
   zipCode: z.string().min(4, "Érvényes irányítószám szükséges").max(4),
   city: z.string().min(1, "A város automatikusan kitöltődik"),
   phases: z.enum(["1", "3"]),
@@ -52,6 +53,7 @@ export const QuestionnaireForm = () => {
     defaultValues: {
       carBrand: "",
       carModel: "",
+      customCar: "",
       zipCode: "",
       city: "",
       phases: "1",

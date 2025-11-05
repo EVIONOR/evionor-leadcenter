@@ -12,7 +12,9 @@ interface BasicInfoSectionProps {
 
 export const BasicInfoSection = ({ form }: BasicInfoSectionProps) => {
   const selectedBrand = form.watch("carBrand");
+  const selectedModel = form.watch("carModel");
   const availableModels = selectedBrand ? getModelsByBrand(selectedBrand) : [];
+  const showCustomField = selectedBrand === "Egyéb" || selectedModel === "Egyéb modell";
   return (
     <div className="space-y-6">
       <div className="border-b pb-2">
@@ -84,6 +86,23 @@ export const BasicInfoSection = ({ form }: BasicInfoSectionProps) => {
           )}
         />
       </div>
+
+      {showCustomField && (
+        <FormField
+          control={form.control}
+          name="customCar"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Egyéni autó megadása *</FormLabel>
+              <FormControl>
+                <Input placeholder="pl. Tesla Roadster 2024" {...field} />
+              </FormControl>
+              <FormDescription>Adja meg az autó pontos márka és típus megnevezését</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <FormField

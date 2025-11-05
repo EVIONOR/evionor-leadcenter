@@ -21,7 +21,9 @@ export const ClientSummary = ({ data }: ClientSummaryProps) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <p className="text-sm text-muted-foreground">Autó</p>
-              <p className="font-medium">{data.carBrand} {data.carModel}</p>
+              <p className="font-medium">
+                {data.customCar ? data.customCar : `${data.carBrand} ${data.carModel}`}
+              </p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Helyszín</p>
