@@ -123,6 +123,21 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
         
         <!-- Header -->
         <div style="background: linear-gradient(135deg, #0071e3 0%, #005bb5 100%); padding: 16px 32px; text-align: center;">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 16px;">
+                <tr>
+                    <td align="center">
+                        <table cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 8px; display: inline-block;">
+                            <tr>
+                                <td style="padding: 16px 32px;">
+                                    <a href="https://evionor.hu" target="_blank" style="display: block; text-decoration: none;">
+                                        <img src="https://evionor.hu/images/evionor-email-logo.png" alt="Evionor Logo" width="160" style="height: auto; display: block; border: 0;" />
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
             <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 600; letter-spacing: -0.5px;">Töltő Telepítési Ajánlat</h1>
             <p style="margin: 8px 0 0 0; color: rgba(255, 255, 255, 0.9); font-size: 14px;">Személyre szabott megoldás az Ön igényeihez</p>
         </div>
