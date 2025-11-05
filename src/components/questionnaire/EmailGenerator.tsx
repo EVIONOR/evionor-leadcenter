@@ -128,7 +128,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
             <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 16px;">
                 <tr>
                     <td align="center">
-                        <table cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 8px; display: inline-block;" bgcolor="#ffffff">
+                        <table cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 16px; display: inline-block;" bgcolor="#ffffff">
                             <tr>
                                 <td style="padding: 16px 32px; background-color: #ffffff;" bgcolor="#ffffff">
                                     <a href="https://evionor.hu" target="_blank" style="display: block; text-decoration: none;">
@@ -238,7 +238,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                         </tr>
                     </table>
                     <p style="margin: 16px 0 0 0; padding: 12px; background-color: #fef3c7; border-left: 3px solid #f59e0b; color: #78350f; font-size: 13px; line-height: 1.6;">
-                        <strong>Megjegyzés:</strong> Amennyiben igény szerinti többlet munkavégzés illetve anyagköltség merül fel a végszámla helyszínen elvégzett munka alapján kerül kiállításra, megrendelő által aláírt munkalap alapján.
+                        <strong>Megjegyzés:</strong> Amennyiben többlet munkavégzés és anyagköltség merül fel erről végszámlát állítunk ki. A végszámla helyszínen elvégzett munka alapján kerül kiállításra, megrendelő által aláírt munkalap alapján.
                     </p>
                 </div>
 
