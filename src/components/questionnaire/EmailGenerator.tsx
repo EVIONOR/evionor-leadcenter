@@ -156,10 +156,12 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                   return `
                     ${index > 0 ? '<div style="text-align: center; margin: 16px 0;"><span style="display: inline-block; padding: 8px 24px; background: linear-gradient(135deg, #0071e3 0%, #005bb5 100%); color: white; font-weight: 600; font-size: 14px; border-radius: 20px;">VAGY</span></div>' : ''}
                     <div style="padding: 16px; background-color: white; border-radius: 8px; margin-bottom: ${index < selectedTemplate.products.length - 1 ? '0' : '20px'}; border: 1px solid #e5e7eb;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
-                            <p style="margin: 0; color: #111827; font-size: 16px; font-weight: 600; flex: 1;">${product}</p>
-                            <p style="margin: 0; color: #0071e3; font-size: 18px; font-weight: 700;">${formatPrice(price)}</p>
-                        </div>
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <tr>
+                                <td style="padding: 0; color: #111827; font-size: 16px; font-weight: 600; width: 65%;">${product}</td>
+                                <td style="padding: 0 0 0 20px; color: #0071e3; font-size: 18px; font-weight: 700; text-align: right;">${formatPrice(price)}</td>
+                            </tr>
+                        </table>
                     </div>
                   `;
                 }).join('')}
@@ -182,15 +184,17 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                 <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 12px;">Telepítés</h2>
                 
                 <div style="padding: 16px; background-color: white; border-radius: 8px; margin-bottom: 16px; border: 1px solid #e5e7eb;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
-                        <div style="flex: 1;">
-                            <p style="margin: 0 0 8px 0; color: #111827; font-size: 16px; font-weight: 600;">Telepítési díj (sztenderd telepítés) - ${data.distanceFromBox}m</p>
-                            <p style="margin: 0; color: #6b7280; font-size: 13px;">
-                                ${distance <= 10 ? 'Telepítés 10 méterig' : distance <= 20 ? 'Telepítés 20 méterig' : `Telepítés ${distance} méterig`}
-                            </p>
-                        </div>
-                        <p style="margin: 0; color: #0071e3; font-size: 18px; font-weight: 700;">${formatPrice(installationPrice)}</p>
-                    </div>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr>
+                            <td style="padding: 0; vertical-align: top; width: 70%;">
+                                <p style="margin: 0 0 8px 0; color: #111827; font-size: 16px; font-weight: 600;">Telepítési díj (sztenderd telepítés) - ${data.distanceFromBox}m</p>
+                                <p style="margin: 0; color: #6b7280; font-size: 13px;">
+                                    ${distance <= 10 ? 'Telepítés 10 méterig' : distance <= 20 ? 'Telepítés 20 méterig' : `Telepítés ${distance} méterig`}
+                                </p>
+                            </td>
+                            <td style="padding: 0 0 0 20px; color: #0071e3; font-size: 18px; font-weight: 700; text-align: right; vertical-align: top;">${formatPrice(installationPrice)}</td>
+                        </tr>
+                    </table>
                     <p style="margin: 16px 0 0 0; padding: 12px; background-color: #fef3c7; border-left: 3px solid #f59e0b; color: #78350f; font-size: 13px; line-height: 1.6;">
                         <strong>Megjegyzés:</strong> A végszámla helyszíni munkavégzés alapján kerül kiállításra, megrendelő által aláírt munkalap alapján.
                     </p>
@@ -239,8 +243,8 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                 <table style="width: 100%; border-collapse: collapse;">
                     ${selectedAdditionals.map(item => `
                     <tr>
-                        <td style="padding: 12px 0; color: #374151; font-size: 14px; width: 70%;">${item}</td>
-                        <td style="padding: 12px 0; color: #111827; font-size: 14px; font-weight: 500; text-align: right;">${formatPrice(additionalItemPrices[item] || 0)}</td>
+                        <td style="padding: 12px 0; color: #374151; font-size: 14px; width: 65%;">${item}</td>
+                        <td style="padding: 12px 0 12px 20px; color: #111827; font-size: 14px; font-weight: 500; text-align: right;">${formatPrice(additionalItemPrices[item] || 0)}</td>
                     </tr>
                     `).join("")}
                 </table>
@@ -270,22 +274,22 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                 <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 12px;">Árkalkuláció</h2>
                 <table style="width: 100%; border-collapse: collapse;">
                     <tr>
-                        <td style="padding: 12px 0; color: #374151; font-size: 14px;">Töltő berendezés</td>
-                        <td style="padding: 12px 0; color: #111827; font-size: 14px; font-weight: 500; text-align: right;">${formatPrice(chargerPrice)}</td>
+                        <td style="padding: 12px 0; color: #374151; font-size: 14px; width: 65%;">Töltő berendezés</td>
+                        <td style="padding: 12px 0 12px 20px; color: #111827; font-size: 14px; font-weight: 500; text-align: right;">${formatPrice(chargerPrice)}</td>
                     </tr>
                     <tr>
                         <td style="padding: 12px 0; color: #374151; font-size: 14px;">Telepítés (${data.distanceFromBox}m)</td>
-                        <td style="padding: 12px 0; color: #111827; font-size: 14px; font-weight: 500; text-align: right;">${formatPrice(installationPrice)}</td>
+                        <td style="padding: 12px 0 12px 20px; color: #111827; font-size: 14px; font-weight: 500; text-align: right;">${formatPrice(installationPrice)}</td>
                     </tr>
                     ${selectedAdditionals.length > 0 ? `
                     <tr>
                         <td style="padding: 12px 0; color: #374151; font-size: 14px;">Kiegészítők</td>
-                        <td style="padding: 12px 0; color: #111827; font-size: 14px; font-weight: 500; text-align: right;">${formatPrice(additionalTotal)}</td>
+                        <td style="padding: 12px 0 12px 20px; color: #111827; font-size: 14px; font-weight: 500; text-align: right;">${formatPrice(additionalTotal)}</td>
                     </tr>
                     ` : ""}
                     <tr style="border-top: 2px solid #0071e3;">
                         <td style="padding: 16px 0; color: #111827; font-size: 18px; font-weight: 700;">Végösszeg:</td>
-                        <td style="padding: 16px 0; color: #0071e3; font-size: 22px; font-weight: 700; text-align: right;">${formatPrice(grandTotal)}</td>
+                        <td style="padding: 16px 0 16px 20px; color: #0071e3; font-size: 22px; font-weight: 700; text-align: right;">${formatPrice(grandTotal)}</td>
                     </tr>
                 </table>
                 <p style="margin: 20px 0 0 0; color: #6b7280; font-size: 13px; line-height: 1.6;">
