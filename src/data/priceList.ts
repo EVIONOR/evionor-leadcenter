@@ -111,7 +111,7 @@ export const priceList: ProductPrice[] = [
 // Kiegészítők árai az EmailGenerator számára
 export const additionalItemPrices: Record<string, number> = {
   "RFID Tag": 3000,
-  "Terhelésmenedzsment rendszer": 150000,
+  "Terhelésmenedzsment rendszer": 130000,
   "Szabadon álló oszlop": 140000,
   "Fali hátlap kábeltartóval": 50000,
   "Töltőkábel (3m / 5m / 7m / 10m)": 80000, // átlag ár
