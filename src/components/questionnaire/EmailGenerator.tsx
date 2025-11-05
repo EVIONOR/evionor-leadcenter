@@ -168,13 +168,16 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                 <div style="padding: 16px; background-color: white; border-radius: 8px; margin-bottom: 16px; border: 1px solid #e5e7eb;">
                     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
                         <div style="flex: 1;">
-                            <p style="margin: 0 0 8px 0; color: #111827; font-size: 16px; font-weight: 600;">Telepítési díj (${data.distanceFromBox}m)</p>
+                            <p style="margin: 0 0 8px 0; color: #111827; font-size: 16px; font-weight: 600;">Telepítési díj (sztenderd telepítés) - ${data.distanceFromBox}m</p>
                             <p style="margin: 0; color: #6b7280; font-size: 13px;">
                                 ${distance <= 10 ? 'Telepítés 10 méterig' : distance <= 20 ? 'Telepítés 20 méterig' : `Telepítés ${distance} méterig`}
                             </p>
                         </div>
                         <p style="margin: 0; color: #0071e3; font-size: 18px; font-weight: 700;">${formatPrice(installationPrice)}</p>
                     </div>
+                    <p style="margin: 16px 0 0 0; padding: 12px; background-color: #fef3c7; border-left: 3px solid #f59e0b; color: #78350f; font-size: 13px; line-height: 1.6;">
+                        <strong>Megjegyzés:</strong> A végszámla helyszíni munkavégzés alapján kerül kiállításra, megrendelő által aláírt munkalap alapján.
+                    </p>
                 </div>
 
                 <table style="width: 100%; border-collapse: collapse;">
@@ -191,7 +194,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                 ${data.needsBackplate || data.needsPole || data.needsElectricalPlanning || data.overvoltageProtection || data.infrastructureDevelopment || data.networkExpansion ? `
                 <div style="margin-top: 16px; padding: 16px; background-color: white; border-radius: 8px; border: 1px solid #e5e7eb;">
                     <p style="margin: 0 0 8px 0; color: #374151; font-size: 14px; font-weight: 600;">További telepítési követelmények:</p>
-                    <ul style="margin: 0; padding: 0 0 0 20px; color: #374151; font-size: 14px; line-height: 1.8;">
+                    <ul style="margin: 0 0 12px 0; padding: 0 0 0 20px; color: #374151; font-size: 14px; line-height: 1.8;">
                         ${data.needsBackplate ? "<li>Hátlap szükséges</li>" : ""}
                         ${data.needsPole ? "<li>Oszlop szükséges</li>" : ""}
                         ${data.needsElectricalPlanning ? "<li>Villamos tervezés szükséges</li>" : ""}
@@ -199,6 +202,9 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                         ${data.infrastructureDevelopment && data.infrastructureDetails ? `<li>Infrastruktúra fejlesztés: ${data.infrastructureDetails}</li>` : ""}
                         ${data.networkExpansion ? `<li>Hálózatbővítés: ${data.expansionPhase} fázis, ${data.expansionAmperage} A</li>` : ""}
                     </ul>
+                    <p style="margin: 0; padding: 12px; background-color: #eff6ff; border-left: 3px solid #3b82f6; color: #1e3a8a; font-size: 13px; line-height: 1.6;">
+                        <strong>Megjegyzés:</strong> A sztenderd telepítési tartalmon túli munkavégzésről a helyszínen készül lista. Az árlistája a <a href="https://www.evionor.hu" style="color: #0071e3; text-decoration: underline;">honlapunkon elérhető</a>.
+                    </p>
                 </div>
                 ` : ""}
                 
@@ -240,9 +246,6 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                         <li>Töltőállomás szakszerű felszerelése és beüzemelése</li>
                         <li>Átadás és használatba vétel</li>
                     </ul>
-                    <p style="margin: 16px 0 0 0; padding: 12px; background-color: #fef3c7; border-left: 3px solid #f59e0b; color: #78350f; font-size: 13px; line-height: 1.6;">
-                        <strong>Megjegyzés:</strong> A végszámla helyszíni munkavégzés alapján kerül kiállításra, megrendelő által aláírt munkalap alapján.
-                    </p>
                 </div>
             </div>
 
