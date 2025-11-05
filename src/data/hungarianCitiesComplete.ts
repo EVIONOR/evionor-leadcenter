@@ -1,6 +1,6 @@
-// Teljes magyar irányítószám adatbázis
+// Teljes magyar irányítószám adatbázis - Több mint 500 település
 export const hungarianCities: Record<string, string> = {
-  // Budapest
+  // Budapest - összes kerület
   "1011": "Budapest I.", "1012": "Budapest I.", "1013": "Budapest I.", "1014": "Budapest I.", "1015": "Budapest I.", "1016": "Budapest I.",
   "1021": "Budapest II.", "1022": "Budapest II.", "1023": "Budapest II.", "1024": "Budapest II.", "1025": "Budapest II.", "1026": "Budapest II.", "1027": "Budapest II.", "1028": "Budapest II.", "1029": "Budapest II.",
   "1031": "Budapest III.", "1032": "Budapest III.", "1033": "Budapest III.", "1034": "Budapest III.", "1035": "Budapest III.", "1036": "Budapest III.", "1037": "Budapest III.", "1038": "Budapest III.", "1039": "Budapest III.",
@@ -23,33 +23,139 @@ export const hungarianCities: Record<string, string> = {
   "1201": "Budapest XX.", "1202": "Budapest XX.", "1203": "Budapest XX.", "1204": "Budapest XX.", "1205": "Budapest XX.",
   "1211": "Budapest XXI.", "1212": "Budapest XXI.", "1213": "Budapest XXI.", "1214": "Budapest XXI.", "1215": "Budapest XXI.",
   "1221": "Budapest XXII.", "1222": "Budapest XXII.", "1223": "Budapest XXII.", "1224": "Budapest XXII.", "1225": "Budapest XXII.",
-  "1237": "Budapest XXIII.", "1238": "Budapest XXIII.", "1239": "Budapest XXIII.",
+  "1237": "Budapest XXIII.", "1238": "Budapest XXIII.", "1239": "Budapest XXIII.", "1529": "Budapest",
   
-  // Főbb városok és települések (több ezer további irányítószám)
-  "2000": "Szentendre", "2011": "Budakalász", "2040": "Budaörs", "2051": "Biatorbágy", "2060": "Bicske", "2092": "Budakeszi", "2093": "Budajenő",
-  "2100": "Gödöllő", "2120": "Dunakeszi", "2141": "Csömör", "2143": "Kistarcsa", "2170": "Aszód", "2230": "Gyömrő", "2310": "Szigetszentmiklós",
-  "2330": "Dunaharaszti", "2400": "Dunaújváros", "2440": "Százhalombatta", "2455": "Beloiannisz", "2456": "Besnyő", "2457": "Adony",
-  "2600": "Vác", "2660": "Balassagyarmat", "2700": "Cegléd", "2730": "Albertirsa", "2740": "Abony", "2800": "Tatabánya", "2890": "Tata",
-  "2941": "Ács", "2943": "Bábolna", "3000": "Hatvan", "3100": "Salgótarján", "3200": "Gyöngyös", "3300": "Eger", "3400": "Mezőkövesd",
-  "3500": "Miskolc", "3525": "Miskolc", "3530": "Miskolc", "3700": "Kazincbarcika", "3800": "Szikszó", "3900": "Szerencs",
+  // Pest megye
+  "2000": "Szentendre", "2011": "Budakalász", "2040": "Budaörs", "2051": "Biatorbágy", "2060": "Bicske", "2064": "Csabdi", "2092": "Budakeszi", "2093": "Budajenő",
+  "2100": "Gödöllő", "2117": "Isaszeg", "2120": "Dunakeszi", "2141": "Csömör", "2143": "Kistarcsa", "2170": "Aszód", "2183": "Csemő", "2184": "Csemő", "2191": "Bag",
+  "2216": "Bénye", "2230": "Gyömrő", "2310": "Szigetszentmiklós", "2330": "Dunaharaszti", "2338": "Áporka", "2345": "Apaj", "2347": "Bugyi",
+  "2351": "Alsónémedi", "2400": "Dunaújváros", "2426": "Baracs", "2427": "Baracs", "2440": "Százhalombatta", "2455": "Beloiannisz",
+  "2456": "Besnyő", "2457": "Adony", "2471": "Baracska", "2525": "Bajna", "2529": "Annavölgy", "2533": "Bajót", "2600": "Vác",
+  "2617": "Alsópetény", "2639": "Bernecebaráti", "2641": "Berkenye", "2644": "Borsosberény", "2653": "Bánk", "2660": "Balassagyarmat",
+  "2683": "Acsa", "2687": "Bercel", "2693": "Becske", "2700": "Cegléd", "2730": "Albertirsa", "2737": "Ceglédbercel", "2738": "Cegléd", "2740": "Abony",
+  
+  // Komárom-Esztergom
+  "2800": "Tatabánya", "2836": "Baj", "2855": "Bokod", "2858": "Császár", "2861": "Bakonysárkány", "2862": "Aka", "2883": "Bársonyos",
+  "2884": "Bakonyszombathely", "2885": "Bakonybánk", "2887": "Ácsteszér", "2890": "Tata", "2931": "Almásfüzitő", "2941": "Ács", "2943": "Bábolna", "2944": "Bana",
+  
+  // Nógrád
+  "3015": "Csány", "3032": "Apc", "3045": "Bér", "3047": "Buják", "3066": "Bokor", "3069": "Alsótold", "3070": "Bátonyterenye",
+  "3078": "Bátonyterenye", "3096": "Cserhátsurány", "3100": "Salgótarján", "3123": "Cered", "3126": "Bárna", "3141": "Csécse", "3151": "Bátonyterenye",
+  
+  // Heves
+  "3000": "Hatvan", "3200": "Gyöngyös", "3213": "Atkár", "3243": "Bodony", "3257": "Bükkszenterzsébet", "3261": "Abasár", "3292": "Adács",
+  "3300": "Eger", "3335": "Bükkszék", "3336": "Bátor", "3343": "Bekölce", "3346": "Bélapátfalva", "3347": "Balaton", "3353": "Aldebrő",
+  "3368": "Boconád", "3371": "Átány", "3373": "Besenyőtelek", "3399": "Andornaktálya", "3412": "Bogács", "3414": "Bükkzsérc", "3422": "Bükkábrány",
+  
+  // Borsod-Abaúj-Zemplén
+  "3426": "Borsodgeszt", "3462": "Borsodivánka", "3467": "Ároktő", "3500": "Miskolc", "3525": "Miskolc", "3530": "Miskolc", "3554": "Bükkaranyos",
+  "3557": "Bükkszentkereszt", "3571": "Alsózsolca", "3574": "Bőcs", "3575": "Berzék", "3597": "Cserépváralja", "3623": "Borsodszentgyörgy",
+  "3641": "Cserépváralja", "3642": "Bánhorváti", "3648": "Bükkmogyorósd", "3654": "Bánréve", "3658": "Borsodbóta", "3663": "Arló",
+  "3671": "Borsodnádasd", "3672": "Borsodnádasd", "3700": "Kazincbarcika", "3704": "Berente", "3713": "Arnót", "3717": "Alsódobsza",
+  "3726": "Alsószuha", "3735": "Alsótelekes", "3753": "Abod", "3759": "Aggtelek", "3763": "Bódvaszilas", "3768": "Becskeháza",
+  "3779": "Alacska", "3780": "Balajt", "3794": "Boldva", "3796": "Borsodszirák", "3800": "Szikszó", "3809": "Abaújszolnok",
+  "3811": "Alsóvadász", "3815": "Abaújlak", "3821": "Büttös", "3834": "Beret", "3836": "Baktakék", "3837": "Alsógagy", "3841": "Aszaló",
+  "3881": "Abaújszántó", "3882": "Abaújalpár", "3884": "Boldogkőújfalu", "3885": "Boldogkőváralja", "3898": "Abaújvár", "3900": "Szerencs",
+  "3903": "Bekecs", "3916": "Bodrogkeresztúr", "3917": "Bodrogkisfalud", "3943": "Bodrogolaszi", "3973": "Cigánd", "3985": "Alsóberecki",
+  "3987": "Bodroghalom", "3989": "Alsóregmec", "3994": "Bózsva",
+  
+  // Szabolcs-Szatmár-Bereg
+  "4100": "Berettyóújfalu", "4103": "Berettyóújfalu", "4114": "Bojt", "4115": "Ártánd", "4116": "Berekböszörmény", "4128": "Bedő",
+  "4161": "Báránd", "4164": "Bakonszeg", "4172": "Biharnagybajom", "4174": "Bihartorda", "4175": "Bihardancsháza", "4231": "Bököny",
+  "4233": "Balkány", "4235": "Biri", "4241": "Bocskaikert", "4285": "Álmosd", "4286": "Bagamér", "4343": "Bátorliget", "4468": "Balsa",
+  "4483": "Buj", "4488": "Beszterec", "4521": "Berkesz", "4524": "Ajak", "4546": "Anarcs", "4553": "Apagy", "4557": "Besenyőd",
+  "4561": "Baktalórántháza", "4634": "Aranyosapáti", "4643": "Benk", "4732": "Cégénydányád", "4844": "Csaroda", "4933": "Beregsurány",
+  "4934": "Beregdaróc", "4937": "Barabás", "4955": "Botpalád", "4967": "Csaholc",
+  
+  // Hajdú-Bihar
   "4000": "Debrecen", "4025": "Debrecen", "4026": "Debrecen", "4027": "Debrecen", "4028": "Debrecen", "4029": "Debrecen",
-  "4030": "Debrecen", "4031": "Debrecen", "4032": "Debrecen", "4033": "Debrecen", "4034": "Debrecen",
-  "4060": "Balmazújváros", "4100": "Berettyóújfalu", "4110": "Biharkeresztes", "4200": "Hajdúszoboszló", "4220": "Hajdúböszörmény",
-  "4400": "Nyíregyháza", "4450": "Nyíregyháza", "4600": "Kisvárda",
-  "5000": "Szolnok", "5100": "Jászberény", "5241": "Abádszalók", "5310": "Kisújszállás", "5400": "Mezőtúr", "5500": "Gyomaendrőd",
-  "5600": "Békéscsaba", "5623": "Békéscsaba", "5630": "Békés", "5671": "Békéscsaba", "5700": "Gyula", "5830": "Battonya",
-  "6000": "Kecskemét", "6100": "Kiskunfélegyháza", "6200": "Kiskőrös", "6400": "Kiskunhalas", "6500": "Baja", "6600": "Szentes",
-  "6640": "Csongrád", "6700": "Szeged", "6720": "Szeged", "6721": "Szeged", "6722": "Szeged", "6723": "Szeged", "6724": "Szeged",
-  "6725": "Szeged", "6726": "Szeged", "6727": "Szeged", "6728": "Szeged", "6800": "Hódmezővásárhely", "6900": "Makó",
-  "7000": "Sárbogárd", "7100": "Szekszárd", "7140": "Bátaszék", "7150": "Bonyhád", "7200": "Dombóvár", "7300": "Komló",
-  "7400": "Kaposvár", "7500": "Nagyatád", "7570": "Barcs", "7600": "Pécs", "7621": "Pécs", "7622": "Pécs", "7623": "Pécs",
-  "7624": "Pécs", "7625": "Pécs", "7626": "Pécs", "7627": "Pécs", "7628": "Pécs", "7629": "Pécs", "7630": "Pécs",
-  "7700": "Mohács", "7800": "Siklós",
-  "8000": "Székesfehérvár", "8100": "Várpalota", "8200": "Veszprém", "8220": "Balatonalmádi", "8230": "Balatonfüred",
-  "8300": "Tapolca", "8360": "Keszthely", "8380": "Hévíz", "8400": "Ajka", "8500": "Pápa", "8600": "Siófok",
-  "8630": "Balatonboglár", "8700": "Marcali", "8800": "Nagykanizsa", "8900": "Zalaegerszeg",
-  "9021": "Győr", "9022": "Győr", "9023": "Győr", "9024": "Győr", "9025": "Győr", "9026": "Győr", "9027": "Győr", "9028": "Győr", "9029": "Győr",
-  "9100": "Tét", "9200": "Mosonmagyaróvár", "9400": "Sopron", "9500": "Celldömölk", "9600": "Sárvár", "9700": "Szombathely", "9900": "Körmend"
+  "4030": "Debrecen", "4031": "Debrecen", "4032": "Debrecen", "4033": "Debrecen", "4034": "Debrecen", "4060": "Balmazújváros",
+  "4110": "Biharkeresztes", "4200": "Hajdúszoboszló", "4220": "Hajdúböszörmény", "4400": "Nyíregyháza", "4450": "Nyíregyháza", "4600": "Kisvárda",
+  
+  // Jász-Nagykun-Szolnok
+  "5000": "Szolnok", "5071": "Besenyszög", "5100": "Jászberény", "5142": "Alattyán", "5241": "Abádszalók", "5309": "Berekfürdő",
+  "5310": "Kisújszállás", "5400": "Mezőtúr", "5462": "Cibakháza", "5500": "Gyomaendrőd", "5527": "Bucsa",
+  
+  // Békés
+  "5538": "Biharugra", "5551": "Csabacsűd", "5561": "Békésszentandrás", "5600": "Békéscsaba", "5609": "Csabaszabadi", "5621": "Csárdaszállás",
+  "5623": "Békéscsaba", "5630": "Békés", "5643": "Bélmegyer", "5662": "Csanádapáca", "5671": "Békéscsaba", "5700": "Gyula",
+  "5747": "Almáskamarás", "5830": "Battonya", "5946": "Békéssámson",
+  
+  // Csongrád-Csanád
+  "6035": "Ballószög", "6076": "Ágasegyháza", "6088": "Apostag", "6114": "Bugac", "6221": "Akasztó", "6235": "Bócsa", "6239": "Császártöltés",
+  "6351": "Bátya", "6412": "Balotaszállás", "6425": "Bácsszőlős", "6430": "Bácsalmás", "6445": "Borota", "6453": "Bácsbokod",
+  "6454": "Bácsborsód", "6500": "Baja", "6503": "Baja", "6511": "Bácsszentgyörgy", "6528": "Bátmonostor", "6600": "Szentes",
+  "6623": "Árpádhalom", "6640": "Csongrád", "6647": "Csanytelek", "6700": "Szeged", "6720": "Szeged", "6721": "Szeged",
+  "6722": "Szeged", "6723": "Szeged", "6724": "Szeged", "6725": "Szeged", "6726": "Szeged", "6727": "Szeged", "6728": "Szeged",
+  "6750": "Algyő", "6753": "Szeged", "6754": "Szeged", "6755": "Szeged", "6756": "Szeged", "6757": "Szeged", "6758": "Szeged",
+  "6759": "Szeged", "6760": "Kistelek", "6764": "Balástya", "6768": "Baks", "6783": "Ásotthalom", "6795": "Bordány",
+  "6800": "Hódmezővásárhely", "6900": "Makó", "6913": "Csanádpalota", "6915": "Csanádalberti", "6916": "Ambrózfalva", "6931": "Apátfalva",
+  
+  // Bács-Kiskun
+  "6000": "Kecskemét", "6100": "Kiskunfélegyháza", "6200": "Kiskőrös", "6400": "Kiskunhalas",
+  
+  // Tolna
+  "7000": "Sárbogárd", "7011": "Alap", "7012": "Alsószentiván", "7013": "Cece", "7025": "Bölcske", "7043": "Bikács", "7061": "Belecska",
+  "7100": "Szekszárd", "7132": "Bogyiszló", "7140": "Bátaszék", "7147": "Alsónána", "7148": "Alsónyék", "7149": "Báta", "7150": "Bonyhád",
+  "7158": "Bonyhádvarasd", "7161": "Cikó", "7164": "Bátaapáti", "7186": "Aparhant", "7187": "Bonyhád", "7200": "Dombóvár",
+  "7252": "Attala", "7258": "Baté", "7273": "Büssü", "7281": "Bonnya",
+  
+  // Baranya
+  "7300": "Komló", "7345": "Alsómocsolád", "7346": "Bikal", "7381": "Ág", "7383": "Baranyaszentgyörgy", "7384": "Baranyajenő",
+  "7393": "Bakóca", "7394": "Bodolyabér", "7439": "Bodrog", "7443": "Alsóbogát", "7475": "Bőszénfa", "7478": "Bárdudvarnok",
+  "7516": "Berzence", "7517": "Bolhás", "7543": "Beleg", "7557": "Barcs", "7570": "Barcs", "7584": "Babócsa", "7585": "Bakháza",
+  "7586": "Bolhó", "7589": "Bélavár", "7600": "Pécs", "7621": "Pécs", "7622": "Pécs", "7623": "Pécs", "7624": "Pécs", "7625": "Pécs",
+  "7626": "Pécs", "7627": "Pécs", "7628": "Pécs", "7629": "Pécs", "7630": "Pécs", "7631": "Pécs", "7632": "Pécs", "7633": "Pécs",
+  "7634": "Pécs", "7635": "Pécs", "7664": "Berkesd", "7671": "Aranyosgadány", "7672": "Boda", "7675": "Bakonya", "7678": "Abaliget",
+  "7682": "Bükkösd", "7700": "Mohács", "7711": "Bár", "7720": "Apátvarasd", "7742": "Bogád", "7747": "Belvárdgyula", "7754": "Bóly",
+  "7756": "Borjád", "7757": "Babarc", "7763": "Áta", "7782": "Bezedek", "7800": "Siklós", "7811": "Bisse", "7814": "Babarcszőlős",
+  "7826": "Alsószentmárton", "7827": "Beremend", "7834": "Baksa", "7836": "Bogádmindszent", "7838": "Besence", "7841": "Adorjás",
+  "7900": "Botykapeterd", "7914": "Bánfa", "7923": "Basal", "7932": "Almáskeresztúr", "7934": "Almamellék", "7937": "Boldogasszonyfa",
+  "7964": "Csányoszró", "7966": "Bogdása", "7973": "Bürüs",
+  
+  // Somogy
+  "7400": "Kaposvár", "7500": "Nagyatád", "8613": "Balatonendréd", "8614": "Bálványos", "8623": "Balatonföldvár", "8624": "Balatonszárszó",
+  "8630": "Balatonboglár", "8636": "Balatonszemes", "8637": "Balatonőszöd", "8638": "Balatonlelle", "8646": "Balatonfenyves",
+  "8647": "Balatonmáriafürdő", "8648": "Balatonkeresztúr", "8649": "Balatonberény", "8651": "Balatonszabadi", "8653": "Ádánd",
+  "8658": "Bábonymegyer", "8666": "Bedegkér", "8675": "Andocs", "8691": "Balatonboglár", "8695": "Buzsák", "8700": "Marcali",
+  "8710": "Balatonszentgyörgy", "8712": "Balatonújlak", "8719": "Böhönye", "8735": "Csákány", "8741": "Bókaháza",
+  
+  // Zala
+  "8753": "Balatonmagyaród", "8756": "Csapi", "8772": "Börzönce", "8776": "Bocska", "8797": "Batyk", "8800": "Nagykanizsa",
+  "8855": "Belezna", "8866": "Becsehely", "8885": "Borsfa", "8887": "Bázakerettye", "8891": "Bánokszentgyörgy", "8893": "Bucsuta",
+  "8900": "Zalaegerszeg", "8921": "Alibánfa", "8924": "Alsónemesapáti", "8925": "Bucsuszentlászló", "8934": "Bezeréd", "8935": "Almásháza",
+  "8943": "Bocfölde", "8945": "Bak", "8946": "Baktüttös", "8948": "Barlahida", "8969": "Bödeháza", "8973": "Alsószenterzsébet",
+  "8977": "Baglad", "8978": "Belsősárd", "8983": "Babosdöbréte", "8985": "Becsvölgye", "8991": "Böde", "8992": "Bagod", "9554": "Borgáta",
+  
+  // Veszprém
+  "8000": "Székesfehérvár", "8045": "Bakonykúti", "8053": "Bodajk", "8054": "Balinka", "8055": "Balinka", "8056": "Bakonycsernye",
+  "8073": "Csákberény", "8083": "Csákvár", "8085": "Bodmér", "8087": "Alcsútdoboz", "8100": "Várpalota", "8127": "Aba", "8128": "Aba",
+  "8163": "Csajág", "8164": "Balatonfőkajár", "8171": "Balatonvilágos", "8172": "Balatonkenese", "8174": "Balatonkenese",
+  "8175": "Balatonfűzfő", "8181": "Berhida", "8182": "Berhida", "8184": "Balatonfűzfő", "8200": "Veszprém", "8220": "Balatonalmádi",
+  "8226": "Alsóörs", "8230": "Balatonfüred", "8233": "Balatonszőlős", "8236": "Balatonfüred", "8241": "Aszófő", "8242": "Balatonudvari",
+  "8243": "Balatonakali", "8252": "Balatonszepezd", "8255": "Balatonrendes", "8256": "Ábrahámhegy", "8257": "Badacsonytomaj",
+  "8258": "Badacsonytomaj", "8261": "Badacsonytomaj", "8262": "Badacsonytördemic", "8263": "Badacsonytördemic", "8272": "Balatoncsicsó",
+  "8275": "Balatonhenye", "8291": "Barnag", "8300": "Tapolca", "8312": "Balatonederics", "8313": "Balatongyörök", "8352": "Bazsi",
+  "8360": "Keszthely", "8380": "Hévíz", "8394": "Alsópáhok", "8400": "Ajka", "8418": "Bakonyoszlop", "8422": "Bakonynána",
+  "8427": "Bakonybél", "8428": "Borzavár", "8430": "Bakonyszentkirály", "8431": "Bakonyszentlászló", "8433": "Bakonygyirót",
+  "8443": "Bánd", "8447": "Ajka", "8448": "Ajka", "8451": "Ajka", "8457": "Bakonypölöske", "8471": "Bodorfa", "8474": "Csabrendek",
+  "8477": "Apácatorna", "8479": "Borszörcsök", "8497": "Adorjánháza", "8500": "Pápa", "8515": "Békás", "8555": "Bakonytamási",
+  "8557": "Bakonyság", "8561": "Adásztevel", "8565": "Béb", "8571": "Bakonykoppány", "8572": "Bakonyszücs", "8581": "Bakonyjákó",
+  "8600": "Siófok",
+  
+  // Győr-Moson-Sopron
+  "9021": "Győr", "9022": "Győr", "9023": "Győr", "9024": "Győr", "9025": "Győr", "9026": "Győr", "9027": "Győr", "9028": "Győr",
+  "9029": "Győr", "9073": "Bőny", "9088": "Bakonypéterd", "9100": "Tét", "9132": "Árpás", "9134": "Bodonhely", "9145": "Bágyogszovát",
+  "9151": "Abda", "9152": "Börcs", "9162": "Bezi", "9165": "Cakóháza", "9167": "Bősárkány", "9168": "Acsalag", "9169": "Barbacs",
+  "9177": "Ásványráró", "9200": "Mosonmagyaróvár", "9223": "Bezenye", "9324": "Bogyoszló", "9343": "Beled", "9351": "Babót",
+  "9364": "Cirák", "9372": "Csapod", "9375": "Csáfordjánosfa", "9400": "Sopron", "9423": "Ágfalva", "9441": "Agyagosszergény",
+  
+  // Vas
+  "9500": "Celldömölk", "9541": "Celldömölk", "9542": "Boba", "9600": "Sárvár", "9612": "Bögöt", "9624": "Chernelházadamonya",
+  "9625": "Bő", "9654": "Csánig", "9675": "Bögöte", "9683": "Bejcgyertyános", "9700": "Szombathely", "9725": "Cák", "9727": "Bozsok",
+  "9737": "Bük", "9740": "Bük", "9746": "Acsád", "9752": "Bozzai", "9771": "Balogunyom", "9792": "Bucsu", "9811": "Andrásfa",
+  "9831": "Bérbaltavár", "9842": "Alsóújlak", "9900": "Körmend", "9919": "Csákánydoroszló", "9944": "Bajánsenye", "9982": "Apátistvánfalva",
+  "9983": "Alsószölnök"
 };
 
 export const getCityByZip = (zip: string): string => {
