@@ -376,7 +376,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
 
         <!-- Footer -->
         <div style="background-color: #f9fafb; padding: 24px 32px; text-align: center; border-top: 1px solid #e5e7eb;">
-            <p style="margin: 0; color: #9ca3af; font-size: 13px;">EVIONOR 2025 minden jog fenntartva</p>
+            <p style="margin: 0; color: #9ca3af; font-size: 13px;">EVIONOR Magyarország 2025 ©</p>
         </div>
     </div>
 </body>
