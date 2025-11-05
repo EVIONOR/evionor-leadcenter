@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { Copy, Mail } from "lucide-react";
 import { toast } from "sonner";
 import { additionalItemPrices, formatPrice, priceList } from "@/data/priceList";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface EmailGeneratorProps {
   data: QuestionnaireData;
@@ -27,6 +28,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
   const [selectedTemplate, setSelectedTemplate] = useState<ChargerTemplate | null>(null);
   const [selectedAdditionals, setSelectedAdditionals] = useState<string[]>([]);
   const [generatedEmail, setGeneratedEmail] = useState("");
+  const [senderName, setSenderName] = useState<string>("Nagy István");
 
   // Ár keresés a termék névből
   const findProductPrice = (productName: string): number => {
@@ -294,16 +296,18 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
             <!-- Closing -->
             <div style="margin-top: 40px; padding-top: 32px; border-top: 1px solid #e5e7eb;">
                 <p style="margin: 0 0 24px 0; color: #374151; font-size: 15px; line-height: 1.6;">További kérdés esetén állunk rendelkezésére!</p>
-                <p style="margin: 0; color: #6b7280; font-size: 14px;">Üdvözlettel,</p>
-                <p style="margin: 8px 0 0 0; color: #111827; font-size: 14px; font-weight: 600;">[Az Ön Neve]</p>
-                <p style="margin: 4px 0 0 0; color: #6b7280; font-size: 14px;">[Cégnév]</p>
-                <p style="margin: 4px 0 0 0; color: #6b7280; font-size: 14px;">[Elérhetőség]</p>
+                <p style="margin: 0 0 8px 0; color: #6b7280; font-size: 14px;">Üdvözlettel,</p>
+                <p style="margin: 0 0 16px 0; color: #111827; font-size: 14px; font-weight: 600;">${senderName}</p>
+                <p style="margin: 0 0 4px 0; color: #111827; font-size: 14px; font-weight: 600;">Az EVIONOR Csapata</p>
+                <p style="margin: 0 0 4px 0; color: #0071e3; font-size: 14px;">+36 20 581 9166</p>
+                <p style="margin: 0 0 4px 0; color: #0071e3; font-size: 14px;"><a href="mailto:info@evionor.hu" style="color: #0071e3; text-decoration: none;">info@evionor.hu</a></p>
+                <p style="margin: 0; color: #0071e3; font-size: 14px;"><a href="https://www.evionor.hu" style="color: #0071e3; text-decoration: none;">www.evionor.hu</a></p>
             </div>
         </div>
 
         <!-- Footer -->
         <div style="background-color: #f9fafb; padding: 24px 32px; text-align: center; border-top: 1px solid #e5e7eb;">
-            <p style="margin: 0; color: #9ca3af; font-size: 13px;">© 2024 [Cégnév]. Minden jog fenntartva.</p>
+            <p style="margin: 0; color: #9ca3af; font-size: 13px;">© 2024 EVIONOR. Minden jog fenntartva.</p>
         </div>
     </div>
 </body>
@@ -349,6 +353,22 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
           <CardDescription>Válasszon sablont és kiegészítőket az ajánlathoz</CardDescription>
         </CardHeader>
         <CardContent className="pt-6 space-y-6">
+          {/* Ajánlatküldő neve */}
+          <div>
+            <h3 className="text-lg font-semibold mb-3">Ajánlatküldő neve</h3>
+            <Select value={senderName} onValueChange={setSenderName}>
+              <SelectTrigger className="w-full bg-background">
+                <SelectValue placeholder="Válasszon ajánlatküldőt" />
+              </SelectTrigger>
+              <SelectContent className="bg-background z-50">
+                <SelectItem value="Nagy István">Nagy István</SelectItem>
+                <SelectItem value="Horváth Gáspár">Horváth Gáspár</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <Separator />
+
           {/* Sablon választás */}
           <div>
             <h3 className="text-lg font-semibold mb-3">Válasszon töltő sablont</h3>
