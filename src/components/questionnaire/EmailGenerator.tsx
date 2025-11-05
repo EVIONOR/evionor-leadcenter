@@ -93,22 +93,24 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
     const chargerPrices = selectedTemplate.products.map(product => findProductPrice(product));
     const chargerPrice = chargerPrices.length > 0 ? chargerPrices[0] : (selectedTemplate.basePrice || 0);
     
-    // Telepítési ár a távolság alapján
+    // Telepítési ár a távolság alapján (csak ha szükséges)
     const distance = parseFloat(data.distanceFromBox) || 0;
     let installationPrice = 0;
-    if (distance <= 10) {
-      installationPrice = 249000;
-    } else if (distance <= 20) {
-      installationPrice = 299000;
-    } else {
-      installationPrice = 299000 + ((distance - 20) * 15000); // 20m felett további 15k/méter
+    if (data.needsInstallation) {
+      if (distance <= 10) {
+        installationPrice = 249000;
+      } else if (distance <= 20) {
+        installationPrice = 299000;
+      } else {
+        installationPrice = 299000 + ((distance - 20) * 15000); // 20m felett további 15k/méter
+      }
     }
 
     const additionalTotal = selectedAdditionals.reduce((sum, item) => {
       return sum + (additionalItemPrices[item] || 0);
     }, 0);
 
-    const grandTotal = chargerPrice + installationPrice;
+    const grandTotal = chargerPrice + (data.needsInstallation ? installationPrice : 0);
 
     const email = `
 <!DOCTYPE html>
@@ -218,6 +220,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                 </div>
             </div>
 
+            ${data.needsInstallation ? `
             <!-- Installation Section -->
             <div style="margin-bottom: 24px; background-color: #f3f4f6; padding: 24px; border-radius: 12px; border: 2px solid #e5e7eb;">
                 <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 12px;">Telepítés</h2>
@@ -274,6 +277,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                 </div>
                 ` : ""}
             </div>
+            ` : ""}
 
             ${selectedAdditionals.length > 0 ? `
             <!-- Accessories Section -->
@@ -290,6 +294,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
             </div>
             ` : ""}
 
+            ${data.needsInstallation ? `
             <!-- Standard Installation Description -->
             <div style="margin-bottom: 24px; background-color: #f3f4f6; padding: 24px; border-radius: 12px; border: 2px solid #e5e7eb;">
                 <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 12px;">Sztenderd telepítés</h2>
@@ -307,6 +312,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                     </ul>
                 </div>
             </div>
+            ` : ""}
 
             <!-- Installation Price Section -->
             <div style="margin-bottom: 40px; background-color: #f3f4f6; padding: 24px; border-radius: 12px; border: 2px solid #0071e3;">
@@ -316,19 +322,23 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                         <td style="padding: 12px 0; color: #374151; font-size: 14px; width: 65%;">Töltő berendezés</td>
                         <td style="padding: 12px 0 12px 20px; color: #111827; font-size: 14px; font-weight: 500; text-align: right;">${formatPrice(chargerPrice)}</td>
                     </tr>
+                    ${data.needsInstallation ? `
                     <tr>
                         <td style="padding: 12px 0; color: #374151; font-size: 14px;">Telepítés (${data.distanceFromBox}m)</td>
                         <td style="padding: 12px 0 12px 20px; color: #111827; font-size: 14px; font-weight: 500; text-align: right;">${formatPrice(installationPrice)}</td>
                     </tr>
+                    ` : ""}
                     <tr style="border-top: 2px solid #0071e3;">
                         <td style="padding: 16px 0; color: #111827; font-size: 18px; font-weight: 700;">Végösszeg:</td>
                         <td style="padding: 16px 0 16px 20px; color: #0071e3; font-size: 22px; font-weight: 700; text-align: right;">${formatPrice(grandTotal)}</td>
                     </tr>
                 </table>
+                ${data.needsInstallation ? `
                 <p style="margin: 20px 0 0 0; color: #6b7280; font-size: 13px; line-height: 1.6;">
                     <strong>Telepítési díj tartalmazza:</strong> Szakszerű telepítést, bekötést, beüzemelést és átadást. 
                     ${distance > 20 ? `20m feletti vezetékvezeték esetén méterenként +${formatPrice(15000)} felár.` : ""}
                 </p>
+                ` : ""}
                 <p style="margin: 12px 0 0 0; color: #9ca3af; font-size: 11px; font-style: italic;">
                     Az árak bruttó árak, a 27% ÁFÁ-t tartalmazzák.
                 </p>

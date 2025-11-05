@@ -12,6 +12,7 @@ export interface QuestionnaireData {
   amperage: string;
   installLocation: string;
   buildingType: "családi_ház" | "társas_ház" | "sorház" | "";
+  needsInstallation: boolean;
   needsElectricalPlanning: boolean;
   indoorOutdoor: "kültér" | "beltér";
   mountingSurface: "beton" | "fa" | "tégla" | "";

@@ -12,6 +12,7 @@ interface InstallationSectionProps {
 
 export const InstallationSection = ({ form }: InstallationSectionProps) => {
   const networkExpansion = form.watch("networkExpansion");
+  const needsInstallation = form.watch("needsInstallation");
 
   return (
     <div className="space-y-6">
@@ -22,10 +23,10 @@ export const InstallationSection = ({ form }: InstallationSectionProps) => {
 
       <FormField
         control={form.control}
-        name="needsElectricalPlanning"
+        name="needsInstallation"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Szükség van-e villamos tervezésre? *</FormLabel>
+            <FormLabel>Szükség van telepítésre? *</FormLabel>
             <FormControl>
               <RadioGroup
                 onValueChange={(value) => field.onChange(value === "true")}
@@ -33,12 +34,12 @@ export const InstallationSection = ({ form }: InstallationSectionProps) => {
                 className="flex gap-4"
               >
                 <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="true" id="planning-yes" />
-                  <label htmlFor="planning-yes" className="cursor-pointer">Igen</label>
+                  <RadioGroupItem value="true" id="installation-yes" />
+                  <label htmlFor="installation-yes" className="cursor-pointer">Igen</label>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="false" id="planning-no" />
-                  <label htmlFor="planning-no" className="cursor-pointer">Nem</label>
+                  <RadioGroupItem value="false" id="installation-no" />
+                  <label htmlFor="installation-no" className="cursor-pointer">Nem</label>
                 </div>
               </RadioGroup>
             </FormControl>
@@ -46,6 +47,35 @@ export const InstallationSection = ({ form }: InstallationSectionProps) => {
           </FormItem>
         )}
       />
+
+      {needsInstallation && (
+        <>
+          <FormField
+            control={form.control}
+            name="needsElectricalPlanning"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Szükség van-e villamos tervezésre? *</FormLabel>
+                <FormControl>
+                  <RadioGroup
+                    onValueChange={(value) => field.onChange(value === "true")}
+                    defaultValue={field.value ? "true" : "false"}
+                    className="flex gap-4"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="true" id="planning-yes" />
+                      <label htmlFor="planning-yes" className="cursor-pointer">Igen</label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="false" id="planning-no" />
+                      <label htmlFor="planning-no" className="cursor-pointer">Nem</label>
+                    </div>
+                  </RadioGroup>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
       <FormField
         control={form.control}
@@ -307,6 +337,8 @@ export const InstallationSection = ({ form }: InstallationSectionProps) => {
             )}
           />
         </div>
+      )}
+        </>
       )}
     </div>
   );
