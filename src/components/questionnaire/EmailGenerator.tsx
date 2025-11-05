@@ -100,9 +100,9 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                     <td align="center">
                         <table cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 12px;">
                             <tr>
-                                <td style="padding: 16px 32px;">
+                                <td style="padding: 24px 60px;">
                                     <a href="https://evionor.hu" target="_blank" style="display: block; text-decoration: none;">
-                                        <img src="https://evionor.hu/images/evionor-logo-new.png" alt="Evionor" style="height: 50px; width: auto; display: block; border: 0;" />
+                                        <img src="https://evionor.hu/images/evionor-logo-new.png" alt="Evionor Logo" width="180" style="height: auto; display: block; border: 0;" />
                                     </a>
                                 </td>
                             </tr>
