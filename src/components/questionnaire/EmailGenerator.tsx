@@ -30,7 +30,6 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
   const [selectedAdditionals, setSelectedAdditionals] = useState<string[]>([]);
   const [generatedEmail, setGeneratedEmail] = useState("");
   const [senderName, setSenderName] = useState<string>("Nagy István");
-  const [clientName, setClientName] = useState<string>("");
 
   // Ár keresés a termék névből
   const findProductPrice = (productName: string): number => {
@@ -118,7 +117,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
         <div style="padding: 40px 32px;">
             
             <!-- Intro -->
-            <p style="margin: 0 0 32px 0; color: #374151; font-size: 15px; line-height: 1.6;">Tisztelt ${clientName || 'Ügyfél'},</p>
+            <p style="margin: 0 0 32px 0; color: #374151; font-size: 15px; line-height: 1.6;">Tisztelt ${data.contactName},</p>
             <p style="margin: 0 0 40px 0; color: #374151; font-size: 15px; line-height: 1.6;">Köszönjük érdeklődését! Az Ön által megadott adatok alapján az alábbi ajánlatot készítettük.</p>
 
             <!-- Client Data Section -->
@@ -126,7 +125,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                 <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 12px;">Ügyfél adatok</h2>
                 <table style="width: 100%; border-collapse: collapse;">
                     <tr>
-                        <td style="padding: 12px 0; color: #6b7280; font-size: 14px; width: 40%;">Kapcsolattartó</td>
+                        <td style="padding: 12px 0; color: #6b7280; font-size: 14px; width: 40%;">Ügyfél</td>
                         <td style="padding: 12px 0; color: #111827; font-size: 14px; font-weight: 500;">${data.contactName}</td>
                     </tr>
                     <tr>
@@ -394,20 +393,6 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
           <CardDescription>Válasszon sablont és kiegészítőket az ajánlathoz</CardDescription>
         </CardHeader>
         <CardContent className="pt-6 space-y-6">
-          {/* Ügyfél neve */}
-          <div>
-            <h3 className="text-lg font-semibold mb-3">Ügyfél neve</h3>
-            <Input 
-              type="text"
-              placeholder="Pl. Kovács János"
-              value={clientName}
-              onChange={(e) => setClientName(e.target.value)}
-              className="w-full"
-            />
-          </div>
-
-          <Separator />
-
           {/* Ajánlatküldő neve */}
           <div>
             <h3 className="text-lg font-semibold mb-3">Ajánlatküldő neve</h3>

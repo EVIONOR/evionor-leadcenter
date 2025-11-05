@@ -27,7 +27,7 @@ export const BasicInfoSection = ({ form }: BasicInfoSectionProps) => {
         name="contactName"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Kapcsolattartó neve *</FormLabel>
+            <FormLabel>Ügyfél neve *</FormLabel>
             <FormControl>
               <Input placeholder="pl. Kovács János" {...field} />
             </FormControl>
