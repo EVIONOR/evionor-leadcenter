@@ -130,7 +130,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                             <tr>
                                 <td style="padding: 16px 32px;">
                                     <a href="https://evionor.hu" target="_blank" style="display: block; text-decoration: none;">
-                                        <img src="https://evionor.hu/images/evionor-email-logo.png" alt="Evionor Logo" width="160" style="height: auto; display: block; border: 0;" />
+                                        <img src="https://evionor.hu/cdn/shop/files/evionor-logo.png?v=1761743181" alt="Evionor Logo" width="160" style="height: auto; display: block; border: 0;" />
                                     </a>
                                 </td>
                             </tr>
