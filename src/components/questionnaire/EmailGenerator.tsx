@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Copy, Mail } from "lucide-react";
 import { toast } from "sonner";
+import { additionalItemPrices, formatPrice } from "@/data/priceList";
 
 interface EmailGeneratorProps {
   data: QuestionnaireData;
@@ -37,6 +38,11 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
 
   const generateEmail = () => {
     if (!selectedTemplate) return;
+
+    // Számítsuk ki az összegeket
+    const additionalTotal = selectedAdditionals.reduce((sum, item) => {
+      return sum + (additionalItemPrices[item] || 0);
+    }, 0);
 
     const email = `
 <!DOCTYPE html>
@@ -89,7 +95,8 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
             <div style="margin-bottom: 40px; background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%); padding: 24px; border-radius: 12px; border: 1px solid #e5e7eb;">
                 <h2 style="margin: 0 0 16px 0; color: #111827; font-size: 18px; font-weight: 600;">Ajánlott töltő</h2>
                 <h3 style="margin: 0 0 8px 0; color: #667eea; font-size: 20px; font-weight: 600;">${selectedTemplate.name}</h3>
-                <p style="margin: 0 0 20px 0; color: #6b7280; font-size: 14px;">${selectedTemplate.products.join(", ")}</p>
+                <p style="margin: 0 0 12px 0; color: #6b7280; font-size: 14px;">${selectedTemplate.products.join(", ")}</p>
+                ${selectedTemplate.basePrice ? `<p style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 700;">Ár: ${formatPrice(selectedTemplate.basePrice)}</p>` : ""}
                 
                 <div style="margin-top: 20px;">
                     <p style="margin: 0 0 12px 0; color: #374151; font-size: 14px; font-weight: 600;">Jellemzők:</p>
@@ -143,9 +150,18 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
             <!-- Accessories Section -->
             <div style="margin-bottom: 40px;">
                 <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 600; padding-bottom: 12px; border-bottom: 2px solid #e5e7eb;">Kiegészítők</h2>
-                <ul style="margin: 0; padding: 0 0 0 20px; color: #374151; font-size: 14px; line-height: 1.8;">
-                    ${selectedAdditionals.map(item => `<li>${item}</li>`).join("")}
-                </ul>
+                <table style="width: 100%; border-collapse: collapse;">
+                    ${selectedAdditionals.map(item => `
+                    <tr>
+                        <td style="padding: 12px 0; color: #374151; font-size: 14px; width: 70%;">${item}</td>
+                        <td style="padding: 12px 0; color: #111827; font-size: 14px; font-weight: 500; text-align: right;">${formatPrice(additionalItemPrices[item] || 0)}</td>
+                    </tr>
+                    `).join("")}
+                    <tr style="border-top: 2px solid #e5e7eb;">
+                        <td style="padding: 16px 0; color: #111827; font-size: 15px; font-weight: 600;">Kiegészítők összesen:</td>
+                        <td style="padding: 16px 0; color: #667eea; font-size: 16px; font-weight: 700; text-align: right;">${formatPrice(additionalTotal)}</td>
+                    </tr>
+                </table>
             </div>
             ` : ""}
 

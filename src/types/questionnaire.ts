@@ -40,6 +40,7 @@ export interface ChargerTemplate {
   location: string;
   hasSolar: boolean;
   products: string[];
+  basePrice?: number;
 }
 
 export const chargerTemplates: ChargerTemplate[] = [
@@ -50,7 +51,8 @@ export const chargerTemplates: ChargerTemplate[] = [
     hasApp: true,
     location: "indoor",
     hasSolar: false,
-    products: ["Charge Amps HALO"]
+    products: ["Charge Amps HALO"],
+    basePrice: 198000
   },
   {
     id: "template2",
@@ -59,7 +61,8 @@ export const chargerTemplates: ChargerTemplate[] = [
     hasApp: false,
     location: "outdoor",
     hasSolar: false,
-    products: ["AMINA 1 (nincs kilógó kábel)"]
+    products: ["AMINA 1 (nincs kilógó kábel)"],
+    basePrice: 195000
   },
   {
     id: "template3",
@@ -68,7 +71,8 @@ export const chargerTemplates: ChargerTemplate[] = [
     hasApp: true,
     location: "any",
     hasSolar: false,
-    products: ["EASEE CHARGE UP", "ZAPTEC GO + LOAD BALANCE"]
+    products: ["EASEE CHARGE UP", "ZAPTEC GO + LOAD BALANCE"],
+    basePrice: 359000
   },
   {
     id: "template4",
@@ -77,6 +81,7 @@ export const chargerTemplates: ChargerTemplate[] = [
     hasApp: true,
     location: "any",
     hasSolar: true,
-    products: ["Zaptec GO 2 + SOLAR LOAD BALANCING"]
+    products: ["Zaptec GO 2 + SOLAR LOAD BALANCING"],
+    basePrice: 505000
   }
 ];
