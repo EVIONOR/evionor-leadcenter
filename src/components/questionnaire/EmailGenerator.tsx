@@ -307,17 +307,23 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
         <Card className="shadow-lg">
           <CardHeader className="bg-gradient-to-r from-secondary/5 to-primary/5 border-b">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-xl">Generált email</CardTitle>
+              <CardTitle className="text-xl">Generált email előnézet</CardTitle>
               <Button variant="outline" size="sm" onClick={copyToClipboard}>
                 <Copy className="mr-2 h-4 w-4" />
-                Másolás
+                HTML másolása
               </Button>
             </div>
+            <CardDescription className="mt-2">
+              Az alábbi előnézet mutatja, hogy néz majd ki az email. A "HTML másolása" gombbal másolhatod a teljes HTML kódot.
+            </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
-            <pre className="whitespace-pre-wrap font-mono text-sm bg-muted p-4 rounded-lg overflow-auto max-h-[600px]">
-              {generatedEmail}
-            </pre>
+            <iframe
+              srcDoc={generatedEmail}
+              className="w-full border rounded-lg"
+              style={{ minHeight: "800px" }}
+              title="Email előnézet"
+            />
           </CardContent>
         </Card>
       )}
