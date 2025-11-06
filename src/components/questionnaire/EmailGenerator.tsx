@@ -260,14 +260,11 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                         ` : ""}
                         ${selectedTemplate.products[0]?.includes("Amina 1") ? `
                         <li>Töltőcsatlakozó: Type 2 kontakt (1-fázis, max. 7.4 kW)</li>
-                        <li>Töltési mód: 3. mód</li>
                         <li>Fázisok száma: 1-fázis (IT, TT, TN)</li>
                         <li>Tápellátás: 230 V AC, 1-fázis, 6–32 A</li>
                         <li>Maximális töltési teljesítmény: 7.4 kW</li>
-                        <li>Hálózat: IT, TT és TN (230 V 1-fázis)</li>
                         <li>Töltőáram: Fokozatmentes beállítás 6–32 A-ig (max. 7.4 kW-ig)</li>
                         <li>Üzemi feszültség: 230 V AC (±20%) – 1-fázis</li>
-                        <li>Frekvencia: 50 Hz</li>
                         <li>Energiafogyasztás: <1 W (készenléti üzemmódban)</li>
                         <li>Biztosíték: Max 40A</li>
                         <li>Földzárlat védelem: Beépített RDC-DD (6 mA) IEC 62955 szerint</li>
@@ -276,17 +273,11 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                         <li>Bluetooth: Nem támogatott</li>
                         <li>Telekommunikáció: Nem támogatott</li>
                         <li>Funkciók: Plug & Charge – egyszerű és helyi töltés alkalmazás vagy felhő nélkül</li>
-                        <li>Energia szabályozás: Nincs energiamenedzsment vagy terhelésmenedzsment</li>
+                        <li>Energia szabályozás: Nincs terhelésmenedzsment</li>
                         <li>Energiamérő: Beépített – ±3% pontosság</li>
                         <li>Védelmi osztály: IP54</li>
-                        <li>Tűzvédelem: UL94 tanúsított önoltó műanyag</li>
-                        <li>Ütésállóság: IK08</li>
                         <li>UV védelem: UV álló</li>
-                        <li>Szigetelési osztály: II (4kV AC és 6kV impulzus)</li>
                         <li>Túlfeszültség osztály: >III (4kV)</li>
-                        <li>Méretek: 200 × 125 × 105 mm</li>
-                        <li>Súly: 1.15 kg</li>
-                        <li>Szabványok: CE megfelelőség IEC 61851-1:2017, IEC 62955 és ROHS Irányelv 2011/65/EU szerint</li>
                         <li>Garancia: 5 év</li>
                         ` : ""}
                         ${selectedTemplate.products[0]?.includes("Charge Amps Halo") ? `
