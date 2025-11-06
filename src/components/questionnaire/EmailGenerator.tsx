@@ -64,6 +64,9 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
   const getChargerImageUrl = (productName: string): string => {
     // Email esetén az evionor.hu domain-t használjuk
     const baseUrl = "https://evionor.hu";
+    if (productName.includes("Zaptec Go 2")) {
+      return `${baseUrl}/images/zaptec-go-2.webp`;
+    }
     if (productName.includes("Zaptec Go")) {
       return `${baseUrl}/images/zaptec-go.webp`;
     }
