@@ -6,7 +6,7 @@ export interface ProductPrice {
 
 export const priceList: ProductPrice[] = [
   // Amina
-  { name: "Amina 1 7.4kW", price: 195000, category: "töltő" },
+  { name: "AMINA 1 - 7.4kW (nincs kilógó kábel)", price: 195000, category: "töltő" },
   { name: "Amina S 13kW 20A", price: 253000, category: "töltő" },
   { name: "Amina S 22kW 32A", price: 295000, category: "töltő" },
   { name: "Amina C 22kW", price: 378000, category: "töltő" },
@@ -39,7 +39,7 @@ export const priceList: ProductPrice[] = [
   { name: "Easee Socket Caps", price: 5000, category: "kiegészítő" },
   
   // Zaptec
-  { name: "Zaptec Go", price: 353000, category: "töltő" },
+  { name: "Zaptec Go 22kW", price: 353000, category: "töltő" },
   { name: "Zaptec Solar MID", price: 505000, category: "töltő" },
   { name: "Zaptec Pro MID", price: 589000, category: "töltő" },
   { name: "Zaptec Front Cover", price: 19000, category: "kiegészítő" },
@@ -59,7 +59,7 @@ export const priceList: ProductPrice[] = [
   // Charge Amps
   { name: "Charge Amps Luna 22kW", price: 365000, category: "töltő" },
   { name: "Charge Amps Dawn 22kW", price: 503000, category: "töltő" },
-  { name: "Charge Amps Halo 7.4kW", price: 299000, category: "töltő" },
+  { name: "Charge Amps Halo 11kW", price: 299000, category: "töltő" },
   { name: "Charge Amps Aura 2x22kW", price: 1306000, category: "töltő" },
   { name: "Charge Amps Aura 2x22kW 4G", price: 1502000, category: "töltő" },
   { name: "Charge Amps Amp Guard - 63A", price: 132000, category: "mérő" },
