@@ -216,6 +216,15 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                         ${data.loadManagement ? "<li>Terhelésmenedzsment</li>" : ""}
                         ${data.solarIntegration !== "nem" ? "<li>Napelemes integráció</li>" : ""}
                         ${data.builtInCable ? "<li>Beépített töltőkábel</li>" : ""}
+                        ${selectedTemplate.products[0]?.includes("Easee Charge Up") ? `
+                        <li>Univerzális töltőállomás minden elektromos autóhoz</li>
+                        <li>Nem igényel előre telepített áramvédő kapcsolót (RCD), sorozatban köthető – tökéletes több töltőponthoz</li>
+                        <li>Támogat minden hálózatot (IT / TT, 230V/1+3-fázis és TN 400V) és minden áramerősséget (6-32A)</li>
+                        <li>Az alkalmazáson keresztül váltható 1-fázisú és 3-fázisú töltés között IT és TN hálózatokon</li>
+                        <li>Megbízható és jövőálló töltő otthoni töltéshez</li>
+                        <li>Helyi Bluetooth vezérlés megbízható kapcsolatot biztosít</li>
+                        <li>5 év garancia — Biztonságos és megbízható</li>
+                        ` : ""}
                     </ul>
                 </div>
             </div>
