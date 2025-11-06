@@ -207,15 +207,9 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                   `;
                 }).join('')}
                 
-                <div style="margin-top: 20px; padding: 16px; background-color: white; border-radius: 8px; border: 1px solid #e5e7eb;">
+                 <div style="margin-top: 20px; padding: 16px; background-color: white; border-radius: 8px; border: 1px solid #e5e7eb;">
                     <p style="margin: 0 0 12px 0; color: #374151; font-size: 14px; font-weight: 600;">Jellemzők:</p>
                     <ul style="margin: 0; padding: 0 0 0 20px; color: #374151; font-size: 14px; line-height: 1.8;">
-                        <li>${data.phases} fázis</li>
-                        <li>${data.indoorOutdoor === "kültér" ? "Kültéri" : "Beltéri"} kivitel</li>
-                        ${data.needsApp ? "<li>Okostelefonos vezérlés</li>" : ""}
-                        ${data.loadManagement ? "<li>Terhelésmenedzsment</li>" : ""}
-                        ${data.solarIntegration !== "nem" ? "<li>Napelemes integráció</li>" : ""}
-                        ${data.builtInCable ? "<li>Beépített töltőkábel</li>" : ""}
                         ${selectedTemplate.products[0]?.includes("Easee Charge Up") ? `
                         <li>Töltőcsatlakozó: Type 2 kontakt, aljzat (IEC 62196-1/2)</li>
                         <li>Fázisok: 1/3</li>
