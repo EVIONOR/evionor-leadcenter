@@ -92,11 +92,20 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
       .replace('+ solar load balancing', '')
       .trim();
     
-    const product = priceList.find(p => {
+    // Pontos egyezés keresése először (pl. "Zaptec Go 2" vs "Zaptec Go")
+    let product = priceList.find(p => {
       const normalizedProductName = p.name.toLowerCase().replace(/\s+/g, ' ');
-      return normalizedProductName.includes(normalizedSearch.split(' ')[0]) && 
-             normalizedProductName.includes(normalizedSearch.split(' ')[1] || '');
+      return normalizedProductName === normalizedSearch;
     });
+    
+    // Ha nincs pontos egyezés, próbáljuk meg a részleges keresést
+    if (!product) {
+      product = priceList.find(p => {
+        const normalizedProductName = p.name.toLowerCase().replace(/\s+/g, ' ');
+        const searchWords = normalizedSearch.split(' ');
+        return searchWords.every(word => normalizedProductName.includes(word));
+      });
+    }
     
     return product?.price || 0;
   };
