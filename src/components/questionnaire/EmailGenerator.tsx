@@ -225,6 +225,30 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                         <li>Helyi Bluetooth vezérlés megbízható kapcsolatot biztosít</li>
                         <li>5 év garancia — Biztonságos és megbízható</li>
                         ` : ""}
+                        ${selectedTemplate.products[0]?.includes("Zaptec Go") ? `
+                        <li>Töltőcsatlakozó: Type 2 (IEC 62196-1/2)</li>
+                        <li>Töltési mód: 3. mód</li>
+                        <li>Fázisok száma: 1/3</li>
+                        <li>Tápellátás: 6-32A</li>
+                        <li>Hálózat: IT (230V) és TN (400V)</li>
+                        <li>Töltőáram: vezeték nélküli beállítás 6A-32A között (1,3-22kW)</li>
+                        <li>Üzemi feszültség: 230V-400V</li>
+                        <li>Frekvencia: 50-60 Hz</li>
+                        <li>Energiafogyasztás: <1W készenléti üzemmódban</li>
+                        <li>Földzárlat védelem: Beépített elektronikus DC-szűrő 6mA</li>
+                        <li>Üzemi hőmérséklet: -30°C és +40°C között (Tárolás: -30°C és +50°C között)</li>
+                        <li>Hitelesítés: RFID/NFC, 13,56 MHz / Alkalmazás</li>
+                        <li>WiFi: 802.11n</li>
+                        <li>Kommunikációs protokollok: Bluetooth Low Energy (BLE 4.1), RFID/NFC Mifare Classic, WiFi 2,4 GHz, 4G LTE-M</li>
+                        <li>Funkciók: Terhelésmenedzsment, Felhőalapú szolgáltatások, Energiamérés, Lágy indítás, Energia szabályozás, Okos otthonokra felkészítve</li>
+                        <li>Teljesítménymérés: Integrált energiamérő (~1% pontosság)</li>
+                        <li>Szoftverfrissítések: Automatikus letöltés</li>
+                        <li>Védelmi osztály: IP54</li>
+                        <li>Méretek: 24,2 x 18 x 7,5 cm</li>
+                        <li>Súly: 1,3 kg</li>
+                        <li>Tanúsítványok: CE és IEC 61851-1</li>
+                        <li>Garancia: 5 év</li>
+                        ` : ""}
                     </ul>
                 </div>
             </div>
