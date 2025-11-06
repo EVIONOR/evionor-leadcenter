@@ -62,11 +62,11 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
 
   // Kép URL lekérése termék név alapján (evionor.hu CDN)
   const getChargerImageUrl = (productName: string): string => {
-    // Fontos: Go 2 ELŐBB, mert tartalmazza a "Go" stringet is
-    if (productName.includes("Go 2")) {
+    // Pontos egyezések először, hogy ne keveredjenek össze
+    if (productName.includes("Zaptec Go 2")) {
       return "https://evionor.hu/cdn/shop/files/ZaptecGo2_Productimage_quater_asphaltblack.webp?v=1762325254&width=600";
     }
-    if (productName.includes("Zaptec Go")) {
+    if (productName.includes("Zaptec Go 22kW") || (productName.includes("Zaptec Go") && !productName.includes("2"))) {
       return "https://evionor.hu/cdn/shop/files/Zaptec_Go_Home_Charging_2329.webp?v=1762272030&width=600";
     }
     if (productName.includes("Easee Charge Up")) {
