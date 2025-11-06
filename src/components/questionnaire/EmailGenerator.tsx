@@ -289,6 +289,32 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                         <li>Szabványok: CE megfelelőség IEC 61851-1:2017, IEC 62955 és ROHS Irányelv 2011/65/EU szerint</li>
                         <li>Garancia: 5 év</li>
                         ` : ""}
+                        ${selectedTemplate.products[0]?.includes("Charge Amps Halo") ? `
+                        <li>Töltőcsatlakozó: Type 2 kontakt</li>
+                        <li>Töltési mód: 3. mód</li>
+                        <li>Fázisok száma: 1-fázis (3,7 kW verzió) vagy 3-fázis (11 kW verzió)</li>
+                        <li>Tápellátás: 230 V, 50 Hz, 16 A (1-fázis) / 400V (3-fázis)</li>
+                        <li>Maximális teljesítmény: 3,7 kW (1-fázis) / 11 kW (3-fázis)</li>
+                        <li>Töltőáram: 1-fázis, 16 A / 3-fázis, 16 A</li>
+                        <li>Üzemi feszültség: 230 V (1-fázis) / 400V (3-fázis)</li>
+                        <li>Frekvencia: 50 Hz</li>
+                        <li>Üzemi hőmérséklet: -30°C és +45°C között</li>
+                        <li>Kábel: 7,5 m hosszú, megerősített, hajlékony -25°C-ig</li>
+                        <li>Áramvédő kapcsoló: Beépített DC-védelem, Type A földzárlat-védő szükséges</li>
+                        <li>WiFi: Igen (külső WiFi antenna)</li>
+                        <li>RFID azonosítás: Igen, 13,56 MHz</li>
+                        <li>Funkciók: RFID hozzáférés-szabályozás, Extra konnektor (e-bike, motorvärmer), Felhőalapú szolgáltatások, LED jelzőfények</li>
+                        <li>Energiamérő: 1-3 fázis feszültség, áram és teljesítmény mérés (2014/32/EU direktíva szerint)</li>
+                        <li>Szoftverfrissítések: Automatikus frissítések felhőn keresztül</li>
+                        <li>Védelmi osztály: Ladeboks IP66, töltőcsatlakozó és konnektor IP44</li>
+                        <li>Ütésállóság: IK10</li>
+                        <li>Méretek: Ladeboks 26,24 x 15,94 x 20,32 cm, Töltőcsatlakozó 8,1 x 12,5 x 8,8 cm</li>
+                        <li>Súly: 4 kg</li>
+                        <li>Anyag: Újrahasznosított alumínium</li>
+                        <li>Tervezés és gyártás: Svédország</li>
+                        <li>Ladestandard: Mode 3 – áram csak akkor kapcsol be, amikor a jármű és ladeboks kommunikál</li>
+                        <li>Garancia: 5 év</li>
+                        ` : ""}
                     </ul>
                 </div>
             </div>
