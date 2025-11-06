@@ -69,16 +69,16 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
       return "https://evionor.hu/cdn/shop/files/Zaptec_Go_Home_Charging_2329.webp?v=1762325254&width=600";
     }
     if (productName.includes("Easee Charge Up")) {
-      return "https://evionor.hu/cdn/shop/files/ChargingRobotAll_Front_Black_2K_8-bit_sRGB_Web.webp?v=1762325254&width=600";
+      return "https://evionor.hu/cdn/shop/files/ChargingRobotAll_Front_Black_2K_8-bit_sRGB_Web_e31b280f-1e5a-4656-9124-c897b46649da.webp?v=1762426764&width=600";
     }
     if (productName.includes("Charge Amps Luna")) {
-      return "https://evionor.hu/cdn/shop/files/PACKSHOT_-_Luna_Silver_-_Front_Transparent_HR_1.webp?v=1762325254&width=600";
+      return "https://evionor.hu/cdn/shop/files/PACKSHOT_-_Luna_Silver_-_Front_Transparent_HR.webp?v=1762427311&width=600";
     }
     if (productName.includes("AMINA 1") || productName.includes("Amina 1")) {
-      return "https://evionor.hu/cdn/shop/files/Amina1-01.webp?v=1762325254&width=600";
+      return "https://evionor.hu/cdn/shop/files/Amina1-01_b6b7cf86-b2bf-4fee-bfd1-2eed3d1e2273.webp?v=1760611153&width=600";
     }
     if (productName.includes("Charge Amps Halo")) {
-      return "https://evionor.hu/cdn/shop/files/PACKSHOTSHALOwCableFrontTransparentHR.webp?v=1762325254&width=600";
+      return "https://evionor.hu/cdn/shop/files/PACKSHOTSHALOwCableFrontTransparentHR.webp?v=1760611158&width=600";
     }
     return "";
   };
