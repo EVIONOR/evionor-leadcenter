@@ -69,16 +69,6 @@ export const chargerTemplates: ChargerTemplate[] = [
     basePrice: 195000
   },
   {
-    id: "template3",
-    name: "3 fázis - Standard",
-    phase: "3",
-    hasApp: true,
-    location: "any",
-    hasSolar: false,
-    products: ["Easee Charge Up", "Zaptec Go"],
-    basePrice: 359000
-  },
-  {
     id: "template3a",
     name: "3 fázis - Standard - Easee Charge Up",
     phase: "3",
