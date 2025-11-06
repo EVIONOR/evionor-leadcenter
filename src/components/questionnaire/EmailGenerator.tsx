@@ -144,6 +144,26 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
         <li style="font-size: 8px;">Garancia: 5 év</li>
       `;
     }
+    if (productName.includes("Zaptec Go 2")) {
+      return `
+        <li style="font-size: 8px;">Töltőcsatlakozó: Type 2 (IEC 62196-1/2)</li>
+        <li style="font-size: 8px;">Fázisok száma: 1/3</li>
+        <li style="font-size: 8px;">Tápellátás: 6-32A</li>
+        <li style="font-size: 8px;">Hálózat: IT (230V) és TN (400V)</li>
+        <li style="font-size: 8px;">Töltőáram: vezeték nélküli beállítás 6A-32A között (1,3-22kW)</li>
+        <li style="font-size: 8px;">Üzemi feszültség: 230V-400V</li>
+        <li style="font-size: 8px;">Földzárlat védelem: Beépített elektronikus DC-szűrő 6mA</li>
+        <li style="font-size: 8px;">Üzemi hőmérséklet: -30°C és +40°C között</li>
+        <li style="font-size: 8px;">Hitelesítés: RFID/NFC, 13,56 MHz / Alkalmazás</li>
+        <li style="font-size: 8px;">WiFi: 802.11n</li>
+        <li style="font-size: 8px;">Kommunikációs protokollok: Bluetooth Low Energy (BLE 4.1), RFID/NFC Mifare Classic, WiFi 2,4 GHz, 4G LTE-M</li>
+        <li style="font-size: 8px;">Funkciók: Terhelésmenedzsment, Napelemes integrációval (Solar load balancing), Felhőalapú szolgáltatások, Energiamérés, Lágy indítás, Energia szabályozás, Okos otthonokra felkészítve</li>
+        <li style="font-size: 8px;">Teljesítménymérés: Integrált energiamérő (~1% pontosság)</li>
+        <li style="font-size: 8px;">Szoftverfrissítések: Automatikus letöltés</li>
+        <li style="font-size: 8px;">Védelmi osztály: IP54</li>
+        <li style="font-size: 8px;">Garancia: 5 év</li>
+      `;
+    }
     if (productName.includes("Zaptec Go")) {
       return `
         <li style="font-size: 8px;">Töltőcsatlakozó: Type 2 (IEC 62196-1/2)</li>
