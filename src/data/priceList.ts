@@ -40,7 +40,7 @@ export const priceList: ProductPrice[] = [
   
   // Zaptec
   { name: "Zaptec Go", price: 353000, category: "töltő" },
-  { name: "Zaptec Go 2", price: 505000, category: "töltő" },
+  { name: "Zaptec Solar MID", price: 505000, category: "töltő" },
   { name: "Zaptec Pro MID", price: 589000, category: "töltő" },
   { name: "Zaptec Front Cover", price: 19000, category: "kiegészítő" },
   { name: "Zaptec Backplate Pro", price: 51000, category: "kiegészítő" },

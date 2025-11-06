@@ -100,12 +100,12 @@ export const chargerTemplates: ChargerTemplate[] = [
   },
   {
     id: "template4",
-    name: "3 fázis - Napelemes - Zaptec Go 2 22kW",
+    name: "3 fázis - Napelemes - Zaptec Solar MID 22kW",
     phase: "3",
     hasApp: true,
     location: "any",
     hasSolar: true,
-    products: ["Zaptec Go 2"],
+    products: ["Zaptec Solar MID"],
     basePrice: 505000
   }
 ];

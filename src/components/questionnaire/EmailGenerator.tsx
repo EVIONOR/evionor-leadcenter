@@ -37,7 +37,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
     "AMINA 1 - 7.4kW (nincs kilógó kábel)": "https://evionor.hu/collections/all/products/amina-1-evtlt?_pos=1&_fid=bb7a6be86&_ss=c",
     "Easee Charge Up 22kW": "https://evionor.hu/collections/all/products/easee-charge-up-evtlt",
     "Zaptec Go 22kW": "https://evionor.hu/collections/all/products/zaptec-go-evtlt",
-    "Zaptec Go 2": "https://evionor.hu/collections/all/products/zaptec-go-2"
+    "Zaptec Solar MID": "https://evionor.hu/collections/all/products/zaptec-go-2"
   };
 
   // Kosárba button URLs (product pages with installation)
@@ -46,7 +46,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
     "Charge Amps Halo 11kW": "https://evionor.hu/products/charge-amps-halo-7-4kw-11kw-ev-tolto-telepites-csomag",
     "Charge Amps Luna 22kW": "https://evionor.hu/products/charge-amps-luna-22kw-ev-tolto-telepites-csomag",
     "Zaptec Go 22kW": "https://evionor.hu/products/zaptec-go-22kw-ev-tolto-telepitesi-csomgaban",
-    "Zaptec Go 2": "https://evionor.hu/products/zaptec-go-22kw-ev-tolto-telepitesi-csomgaban",
+    "Zaptec Solar MID": "https://evionor.hu/products/zaptec-go-22kw-ev-tolto-telepitesi-csomgaban",
     "Easee Charge Up 22kW": "https://evionor.hu/products/easee-charge-up-22kw-ev-tolto-telepitesi-csomgaban"
   };
 
@@ -63,10 +63,10 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
   // Kép URL lekérése termék név alapján (evionor.hu CDN)
   const getChargerImageUrl = (productName: string): string => {
     // Pontos egyezések először, hogy ne keveredjenek össze
-    if (productName.includes("Zaptec Go 2")) {
+    if (productName.includes("Zaptec Solar MID")) {
       return "https://evionor.hu/cdn/shop/files/ZaptecGo2_Productimage_quater_asphaltblack.webp?v=1762325254&width=600";
     }
-    if (productName.includes("Zaptec Go 22kW") || (productName.includes("Zaptec Go") && !productName.includes("2"))) {
+    if (productName.includes("Zaptec Go 22kW") || (productName.includes("Zaptec Go") && !productName.includes("Solar"))) {
       return "https://evionor.hu/cdn/shop/files/Zaptec_Go_Home_Charging_2329.webp?v=1762272030&width=600";
     }
     if (productName.includes("Easee Charge Up")) {
@@ -177,7 +177,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
         <li style="font-size: 8px;">Garancia: 5 év</li>
       `;
     }
-    if (productName.includes("Zaptec Go 2")) {
+    if (productName.includes("Zaptec Solar MID")) {
       return `
         <li style="font-size: 8px;">Töltőcsatlakozó: Type 2 (IEC 62196-1/2)</li>
         <li style="font-size: 8px;">Fázisok száma: 1/3</li>
@@ -197,7 +197,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
         <li style="font-size: 8px;">Garancia: 5 év</li>
       `;
     }
-    if (productName.includes("Zaptec Go 22kW") || (productName.includes("Zaptec Go") && !productName.includes("2"))) {
+    if (productName.includes("Zaptec Go 22kW") || (productName.includes("Zaptec Go") && !productName.includes("Solar"))) {
       return `
         <li style="font-size: 8px;">Töltőcsatlakozó: Type 2 (IEC 62196-1/2)</li>
         <li style="font-size: 8px;">Fázisok száma: 1/3</li>
