@@ -66,7 +66,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
       return "https://evionor.hu/cdn/shop/files/ZaptecGo2_Productimage_quater_asphaltblack.webp?v=1762325254&width=600";
     }
     if (productName.includes("Zaptec Go")) {
-      return "https://evionor.hu/cdn/shop/files/Zaptec_Go_Home_Charging_2329.webp?v=1762325254&width=600";
+      return "https://evionor.hu/cdn/shop/files/Zaptec_Go_Home_Charging_2329.webp?v=1762272030&width=600";
     }
     if (productName.includes("Easee Charge Up")) {
       return "https://evionor.hu/cdn/shop/files/ChargingRobotAll_Front_Black_2K_8-bit_sRGB_Web_e31b280f-1e5a-4656-9124-c897b46649da.webp?v=1762426764&width=600";
