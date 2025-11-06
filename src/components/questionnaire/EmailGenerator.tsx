@@ -217,13 +217,41 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                         ${data.solarIntegration !== "nem" ? "<li>Napelemes integráció</li>" : ""}
                         ${data.builtInCable ? "<li>Beépített töltőkábel</li>" : ""}
                         ${selectedTemplate.products[0]?.includes("Easee Charge Up") ? `
-                        <li>Univerzális töltőállomás minden elektromos autóhoz</li>
-                        <li>Nem igényel előre telepített áramvédő kapcsolót (RCD), sorozatban köthető – tökéletes több töltőponthoz</li>
-                        <li>Támogat minden hálózatot (IT / TT, 230V/1+3-fázis és TN 400V) és minden áramerősséget (6-32A)</li>
-                        <li>Az alkalmazáson keresztül váltható 1-fázisú és 3-fázisú töltés között IT és TN hálózatokon</li>
-                        <li>Megbízható és jövőálló töltő otthoni töltéshez</li>
-                        <li>Helyi Bluetooth vezérlés megbízható kapcsolatot biztosít</li>
-                        <li>5 év garancia — Biztonságos és megbízható</li>
+                        <li>Töltőcsatlakozó: Type 2 kontakt, aljzat (IEC 62196-1/2)</li>
+                        <li>Töltési mód: 3. mód</li>
+                        <li>Fázisok: 1/3</li>
+                        <li>Tápellátás: 6-32A</li>
+                        <li>Maximális teljesítmény: 22 kW</li>
+                        <li>Hálózat: IT (230V) és TN (400V) (automatikus érzékelés)</li>
+                        <li>Töltési teljesítmény: Fokozatmentes (1A) beállítás 6A-32A között (1,4 - 22 kW)</li>
+                        <li>Üzemi feszültség: 230V - 400 VAC</li>
+                        <li>Frekvencia: 50 Hz</li>
+                        <li>Energiafogyasztás: <1 W készenléti üzemmódban</li>
+                        <li>Biztosíték méret: Max 40A</li>
+                        <li>Áramvédő kapcsoló (RCD): Beépített elektronikus RCD Type A (30mA) + 6mA DC-RCM / RDC-PD</li>
+                        <li>Üzemi hőmérséklet: -30°C és +50°C között</li>
+                        <li>Hitelesítés: RFID/NFC, 13,56 MHz / Alkalmazás</li>
+                        <li>WiFi: 802.11 b/g/n (2,4 GHz)</li>
+                        <li>Bluetooth: 4.3</li>
+                        <li>Telekommunikáció: eSIM - 4G/LTE Cat M1</li>
+                        <li>Kommunikációs protokollok: Bluetooth Low Energy (BLE 4.3), WiFi, RFID/NFC és OCPP 1.6J</li>
+                        <li>Harmadik fél integráció: OCPP 1.6J 4G/WiFi-n és API-n keresztül</li>
+                        <li>Funkciók: Terhelésmenedzsment max. 3 töltőállomáshoz, Vezeték nélküli terhelésmenedzsment a főbiztosítékhoz, Energiamérő, Lágy indítás</li>
+                        <li>Szenzorok: Nyomásérzékelő (kézi beállítás és intelligens töltés), Fényérzékelő (automatikus LED fényerő)</li>
+                        <li>Energia szabályozás és okos otthonokra felkészítve</li>
+                        <li>Energiamérő: Integrált mérő +/- 3% pontossággal</li>
+                        <li>Lopásvédelem: Elektronika deaktiválható és nyomon követhető, rejtett lakattal rögzíthető, kábel lezárható</li>
+                        <li>Szoftverfrissítések: Automatikus frissítések (tartalmazza)</li>
+                        <li>Védelmi osztály: IP54</li>
+                        <li>Tűzvédelem: UL94</li>
+                        <li>Ütésállóság: IK10</li>
+                        <li>UV védelem: UV álló</li>
+                        <li>Szigetelési osztály: II (4kV AC és 6kV impulzus)</li>
+                        <li>Túláram osztály: >III (4kV)</li>
+                        <li>Méretek: 194 x 256 x 106 mm</li>
+                        <li>Súly: 1,5 kg</li>
+                        <li>Szabványok: IEC 61851-1, IEC 61851-22, Radio Equipment Directive 2014/53/EU, ROHS 2011/65/EU, CE</li>
+                        <li>Garancia: 5 év</li>
                         ` : ""}
                         ${selectedTemplate.products[0]?.includes("Zaptec Go") ? `
                         <li>Töltőcsatlakozó: Type 2 (IEC 62196-1/2)</li>
