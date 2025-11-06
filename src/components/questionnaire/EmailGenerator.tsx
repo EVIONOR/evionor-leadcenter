@@ -34,6 +34,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
   // Termék URL mapping (webshop product pages)
   const productUrls: { [key: string]: string } = {
     "Charge Amps Halo": "https://evionor.hu/collections/all/products/charge-amps-halo-7-4kw-ev-tolto",
+    "Charge Amps Luna 22kW": "https://evionor.hu/collections/all/products/charge-amps-luna-22kw-ev-tolto",
     "Amina 1 (nincs kilógó kábel)": "https://evionor.hu/collections/all/products/amina-1-evtlt?_pos=1&_fid=bb7a6be86&_ss=c",
     "Easee Charge Up": "https://evionor.hu/collections/all/products/easee-charge-up-evtlt",
     "Zaptec Go": "https://evionor.hu/collections/all/products/zaptec-go-evtlt",
@@ -44,6 +45,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
   const cartUrls: { [key: string]: string } = {
     "Amina 1 (nincs kilógó kábel)": "https://evionor.hu/products/amina-1-1-fazisu-tolto-telepitessel",
     "Charge Amps Halo": "https://evionor.hu/products/charge-amps-halo-7-4kw-11kw-ev-tolto-telepites-csomag",
+    "Charge Amps Luna 22kW": "https://evionor.hu/products/charge-amps-luna-22kw-ev-tolto-telepites-csomag",
     "Zaptec Go": "https://evionor.hu/products/zaptec-go-22kw-ev-tolto-telepitesi-csomgaban",
     "Zaptec Go 2": "https://evionor.hu/products/zaptec-go-22kw-ev-tolto-telepitesi-csomgaban",
     "Easee Charge Up": "https://evionor.hu/products/easee-charge-up-22kw-ev-tolto-telepitesi-csomgaban"
@@ -209,8 +211,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                   const price = findProductPrice(product);
                   const productUrl = getProductUrl(product);
                   return `
-                    ${index > 0 ? '<div style="text-align: center; margin: 16px 0;"><span style="display: inline-block; padding: 8px 24px; background: linear-gradient(135deg, #0071e3 0%, #005bb5 100%); color: white; font-weight: 600; font-size: 14px; border-radius: 20px;">VAGY</span></div>' : ''}
-                    <div style="padding: 16px; background-color: white; border-radius: 8px; margin-bottom: ${index < selectedTemplate.products.length - 1 ? '0' : '20px'}; border: 1px solid #e5e7eb;">
+                    <div style="padding: 16px; background-color: white; border-radius: 8px; margin-bottom: ${index < selectedTemplate.products.length - 1 ? '12px' : '20px'}; border: 1px solid #e5e7eb;">
                         <table style="width: 100%; border-collapse: collapse;">
                             <tr>
                                 <td style="padding: 0; width: 65%;"><a href="${productUrl}" style="color: #111827; font-size: 16px; font-weight: 600; text-decoration: none; border-bottom: 2px solid #0071e3; transition: color 0.2s;" onMouseOver="this.style.color='#0071e3'" onMouseOut="this.style.color='#111827'">${product}</a></td>
@@ -312,6 +313,32 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                         <li>Védelmi osztály: Töltőtest IP66, töltőcsatlakozó és konnektor IP44</li>
                         <li>Anyag: Újrahasznosított alumínium</li>
                         <li>Tervezés és gyártás: Svédország</li>
+                        <li>Garancia: 5 év</li>
+                        ` : ""}
+                        ${selectedTemplate.products[0]?.includes("Charge Amps Luna") ? `
+                        <li>Töltőcsatlakozó: Type 2, 22 kW</li>
+                        <li>Fázisok száma: 1/3</li>
+                        <li>Tápellátás: 6-32A</li>
+                        <li>Maximális töltési teljesítmény: 22 kW</li>
+                        <li>Töltőáram: Fokozatmentes (1A) beállítás 6A-32A között (1,4 - 22 kW)</li>
+                        <li>Üzemi feszültség: 230V - 400VAC</li>
+                        <li>Frekvencia: 50 Hz</li>
+                        <li>Energiafogyasztás: <1W készenléti üzemmódban</li>
+                        <li>Biztosíték: Max 40A</li>
+                        <li>Földzárlat védelem: Beépített Type B áramvédő (IEC 60947-2, AC: 30 mA, DC: 6 mA)</li>
+                        <li>Üzemi hőmérséklet: -35°C és +45°C között</li>
+                        <li>Hitelesítés: RFID</li>
+                        <li>WiFi: 802.11 b/g/n/ax</li>
+                        <li>Bluetooth: Version 5.0 and LE 5.3</li>
+                        <li>Telekommunikáció: eSIM - 4G</li>
+                        <li>Kommunikációs protokollok: WiFi, 4G LTE (eSIM), Bluetooth Low Energy 5.0/5.3, RFID/NFC, OCPP 1.6J</li>
+                        <li>Funkciók: Terhelésmenedzsment (vezeték nélküli), WiFi/4G applikációval (Charge Amps app), ISO 15118 ready</li>
+                        <li>Energiamérő: Integrált energiamérő +/- 3% pontosság</li>
+                        <li>Szoftverfrissítések: Automatikus frissítések</li>
+                        <li>Védelmi osztály: IP54</li>
+                        <li>Földzárlat védelem és lágy indítás</li>
+                        <li>Ütésállóság: IK10</li>
+                        <li>UV védelem: UV álló</li>
                         <li>Garancia: 5 év</li>
                         ` : ""}
                     </ul>

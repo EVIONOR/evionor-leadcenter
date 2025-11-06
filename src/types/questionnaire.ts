@@ -56,7 +56,7 @@ export const chargerTemplates: ChargerTemplate[] = [
     location: "indoor",
     hasSolar: false,
     products: ["Charge Amps Halo"],
-    basePrice: 198000
+    basePrice: 299000
   },
   {
     id: "template2",
@@ -97,6 +97,16 @@ export const chargerTemplates: ChargerTemplate[] = [
     hasSolar: false,
     products: ["Zaptec Go"],
     basePrice: 359000
+  },
+  {
+    id: "template3c",
+    name: "3 fázis - Standard - Charge Amps Luna 22kW",
+    phase: "3",
+    hasApp: true,
+    location: "any",
+    hasSolar: false,
+    products: ["Charge Amps Luna 22kW"],
+    basePrice: 365000
   },
   {
     id: "template4",
