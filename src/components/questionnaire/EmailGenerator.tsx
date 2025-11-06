@@ -218,7 +218,6 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                         ${data.builtInCable ? "<li>Beépített töltőkábel</li>" : ""}
                         ${selectedTemplate.products[0]?.includes("Easee Charge Up") ? `
                         <li>Töltőcsatlakozó: Type 2 kontakt, aljzat (IEC 62196-1/2)</li>
-                        <li>Töltési mód: 3. mód</li>
                         <li>Fázisok: 1/3</li>
                         <li>Tápellátás: 6-32A</li>
                         <li>Maximális teljesítmény: 22 kW</li>
@@ -237,20 +236,14 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                         <li>Kommunikációs protokollok: Bluetooth Low Energy (BLE 4.3), WiFi, RFID/NFC és OCPP 1.6J</li>
                         <li>Harmadik fél integráció: OCPP 1.6J 4G/WiFi-n és API-n keresztül</li>
                         <li>Funkciók: Terhelésmenedzsment max. 3 töltőállomáshoz, Vezeték nélküli terhelésmenedzsment a főbiztosítékhoz, Energiamérő, Lágy indítás</li>
-                        <li>Szenzorok: Nyomásérzékelő (kézi beállítás és intelligens töltés), Fényérzékelő (automatikus LED fényerő)</li>
                         <li>Energia szabályozás és okos otthonokra felkészítve</li>
                         <li>Energiamérő: Integrált mérő +/- 3% pontossággal</li>
                         <li>Lopásvédelem: Elektronika deaktiválható és nyomon követhető, rejtett lakattal rögzíthető, kábel lezárható</li>
-                        <li>Szoftverfrissítések: Automatikus frissítések (tartalmazza)</li>
+                        <li>Szoftverfrissítések: Automatikus frissítések (ár tartalmazza)</li>
                         <li>Védelmi osztály: IP54</li>
-                        <li>Tűzvédelem: UL94</li>
-                        <li>Ütésállóság: IK10</li>
                         <li>UV védelem: UV álló</li>
                         <li>Szigetelési osztály: II (4kV AC és 6kV impulzus)</li>
                         <li>Túláram osztály: >III (4kV)</li>
-                        <li>Méretek: 194 x 256 x 106 mm</li>
-                        <li>Súly: 1,5 kg</li>
-                        <li>Szabványok: IEC 61851-1, IEC 61851-22, Radio Equipment Directive 2014/53/EU, ROHS 2011/65/EU, CE</li>
                         <li>Garancia: 5 év</li>
                         ` : ""}
                         ${selectedTemplate.products[0]?.includes("Zaptec Go") ? `
