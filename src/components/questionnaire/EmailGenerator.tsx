@@ -62,25 +62,24 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
 
   // Kép URL lekérése termék név alapján
   const getChargerImageUrl = (productName: string): string => {
-    // Email esetén az evionor.hu domain-t használjuk
-    const baseUrl = "https://evionor.hu";
+    // Előnézethez és emailhez is használható URL
     if (productName.includes("Zaptec Go 2")) {
-      return `${baseUrl}/images/zaptec-go-2.webp`;
+      return "/images/zaptec-go-2.webp";
     }
     if (productName.includes("Zaptec Go")) {
-      return `${baseUrl}/images/zaptec-go.webp`;
+      return "/images/zaptec-go.webp";
     }
     if (productName.includes("Easee Charge Up")) {
-      return `${baseUrl}/images/easee-charge-up.webp`;
+      return "/images/easee-charge-up.webp";
     }
     if (productName.includes("Charge Amps Luna")) {
-      return `${baseUrl}/images/charge-amps-luna.webp`;
+      return "/images/charge-amps-luna.webp";
     }
     if (productName.includes("AMINA 1") || productName.includes("Amina 1")) {
-      return `${baseUrl}/images/amina-1.webp`;
+      return "/images/amina-1.webp";
     }
     if (productName.includes("Charge Amps Halo")) {
-      return `${baseUrl}/images/charge-amps-halo.webp`;
+      return "/images/charge-amps-halo.webp";
     }
     return "";
   };
