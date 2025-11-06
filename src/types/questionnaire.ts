@@ -50,42 +50,42 @@ export interface ChargerTemplate {
 export const chargerTemplates: ChargerTemplate[] = [
   {
     id: "template1",
-    name: "1 fázis - Standard - Charge Amps Halo",
+    name: "1/3 fázis - Standard - Charge Amps Halo 11kW",
     phase: "1",
     hasApp: true,
     location: "indoor",
     hasSolar: false,
-    products: ["Charge Amps Halo"],
+    products: ["Charge Amps Halo 11kW"],
     basePrice: 299000
   },
   {
     id: "template2",
-    name: "1 fázis - Standard - Amina 1",
+    name: "1 fázis - Standard - AMINA 1 - 7.4kW",
     phase: "1",
     hasApp: false,
     location: "outdoor",
     hasSolar: false,
-    products: ["Amina 1 (nincs kilógó kábel)"],
+    products: ["AMINA 1 - 7.4kW (nincs kilógó kábel)"],
     basePrice: 195000
   },
   {
     id: "template3a",
-    name: "3 fázis - Standard - Easee Charge Up",
+    name: "3 fázis - Standard - Easee Charge Up 22kW",
     phase: "3",
     hasApp: true,
     location: "any",
     hasSolar: false,
-    products: ["Easee Charge Up"],
+    products: ["Easee Charge Up 22kW"],
     basePrice: 359000
   },
   {
     id: "template3b",
-    name: "3 fázis - Standard - Zaptec Go",
+    name: "3 fázis - Standard - Zaptec Go 22kW",
     phase: "3",
     hasApp: true,
     location: "any",
     hasSolar: false,
-    products: ["Zaptec Go"],
+    products: ["Zaptec Go 22kW"],
     basePrice: 359000
   },
   {
