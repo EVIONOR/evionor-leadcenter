@@ -197,7 +197,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
         <li style="font-size: 8px;">Garancia: 5 év</li>
       `;
     }
-    if (productName.includes("Zaptec Go")) {
+    if (productName.includes("Zaptec Go 22kW") || (productName.includes("Zaptec Go") && !productName.includes("2"))) {
       return `
         <li style="font-size: 8px;">Töltőcsatlakozó: Type 2 (IEC 62196-1/2)</li>
         <li style="font-size: 8px;">Fázisok száma: 1/3</li>
