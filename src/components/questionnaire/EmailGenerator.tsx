@@ -31,7 +31,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
   const [generatedEmail, setGeneratedEmail] = useState("");
   const [senderName, setSenderName] = useState<string>("Nagy István");
 
-  // Termék URL mapping
+  // Termék URL mapping (webshop product pages)
   const productUrls: { [key: string]: string } = {
     "Charge Amps Halo": "https://evionor.hu/collections/all/products/charge-amps-halo-7-4kw-ev-tolto",
     "Amina 1 (nincs kilógó kábel)": "https://evionor.hu/collections/all/products/amina-1-evtlt?_pos=1&_fid=bb7a6be86&_ss=c",
@@ -40,9 +40,23 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
     "Zaptec Go 2": "https://evionor.hu/collections/all/products/zaptec-go-2"
   };
 
+  // Kosárba button URLs (product pages with installation)
+  const cartUrls: { [key: string]: string } = {
+    "Amina 1 (nincs kilógó kábel)": "https://evionor.hu/products/amina-1-1-fazisu-tolto-telepitessel",
+    "Charge Amps Halo": "https://evionor.hu/products/charge-amps-halo-7-4kw-11kw-ev-tolto-telepites-csomag",
+    "Zaptec Go": "https://evionor.hu/products/zaptec-go-22kw-ev-tolto-telepitesi-csomgaban",
+    "Zaptec Go 2": "https://evionor.hu/products/zaptec-go-22kw-ev-tolto-telepitesi-csomgaban",
+    "Easee Charge Up": "https://evionor.hu/products/easee-charge-up-22kw-ev-tolto-telepitesi-csomgaban"
+  };
+
   // Termék URL lekérése
   const getProductUrl = (productName: string): string => {
     return productUrls[productName] || "https://evionor.hu/webshop/";
+  };
+
+  // Kosárba button URL lekérése
+  const getCartUrl = (productName: string): string => {
+    return cartUrls[productName] || "https://evionor.hu/webshop/";
   };
 
   // Ár keresés a termék névből
@@ -418,7 +432,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                     </tr>
                 </table>
                 <div style="text-align: center; margin-top: 24px;">
-                    <a href="https://evionor.hu/webshop/" style="display: inline-block; background: linear-gradient(135deg, #0071e3 0%, #005bb5 100%); color: #ffffff; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3);">Kosárba</a>
+                    <a href="${getCartUrl(selectedTemplate.products[0])}" style="display: inline-block; background: linear-gradient(135deg, #0071e3 0%, #005bb5 100%); color: #ffffff; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3);">Kosárba</a>
                 </div>
                 ${data.needsInstallation ? `
                 <p style="margin: 20px 0 0 0; color: #6b7280; font-size: 13px; line-height: 1.6;">
