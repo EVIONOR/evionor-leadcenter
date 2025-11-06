@@ -303,8 +303,8 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                         A telepítés magában foglalja:
                     </p>
                     <ul style="margin: 0; padding: 0 0 0 20px; color: #374151; font-size: 14px; line-height: 1.8;">
-                        <li>Le Grand Fi relé beépítése</li>
-                        <li>Le Grand Kismegszakító szerelése meglévő villamosszekrénybe</li>
+                        <li>Áramvédő kapcsoló (Legrand) beépítése meglévő szekrénybe</li>
+                        <li>Kismegszakító (Legrand) beszerelése meglévő szekrénybe</li>
                         <li>Kültéri vagy beltéri kábelezés kialakítása igény szerint a töltőállomásig</li>
                         <li>Vésés, csövezés és faláttörési munkálatok szükség szerint</li>
                         <li>Töltőállomás szakszerű felszerelése</li>
