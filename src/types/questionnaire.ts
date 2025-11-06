@@ -50,7 +50,7 @@ export interface ChargerTemplate {
 export const chargerTemplates: ChargerTemplate[] = [
   {
     id: "template1",
-    name: "1 fázis - App kontroll - Kertbe/Belülre",
+    name: "1 fázis - Standard - Charge Amps Halo",
     phase: "1",
     hasApp: true,
     location: "indoor",
@@ -60,7 +60,7 @@ export const chargerTemplates: ChargerTemplate[] = [
   },
   {
     id: "template2",
-    name: "1 fázis - Kültérre - RFID",
+    name: "1 fázis - Standard - Amina 1",
     phase: "1",
     hasApp: false,
     location: "outdoor",

@@ -5,11 +5,10 @@ import { QuestionnaireData, chargerTemplates, ChargerTemplate } from "@/types/qu
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Copy, Mail } from "lucide-react";
+import { Copy, Mail, X } from "lucide-react";
 import { toast } from "sonner";
 import { additionalItemPrices, formatPrice, priceList } from "@/data/priceList";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
 
 interface EmailGeneratorProps {
   data: QuestionnaireData;
@@ -26,7 +25,7 @@ const additionalItems = [
 ];
 
 export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
-  const [selectedTemplate, setSelectedTemplate] = useState<ChargerTemplate | null>(null);
+  const [selectedTemplates, setSelectedTemplates] = useState<ChargerTemplate[]>([]);
   const [selectedAdditionals, setSelectedAdditionals] = useState<string[]>([]);
   const [generatedEmail, setGeneratedEmail] = useState("");
   const [senderName, setSenderName] = useState<string>("Nagy István");
@@ -63,7 +62,6 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
 
   // Ár keresés a termék névből
   const findProductPrice = (productName: string): number => {
-    // Normalizáljuk a neveket összehasonlításhoz
     const normalizedSearch = productName.toLowerCase()
       .replace(/\s+/g, ' ')
       .replace('+ load balance', '')
@@ -97,19 +95,156 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
   // Intelligens sablon ajánlás
   const recommendedTemplate = chargerTemplates.find(template => {
     if (data.solarIntegration !== "nem") return template.id === "template4";
-    if (data.phases === "3") return template.id === "template3";
+    if (data.phases === "3") return template.id === "template3a";
     if (data.needsApp) return template.id === "template1";
     return template.id === "template2";
   });
 
-  const generateEmail = () => {
-    if (!selectedTemplate) return;
+  // Töltő kiválasztása/törlése
+  const toggleTemplate = (template: ChargerTemplate) => {
+    const exists = selectedTemplates.find(t => t.id === template.id);
+    if (exists) {
+      setSelectedTemplates(selectedTemplates.filter(t => t.id !== template.id));
+    } else {
+      setSelectedTemplates([...selectedTemplates, template]);
+    }
+  };
 
-    // Számítsuk ki az összegeket
-    const chargerPrices = selectedTemplate.products.map(product => findProductPrice(product));
-    const chargerPrice = chargerPrices.length > 0 ? chargerPrices[0] : (selectedTemplate.basePrice || 0);
-    
-    // Telepítési ár a távolság alapján (csak ha szükséges)
+  // Jellemzők generálása
+  const getCharacteristics = (productName: string): string => {
+    if (productName.includes("Easee Charge Up")) {
+      return `
+        <li>Töltőcsatlakozó: Type 2 kontakt, aljzat (IEC 62196-1/2)</li>
+        <li>Fázisok: 1/3</li>
+        <li>Tápellátás: 6-32A</li>
+        <li>Maximális teljesítmény: 22 kW</li>
+        <li>Hálózat: IT (230V) és TN (400V) (automatikus érzékelés)</li>
+        <li>Töltési teljesítmény: Fokozatmentes (1A) beállítás 6A-32A között (1,4 - 22 kW)</li>
+        <li>Üzemi feszültség: 230V - 400 VAC</li>
+        <li>Frekvencia: 50 Hz</li>
+        <li>Energiafogyasztás: <1 W készenléti üzemmódban</li>
+        <li>Biztosíték méret: Max 40A</li>
+        <li>Áramvédő kapcsoló (RCD): Beépített elektronikus RCD Type A (30mA) + 6mA DC-RCM / RDC-PD</li>
+        <li>Üzemi hőmérséklet: -30°C és +50°C között</li>
+        <li>Hitelesítés: RFID/NFC, 13,56 MHz / Alkalmazás</li>
+        <li>WiFi: 802.11 b/g/n (2,4 GHz)</li>
+        <li>Bluetooth: 4.3</li>
+        <li>Telekommunikáció: eSIM - 4G/LTE Cat M1</li>
+        <li>Kommunikációs protokollok: Bluetooth Low Energy (BLE 4.3), WiFi, RFID/NFC és OCPP 1.6J</li>
+        <li>Harmadik fél integráció: OCPP 1.6J 4G/WiFi-n és API-n keresztül</li>
+        <li>Funkciók: Terhelésmenedzsment max. 3 töltőállomáshoz, Vezeték nélküli terhelésmenedzsment a főbiztosítékhoz, Energiamérő, Lágy indítás</li>
+        <li>Energia szabályozás és okos otthonokra felkészítve</li>
+        <li>Energiamérő: Integrált mérő +/- 3% pontossággal</li>
+        <li>Lopásvédelem: Elektronika deaktiválható és nyomon követhető, rejtett lakattal rögzíthető, kábel lezárható</li>
+        <li>Szoftverfrissítések: Automatikus frissítések (ár tartalmazza)</li>
+        <li>Védelmi osztály: IP54</li>
+        <li>UV védelem: UV álló</li>
+        <li>Szigetelési osztály: II (4kV AC és 6kV impulzus)</li>
+        <li>Túláram osztály: >III (4kV)</li>
+        <li>Garancia: 5 év</li>
+      `;
+    }
+    if (productName.includes("Zaptec Go")) {
+      return `
+        <li>Töltőcsatlakozó: Type 2 (IEC 62196-1/2)</li>
+        <li>Fázisok száma: 1/3</li>
+        <li>Tápellátás: 6-32A</li>
+        <li>Hálózat: IT (230V) és TN (400V)</li>
+        <li>Töltőáram: vezeték nélküli beállítás 6A-32A között (1,3-22kW)</li>
+        <li>Üzemi feszültség: 230V-400V</li>
+        <li>Földzárlat védelem: Beépített elektronikus DC-szűrő 6mA</li>
+        <li>Üzemi hőmérséklet: -30°C és +40°C között</li>
+        <li>Hitelesítés: RFID/NFC, 13,56 MHz / Alkalmazás</li>
+        <li>WiFi: 802.11n</li>
+        <li>Kommunikációs protokollok: Bluetooth Low Energy (BLE 4.1), RFID/NFC Mifare Classic, WiFi 2,4 GHz, 4G LTE-M</li>
+        <li>Funkciók: Terhelésmenedzsment, Felhőalapú szolgáltatások, Energiamérés, Lágy indítás, Energia szabályozás, Okos otthonokra felkészítve</li>
+        <li>Teljesítménymérés: Integrált energiamérő (~1% pontosság)</li>
+        <li>Szoftverfrissítések: Automatikus letöltés</li>
+        <li>Védelmi osztály: IP54</li>
+        <li>Garancia: 5 év</li>
+      `;
+    }
+    if (productName.includes("Amina 1")) {
+      return `
+        <li>Töltőcsatlakozó: Type 2 kontakt (1-fázis, max. 7.4 kW)</li>
+        <li>Fázisok száma: 1-fázis (IT, TT, TN)</li>
+        <li>Tápellátás: 230 V AC, 1-fázis, 6–32 A</li>
+        <li>Maximális töltési teljesítmény: 7.4 kW</li>
+        <li>Töltőáram: Fokozatmentes beállítás 6–32 A-ig (max. 7.4 kW-ig)</li>
+        <li>Üzemi feszültség: 230 V AC (±20%) – 1-fázis</li>
+        <li>Energiafogyasztás: <1 W (készenléti üzemmódban)</li>
+        <li>Biztosíték: Max 40A</li>
+        <li>Földzárlat védelem: Beépített RDC-DD (6 mA) IEC 62955 szerint</li>
+        <li>Üzemi hőmérséklet: -30°C és +40°C között</li>
+        <li>WiFi: Nem támogatott</li>
+        <li>Bluetooth: Nem támogatott</li>
+        <li>Telekommunikáció: Nem támogatott</li>
+        <li>Funkciók: Plug & Charge – egyszerű és helyi töltés alkalmazás vagy felhő nélkül</li>
+        <li>Energia szabályozás: Nincs terhelésmenedzsment</li>
+        <li>Energiamérő: Beépített – ±3% pontosság</li>
+        <li>Védelmi osztály: IP54</li>
+        <li>UV védelem: UV álló</li>
+        <li>Túlfeszültség osztály: >III (4kV)</li>
+        <li>Garancia: 5 év</li>
+      `;
+    }
+    if (productName.includes("Charge Amps Halo")) {
+      return `
+        <li>Töltőcsatlakozó: Type 2 kontakt</li>
+        <li>Fázisok száma: 1-fázis (3,7 kW verzió) vagy 3-fázis (11 kW verzió)</li>
+        <li>Tápellátás: 230 V, 50 Hz, 16 A (1-fázis) / 400V (3-fázis)</li>
+        <li>Maximális teljesítmény: 3,7 kW (1-fázis) / 11 kW (3-fázis)</li>
+        <li>Töltőáram: 1-fázis, 16 A / 3-fázis, 16 A</li>
+        <li>Üzemi feszültség: 230 V (1-fázis) / 400V (3-fázis)</li>
+        <li>Üzemi hőmérséklet: -30°C és +45°C között</li>
+        <li>Kábel: 7,5 m hosszú, megerősített, hajlékony -25°C-ig</li>
+        <li>Áramvédő kapcsoló: Beépített DC-védelem, Type A földzárlat-védő szükséges</li>
+        <li>WiFi: Igen (külső WiFi antenna)</li>
+        <li>RFID azonosítás: Igen, 13,56 MHz</li>
+        <li>Funkciók: RFID hozzáférés-szabályozás, Extra konnektor (e-bike, motorvärmer), Felhőalapú szolgáltatások, LED jelzőfények</li>
+        <li>Energiamérő: 1-3 fázis feszültség, áram és teljesítmény mérés</li>
+        <li>Szoftverfrissítések: Automatikus frissítések felhőn keresztül</li>
+        <li>Védelmi osztály: Töltőtest IP66, töltőcsatlakozó és konnektor IP44</li>
+        <li>Anyag: Újrahasznosított alumínium</li>
+        <li>Tervezés és gyártás: Svédország</li>
+        <li>Garancia: 5 év</li>
+      `;
+    }
+    if (productName.includes("Charge Amps Luna")) {
+      return `
+        <li>Töltőcsatlakozó: Type 2, 22 kW</li>
+        <li>Fázisok száma: 1/3</li>
+        <li>Tápellátás: 6-32A</li>
+        <li>Maximális töltési teljesítmény: 22 kW</li>
+        <li>Töltőáram: Fokozatmentes (1A) beállítás 6A-32A között (1,4 - 22 kW)</li>
+        <li>Üzemi feszültség: 230V - 400VAC</li>
+        <li>Frekvencia: 50 Hz</li>
+        <li>Energiafogyasztás: <1W készenléti üzemmódban</li>
+        <li>Biztosíték: Max 40A</li>
+        <li>Földzárlat védelem: Beépített Type B áramvédő (IEC 60947-2, AC: 30 mA, DC: 6 mA)</li>
+        <li>Üzemi hőmérséklet: -35°C és +45°C között</li>
+        <li>Hitelesítés: RFID</li>
+        <li>WiFi: 802.11 b/g/n/ax</li>
+        <li>Bluetooth: Version 5.0 and LE 5.3</li>
+        <li>Telekommunikáció: eSIM - 4G</li>
+        <li>Kommunikációs protokollok: WiFi, 4G LTE (eSIM), Bluetooth Low Energy 5.0/5.3, RFID/NFC, OCPP 1.6J</li>
+        <li>Funkciók: Terhelésmenedzsment (vezeték nélküli), WiFi/4G applikációval (Charge Amps app), ISO 15118 ready</li>
+        <li>Energiamérő: Integrált energiamérő +/- 3% pontosság</li>
+        <li>Szoftverfrissítések: Automatikus frissítések</li>
+        <li>Védelmi osztály: IP54</li>
+        <li>Földzárlat védelem és lágy indítás</li>
+        <li>Ütésállóság: IK10</li>
+        <li>UV védelem: UV álló</li>
+        <li>Garancia: 5 év</li>
+      `;
+    }
+    return "";
+  };
+
+  const generateEmail = () => {
+    if (selectedTemplates.length === 0) return;
+
+    // Telepítési ár a távolság alapján
     const distance = parseFloat(data.distanceFromBox) || 0;
     let installationPrice = 0;
     if (data.needsInstallation) {
@@ -118,15 +253,13 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
       } else if (distance <= 20) {
         installationPrice = 299000;
       } else {
-        installationPrice = 299000 + ((distance - 20) * 15000); // 20m felett további 15k/méter
+        installationPrice = 299000 + ((distance - 20) * 15000);
       }
     }
 
     const additionalTotal = selectedAdditionals.reduce((sum, item) => {
       return sum + (additionalItemPrices[item] || 0);
     }, 0);
-
-    const grandTotal = chargerPrice + (data.needsInstallation ? installationPrice : 0);
 
     const email = `
 <!DOCTYPE html>
@@ -202,210 +335,83 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                 </table>
             </div>
 
-            <!-- Charger Section -->
-            <div style="margin-bottom: 24px; background-color: #f3f4f6; padding: 24px; border-radius: 12px; border: 2px solid #e5e7eb;">
-                <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 12px;">Ajánlott töltők</h2>
-                <p style="margin: 0 0 20px 0; color: #0071e3; font-size: 16px; font-weight: 600;">${selectedTemplate.name}</p>
+            <!-- Charger Sections - OSZLOP SZERŰEN -->
+            ${selectedTemplates.map((template, templateIndex) => {
+              const product = template.products[0];
+              const chargerPrice = findProductPrice(product);
+              const productUrl = getProductUrl(product);
+              const grandTotal = chargerPrice + (data.needsInstallation ? installationPrice : 0);
+              
+              return `
+            ${templateIndex > 0 ? '<div style="margin: 32px 0; height: 2px; background: linear-gradient(90deg, transparent, #d1d5db 20%, #d1d5db 80%, transparent); opacity: 0.5;"></div>' : ''}
+            
+            <!-- Töltő ${templateIndex + 1}: ${template.name} -->
+            <div style="margin-bottom: 32px; background-color: #f3f4f6; padding: 24px; border-radius: 12px; border: 2px solid #e5e7eb;">
+                <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 12px;">Ajánlott töltő ${templateIndex + 1}</h2>
+                <p style="margin: 0 0 20px 0; color: #0071e3; font-size: 16px; font-weight: 600;">${template.name}</p>
                 
-                ${selectedTemplate.products.map((product, index) => {
-                  const price = findProductPrice(product);
-                  const productUrl = getProductUrl(product);
-                  return `
-                    <div style="padding: 16px; background-color: white; border-radius: 8px; margin-bottom: ${index < selectedTemplate.products.length - 1 ? '12px' : '20px'}; border: 1px solid #e5e7eb;">
-                        <table style="width: 100%; border-collapse: collapse;">
-                            <tr>
-                                <td style="padding: 0; width: 65%;"><a href="${productUrl}" style="color: #111827; font-size: 16px; font-weight: 600; text-decoration: none; border-bottom: 2px solid #0071e3; transition: color 0.2s;" onMouseOver="this.style.color='#0071e3'" onMouseOut="this.style.color='#111827'">${product}</a></td>
-                                <td style="padding: 0 0 0 20px; color: #0071e3; font-size: 18px; font-weight: 700; text-align: right;">${formatPrice(price)}</td>
-                            </tr>
-                        </table>
-                    </div>
-                  `;
-                }).join('')}
+                <div style="padding: 16px; background-color: white; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e5e7eb;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr>
+                            <td style="padding: 0; width: 65%;"><a href="${productUrl}" style="color: #111827; font-size: 16px; font-weight: 600; text-decoration: none; border-bottom: 2px solid #0071e3; transition: color 0.2s;" onMouseOver="this.style.color='#0071e3'" onMouseOut="this.style.color='#111827'">${product}</a></td>
+                            <td style="padding: 0 0 0 20px; color: #0071e3; font-size: 18px; font-weight: 700; text-align: right;">${formatPrice(chargerPrice)}</td>
+                        </tr>
+                    </table>
+                </div>
                 
-                 <div style="margin-top: 20px; padding: 16px; background-color: white; border-radius: 8px; border: 1px solid #e5e7eb;">
+                <div style="margin-top: 20px; padding: 16px; background-color: white; border-radius: 8px; border: 1px solid #e5e7eb;">
                     <p style="margin: 0 0 12px 0; color: #374151; font-size: 14px; font-weight: 600;">Jellemzők:</p>
                     <ul style="margin: 0; padding: 0 0 0 20px; color: #374151; font-size: 14px; line-height: 1.8;">
-                        ${selectedTemplate.products[0]?.includes("Easee Charge Up") ? `
-                        <li>Töltőcsatlakozó: Type 2 kontakt, aljzat (IEC 62196-1/2)</li>
-                        <li>Fázisok: 1/3</li>
-                        <li>Tápellátás: 6-32A</li>
-                        <li>Maximális teljesítmény: 22 kW</li>
-                        <li>Hálózat: IT (230V) és TN (400V) (automatikus érzékelés)</li>
-                        <li>Töltési teljesítmény: Fokozatmentes (1A) beállítás 6A-32A között (1,4 - 22 kW)</li>
-                        <li>Üzemi feszültség: 230V - 400 VAC</li>
-                        <li>Frekvencia: 50 Hz</li>
-                        <li>Energiafogyasztás: <1 W készenléti üzemmódban</li>
-                        <li>Biztosíték méret: Max 40A</li>
-                        <li>Áramvédő kapcsoló (RCD): Beépített elektronikus RCD Type A (30mA) + 6mA DC-RCM / RDC-PD</li>
-                        <li>Üzemi hőmérséklet: -30°C és +50°C között</li>
-                        <li>Hitelesítés: RFID/NFC, 13,56 MHz / Alkalmazás</li>
-                        <li>WiFi: 802.11 b/g/n (2,4 GHz)</li>
-                        <li>Bluetooth: 4.3</li>
-                        <li>Telekommunikáció: eSIM - 4G/LTE Cat M1</li>
-                        <li>Kommunikációs protokollok: Bluetooth Low Energy (BLE 4.3), WiFi, RFID/NFC és OCPP 1.6J</li>
-                        <li>Harmadik fél integráció: OCPP 1.6J 4G/WiFi-n és API-n keresztül</li>
-                        <li>Funkciók: Terhelésmenedzsment max. 3 töltőállomáshoz, Vezeték nélküli terhelésmenedzsment a főbiztosítékhoz, Energiamérő, Lágy indítás</li>
-                        <li>Energia szabályozás és okos otthonokra felkészítve</li>
-                        <li>Energiamérő: Integrált mérő +/- 3% pontossággal</li>
-                        <li>Lopásvédelem: Elektronika deaktiválható és nyomon követhető, rejtett lakattal rögzíthető, kábel lezárható</li>
-                        <li>Szoftverfrissítések: Automatikus frissítések (ár tartalmazza)</li>
-                        <li>Védelmi osztály: IP54</li>
-                        <li>UV védelem: UV álló</li>
-                        <li>Szigetelési osztály: II (4kV AC és 6kV impulzus)</li>
-                        <li>Túláram osztály: >III (4kV)</li>
-                        <li>Garancia: 5 év</li>
-                        ` : ""}
-                        ${selectedTemplate.products[0]?.includes("Zaptec Go") ? `
-                        <li>Töltőcsatlakozó: Type 2 (IEC 62196-1/2)</li>
-                        <li>Fázisok száma: 1/3</li>
-                        <li>Tápellátás: 6-32A</li>
-                        <li>Hálózat: IT (230V) és TN (400V)</li>
-                        <li>Töltőáram: vezeték nélküli beállítás 6A-32A között (1,3-22kW)</li>
-                        <li>Üzemi feszültség: 230V-400V</li>
-                        <li>Földzárlat védelem: Beépített elektronikus DC-szűrő 6mA</li>
-                        <li>Üzemi hőmérséklet: -30°C és +40°C között</li>
-                        <li>Hitelesítés: RFID/NFC, 13,56 MHz / Alkalmazás</li>
-                        <li>WiFi: 802.11n</li>
-                        <li>Kommunikációs protokollok: Bluetooth Low Energy (BLE 4.1), RFID/NFC Mifare Classic, WiFi 2,4 GHz, 4G LTE-M</li>
-                        <li>Funkciók: Terhelésmenedzsment, Felhőalapú szolgáltatások, Energiamérés, Lágy indítás, Energia szabályozás, Okos otthonokra felkészítve</li>
-                        <li>Teljesítménymérés: Integrált energiamérő (~1% pontosság)</li>
-                        <li>Szoftverfrissítések: Automatikus letöltés</li>
-                        <li>Védelmi osztály: IP54</li>
-                        <li>Garancia: 5 év</li>
-                        ` : ""}
-                        ${selectedTemplate.products[0]?.includes("Amina 1") ? `
-                        <li>Töltőcsatlakozó: Type 2 kontakt (1-fázis, max. 7.4 kW)</li>
-                        <li>Fázisok száma: 1-fázis (IT, TT, TN)</li>
-                        <li>Tápellátás: 230 V AC, 1-fázis, 6–32 A</li>
-                        <li>Maximális töltési teljesítmény: 7.4 kW</li>
-                        <li>Töltőáram: Fokozatmentes beállítás 6–32 A-ig (max. 7.4 kW-ig)</li>
-                        <li>Üzemi feszültség: 230 V AC (±20%) – 1-fázis</li>
-                        <li>Energiafogyasztás: <1 W (készenléti üzemmódban)</li>
-                        <li>Biztosíték: Max 40A</li>
-                        <li>Földzárlat védelem: Beépített RDC-DD (6 mA) IEC 62955 szerint</li>
-                        <li>Üzemi hőmérséklet: -30°C és +40°C között</li>
-                        <li>WiFi: Nem támogatott</li>
-                        <li>Bluetooth: Nem támogatott</li>
-                        <li>Telekommunikáció: Nem támogatott</li>
-                        <li>Funkciók: Plug & Charge – egyszerű és helyi töltés alkalmazás vagy felhő nélkül</li>
-                        <li>Energia szabályozás: Nincs terhelésmenedzsment</li>
-                        <li>Energiamérő: Beépített – ±3% pontosság</li>
-                        <li>Védelmi osztály: IP54</li>
-                        <li>UV védelem: UV álló</li>
-                        <li>Túlfeszültség osztály: >III (4kV)</li>
-                        <li>Garancia: 5 év</li>
-                        ` : ""}
-                        ${selectedTemplate.products[0]?.includes("Charge Amps Halo") ? `
-                        <li>Töltőcsatlakozó: Type 2 kontakt</li>
-                        <li>Fázisok száma: 1-fázis (3,7 kW verzió) vagy 3-fázis (11 kW verzió)</li>
-                        <li>Tápellátás: 230 V, 50 Hz, 16 A (1-fázis) / 400V (3-fázis)</li>
-                        <li>Maximális teljesítmény: 3,7 kW (1-fázis) / 11 kW (3-fázis)</li>
-                        <li>Töltőáram: 1-fázis, 16 A / 3-fázis, 16 A</li>
-                        <li>Üzemi feszültség: 230 V (1-fázis) / 400V (3-fázis)</li>
-                        <li>Üzemi hőmérséklet: -30°C és +45°C között</li>
-                        <li>Kábel: 7,5 m hosszú, megerősített, hajlékony -25°C-ig</li>
-                        <li>Áramvédő kapcsoló: Beépített DC-védelem, Type A földzárlat-védő szükséges</li>
-                        <li>WiFi: Igen (külső WiFi antenna)</li>
-                        <li>RFID azonosítás: Igen, 13,56 MHz</li>
-                        <li>Funkciók: RFID hozzáférés-szabályozás, Extra konnektor (e-bike, motorvärmer), Felhőalapú szolgáltatások, LED jelzőfények</li>
-                        <li>Energiamérő: 1-3 fázis feszültség, áram és teljesítmény mérés</li>
-                        <li>Szoftverfrissítések: Automatikus frissítések felhőn keresztül</li>
-                        <li>Védelmi osztály: Töltőtest IP66, töltőcsatlakozó és konnektor IP44</li>
-                        <li>Anyag: Újrahasznosított alumínium</li>
-                        <li>Tervezés és gyártás: Svédország</li>
-                        <li>Garancia: 5 év</li>
-                        ` : ""}
-                        ${selectedTemplate.products[0]?.includes("Charge Amps Luna") ? `
-                        <li>Töltőcsatlakozó: Type 2, 22 kW</li>
-                        <li>Fázisok száma: 1/3</li>
-                        <li>Tápellátás: 6-32A</li>
-                        <li>Maximális töltési teljesítmény: 22 kW</li>
-                        <li>Töltőáram: Fokozatmentes (1A) beállítás 6A-32A között (1,4 - 22 kW)</li>
-                        <li>Üzemi feszültség: 230V - 400VAC</li>
-                        <li>Frekvencia: 50 Hz</li>
-                        <li>Energiafogyasztás: <1W készenléti üzemmódban</li>
-                        <li>Biztosíték: Max 40A</li>
-                        <li>Földzárlat védelem: Beépített Type B áramvédő (IEC 60947-2, AC: 30 mA, DC: 6 mA)</li>
-                        <li>Üzemi hőmérséklet: -35°C és +45°C között</li>
-                        <li>Hitelesítés: RFID</li>
-                        <li>WiFi: 802.11 b/g/n/ax</li>
-                        <li>Bluetooth: Version 5.0 and LE 5.3</li>
-                        <li>Telekommunikáció: eSIM - 4G</li>
-                        <li>Kommunikációs protokollok: WiFi, 4G LTE (eSIM), Bluetooth Low Energy 5.0/5.3, RFID/NFC, OCPP 1.6J</li>
-                        <li>Funkciók: Terhelésmenedzsment (vezeték nélküli), WiFi/4G applikációval (Charge Amps app), ISO 15118 ready</li>
-                        <li>Energiamérő: Integrált energiamérő +/- 3% pontosság</li>
-                        <li>Szoftverfrissítések: Automatikus frissítések</li>
-                        <li>Védelmi osztály: IP54</li>
-                        <li>Földzárlat védelem és lágy indítás</li>
-                        <li>Ütésállóság: IK10</li>
-                        <li>UV védelem: UV álló</li>
-                        <li>Garancia: 5 év</li>
-                        ` : ""}
+                        ${getCharacteristics(product)}
                     </ul>
                 </div>
-            </div>
 
-            ${data.needsInstallation ? `
-            <!-- Installation Section -->
-            <div style="margin-bottom: 24px; background-color: #f3f4f6; padding: 24px; border-radius: 12px; border: 2px solid #e5e7eb;">
-                <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 12px;">Telepítés</h2>
-                
-                <div style="padding: 16px; background-color: white; border-radius: 8px; margin-bottom: 16px; border: 1px solid #e5e7eb;">
+                ${data.needsInstallation ? `
+                <!-- Installation Section -->
+                <div style="margin-top: 20px; background-color: white; padding: 20px; border-radius: 8px; border: 1px solid #e5e7eb;">
+                    <h3 style="margin: 0 0 16px 0; color: #111827; font-size: 16px; font-weight: 600;">Telepítés</h3>
                     <table style="width: 100%; border-collapse: collapse;">
                         <tr>
                             <td style="padding: 0; vertical-align: top; width: 70%;">
-                                <p style="margin: 0 0 8px 0; color: #111827; font-size: 16px; font-weight: 600;">Telepítési díj (sztenderd telepítés) - ${data.distanceFromBox}m</p>
+                                <p style="margin: 0 0 4px 0; color: #111827; font-size: 14px; font-weight: 500;">Telepítési díj (sztenderd telepítés) - ${data.distanceFromBox}m</p>
                                 <p style="margin: 0; color: #6b7280; font-size: 13px;">
                                     ${distance <= 10 ? 'Telepítés 10 méterig' : distance <= 20 ? 'Telepítés 20 méterig' : `Telepítés ${distance} méterig`}
                                 </p>
                             </td>
-                            <td style="padding: 0 0 0 20px; color: #0071e3; font-size: 18px; font-weight: 700; text-align: right; vertical-align: top;">${formatPrice(installationPrice)}</td>
+                            <td style="padding: 0 0 0 20px; color: #0071e3; font-size: 16px; font-weight: 700; text-align: right; vertical-align: top;">${formatPrice(installationPrice)}</td>
                         </tr>
                     </table>
-                    <p style="margin: 16px 0 0 0; padding: 12px; background-color: #fef3c7; border-left: 3px solid #f59e0b; color: #78350f; font-size: 13px; line-height: 1.6;">
-                        <strong>Megjegyzés:</strong> Amennyiben többlet munkavégzés és anyagköltség merül fel erről végszámlát állítunk ki. A végszámla a helyszínen elvégzett munka alapján kerül kiállításra, megrendelővel egyeztetve és az általa aláírt munkalap alapján.
-                    </p>
                 </div>
+                ` : ''}
 
-                <table style="width: 100%; border-collapse: collapse;">
-                    <tr>
-                        <td style="padding: 12px 0; color: #6b7280; font-size: 14px; width: 40%;">Telepítési hely</td>
-                        <td style="padding: 12px 0; color: #111827; font-size: 14px; font-weight: 500;">${data.installLocation}</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 12px 0; color: #6b7280; font-size: 14px;">Rögzítési felület</td>
-                        <td style="padding: 12px 0; color: #111827; font-size: 14px; font-weight: 500;">${data.mountingSurface}</td>
-                    </tr>
-                </table>
-                
-                ${data.needsBackplate || data.needsPole || data.needsElectricalPlanning || data.overvoltageProtection || data.infrastructureDevelopment || data.networkExpansion ? `
-                <div style="margin-top: 16px; padding: 16px; background-color: white; border-radius: 8px; border: 1px solid #e5e7eb;">
-                    <p style="margin: 0 0 8px 0; color: #374151; font-size: 14px; font-weight: 600;">További telepítési követelmények:</p>
-                    <ul style="margin: 0 0 12px 0; padding: 0 0 0 20px; color: #374151; font-size: 14px; line-height: 1.8;">
-                        ${data.needsBackplate ? "<li>Hátlap szükséges</li>" : ""}
-                        ${data.needsPole ? "<li>Oszlop szükséges</li>" : ""}
-                        ${data.needsElectricalPlanning ? "<li>Villamos tervezés szükséges</li>" : ""}
-                        ${data.overvoltageProtection ? "<li>Túlfeszültség védelem</li>" : ""}
-                        ${data.infrastructureDevelopment && data.infrastructureDetails ? `<li>Infrastruktúra fejlesztés: ${data.infrastructureDetails}</li>` : ""}
-                        ${data.networkExpansion ? `<li>Hálózatbővítés: ${data.expansionPhase} fázis, ${data.expansionAmperage} A</li>` : ""}
-                    </ul>
-                    <p style="margin: 0; padding: 12px; background-color: #eff6ff; border-left: 3px solid #3b82f6; color: #1e3a8a; font-size: 13px; line-height: 1.6;">
-                        <strong>Megjegyzés:</strong> A sztenderd telepítési tartalmon túli munkavégzésről a helyszínen készül lista. Az árlistája a <a href="https://www.evionor.hu" style="color: #0071e3; text-decoration: underline;">honlapunkon elérhető</a>.
-                    </p>
+                <!-- Price Summary for this charger -->
+                <div style="margin-top: 24px; background-color: white; padding: 20px; border-radius: 8px; border: 2px solid #0071e3;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr>
+                            <td style="padding: 8px 0; color: #374151; font-size: 14px; width: 65%;">Töltő berendezés</td>
+                            <td style="padding: 8px 0 8px 20px; color: #111827; font-size: 14px; font-weight: 500; text-align: right;">${formatPrice(chargerPrice)}</td>
+                        </tr>
+                        ${data.needsInstallation ? `
+                        <tr>
+                            <td style="padding: 8px 0; color: #374151; font-size: 14px;">Telepítés (${data.distanceFromBox}m)</td>
+                            <td style="padding: 8px 0 8px 20px; color: #111827; font-size: 14px; font-weight: 500; text-align: right;">${formatPrice(installationPrice)}</td>
+                        </tr>
+                        ` : ""}
+                        <tr style="border-top: 2px solid #0071e3;">
+                            <td style="padding: 12px 0; color: #111827; font-size: 16px; font-weight: 700;">Végösszeg:</td>
+                            <td style="padding: 12px 0 12px 20px; color: #0071e3; font-size: 18px; font-weight: 700; text-align: right;">${formatPrice(grandTotal)}</td>
+                        </tr>
+                    </table>
+                    <div style="text-align: center; margin-top: 20px;">
+                        <a href="${getCartUrl(product)}" style="display: inline-block; background: linear-gradient(135deg, #0071e3 0%, #005bb5 100%); color: #ffffff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-size: 15px; font-weight: 600; box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3);">Kosárba</a>
+                    </div>
                 </div>
-                ` : ""}
-                
-                ${data.groundworkWallPenetration ? `
-                <div style="margin-top: 16px; padding: 16px; background-color: #fef3c7; border-radius: 8px; border-left: 4px solid #f59e0b;">
-                    <p style="margin: 0 0 8px 0; color: #92400e; font-size: 14px; font-weight: 600;">Földmunka/Faláttörés:</p>
-                    <p style="margin: 0; color: #78350f; font-size: 14px; line-height: 1.6;">${data.groundworkWallPenetration}</p>
-                </div>
-                ` : ""}
             </div>
-            ` : ""}
+              `;
+            }).join('')}
 
             ${selectedAdditionals.length > 0 ? `
-            <!-- Accessories Section -->
+            <!-- Accessories Section - CSAK EGYSZER -->
             <div style="margin-bottom: 24px; background-color: #f3f4f6; padding: 24px; border-radius: 12px; border: 2px solid #e5e7eb;">
                 <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 12px;">Kiegészítők (opcionális)</h2>
                 <table style="width: 100%; border-collapse: collapse;">
@@ -420,6 +426,33 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
             ` : ""}
 
             ${data.needsInstallation ? `
+            ${data.needsBackplate || data.needsPole || data.needsElectricalPlanning || data.overvoltageProtection || data.infrastructureDevelopment || data.networkExpansion ? `
+            <!-- Additional Installation Requirements -->
+            <div style="margin-bottom: 24px; background-color: #f3f4f6; padding: 24px; border-radius: 12px; border: 2px solid #e5e7eb;">
+                <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 12px;">További telepítési követelmények</h2>
+                <div style="padding: 16px; background-color: white; border-radius: 8px; border: 1px solid #e5e7eb;">
+                    <ul style="margin: 0 0 12px 0; padding: 0 0 0 20px; color: #374151; font-size: 14px; line-height: 1.8;">
+                        ${data.needsBackplate ? "<li>Hátlap szükséges</li>" : ""}
+                        ${data.needsPole ? "<li>Oszlop szükséges</li>" : ""}
+                        ${data.needsElectricalPlanning ? "<li>Villamos tervezés szükséges</li>" : ""}
+                        ${data.overvoltageProtection ? "<li>Túlfeszültség védelem</li>" : ""}
+                        ${data.infrastructureDevelopment && data.infrastructureDetails ? `<li>Infrastruktúra fejlesztés: ${data.infrastructureDetails}</li>` : ""}
+                        ${data.networkExpansion ? `<li>Hálózatbővítés: ${data.expansionPhase} fázis, ${data.expansionAmperage} A</li>` : ""}
+                    </ul>
+                    <p style="margin: 0; padding: 12px; background-color: #eff6ff; border-left: 3px solid #3b82f6; color: #1e3a8a; font-size: 13px; line-height: 1.6;">
+                        <strong>Megjegyzés:</strong> A sztenderd telepítési tartalmon túli munkavégzésről a helyszínen készül lista. Az árlistája a <a href="https://www.evionor.hu" style="color: #0071e3; text-decoration: underline;">honlapunkon elérhető</a>.
+                    </p>
+                </div>
+            </div>
+            ` : ""}
+
+            ${data.groundworkWallPenetration ? `
+            <div style="margin-bottom: 24px; padding: 16px; background-color: #fef3c7; border-radius: 8px; border-left: 4px solid #f59e0b;">
+                <p style="margin: 0 0 8px 0; color: #92400e; font-size: 14px; font-weight: 600;">Földmunka/Faláttörés:</p>
+                <p style="margin: 0; color: #78350f; font-size: 14px; line-height: 1.6;">${data.groundworkWallPenetration}</p>
+            </div>
+            ` : ""}
+
             <!-- Standard Installation Description -->
             <div style="margin-bottom: 24px; background-color: #f3f4f6; padding: 24px; border-radius: 12px; border: 2px solid #e5e7eb;">
                 <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 12px;">Sztenderd telepítés</h2>
@@ -438,39 +471,6 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                 </div>
             </div>
             ` : ""}
-
-            <!-- Installation Price Section -->
-            <div style="margin-bottom: 40px; background-color: #f3f4f6; padding: 24px; border-radius: 12px; border: 2px solid #0071e3;">
-                <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 12px;">Árkalkuláció</h2>
-                <table style="width: 100%; border-collapse: collapse;">
-                    <tr>
-                        <td style="padding: 12px 0; color: #374151; font-size: 14px; width: 65%;">Töltő berendezés</td>
-                        <td style="padding: 12px 0 12px 20px; color: #111827; font-size: 14px; font-weight: 500; text-align: right;">${formatPrice(chargerPrice)}</td>
-                    </tr>
-                    ${data.needsInstallation ? `
-                    <tr>
-                        <td style="padding: 12px 0; color: #374151; font-size: 14px;">Telepítés (${data.distanceFromBox}m)</td>
-                        <td style="padding: 12px 0 12px 20px; color: #111827; font-size: 14px; font-weight: 500; text-align: right;">${formatPrice(installationPrice)}</td>
-                    </tr>
-                    ` : ""}
-                    <tr style="border-top: 2px solid #0071e3;">
-                        <td style="padding: 16px 0; color: #111827; font-size: 18px; font-weight: 700;">Végösszeg:</td>
-                        <td style="padding: 16px 0 16px 20px; color: #0071e3; font-size: 22px; font-weight: 700; text-align: right;">${formatPrice(grandTotal)}</td>
-                    </tr>
-                </table>
-                <div style="text-align: center; margin-top: 24px;">
-                    <a href="${getCartUrl(selectedTemplate.products[0])}" style="display: inline-block; background: linear-gradient(135deg, #0071e3 0%, #005bb5 100%); color: #ffffff; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3);">Kosárba</a>
-                </div>
-                ${data.needsInstallation ? `
-                <p style="margin: 20px 0 0 0; color: #6b7280; font-size: 13px; line-height: 1.6;">
-                    <strong>Telepítési díj tartalmazza:</strong> Szakszerű telepítést, bekötést, beüzemelést és átadást. 
-                    ${distance > 20 ? `20m feletti vezetékvezeték esetén méterenként +${formatPrice(15000)} felár.` : ""}
-                </p>
-                ` : ""}
-                <p style="margin: 12px 0 0 0; color: #9ca3af; font-size: 11px; font-style: italic;">
-                    Az árak bruttó árak, a 27% ÁFÁ-t tartalmazzák.
-                </p>
-            </div>
 
             <!-- Process Section -->
             <div style="margin-bottom: 40px; background-color: #f9fafb; padding: 24px; border-radius: 12px;">
@@ -522,14 +522,12 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
 
   const copyToClipboard = async () => {
     try {
-      // Az iframe tartalmat jelöljük ki és másoljuk
       const iframe = document.querySelector('iframe[title="Email előnézet"]') as HTMLIFrameElement;
       if (iframe?.contentWindow) {
         const iframeDocument = iframe.contentWindow.document;
         const bodyContent = iframeDocument.body;
         
         if (bodyContent) {
-          // Kijelöljük a teljes tartalmat
           const range = iframeDocument.createRange();
           range.selectNodeContents(bodyContent);
           
@@ -538,7 +536,6 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
             selection.removeAllRanges();
             selection.addRange(range);
             
-            // Modern clipboard API használata HTML formátumban
             try {
               await navigator.clipboard.write([
                 new ClipboardItem({
@@ -548,7 +545,6 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
               ]);
               toast.success("Email kijelölve és vágólapra másolva!");
             } catch (clipboardError) {
-              // Fallback régebbi böngészőkhöz
               iframe.contentWindow.document.execCommand('copy');
               toast.success("Email kijelölve és vágólapra másolva!");
             }
@@ -566,7 +562,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
       <Card className="shadow-lg">
         <CardHeader className="bg-gradient-to-r from-primary/5 to-secondary/5 border-b">
           <CardTitle className="text-2xl">Email generátor</CardTitle>
-          <CardDescription>Válasszon sablont és kiegészítőket az ajánlathoz</CardDescription>
+          <CardDescription>Válasszon töltőket és kiegészítőket az ajánlathoz</CardDescription>
         </CardHeader>
         <CardContent className="pt-6 space-y-6">
           {/* Ajánlatküldő neve */}
@@ -585,9 +581,9 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
 
           <Separator />
 
-          {/* Sablon választás */}
+          {/* Sablon választás - TÖBB TÖLTŐ */}
           <div>
-            <h3 className="text-lg font-semibold mb-3">Válasszon töltő sablont</h3>
+            <h3 className="text-lg font-semibold mb-3">Válasszon töltőket (több is kiválasztható)</h3>
             {recommendedTemplate && (
               <div className="mb-3 p-3 bg-secondary/20 rounded-lg border border-secondary">
                 <p className="text-sm font-medium text-foreground">
@@ -595,32 +591,61 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                 </p>
               </div>
             )}
-            <div className="space-y-2">
-              {chargerTemplates.map((template) => (
-                <div
-                  key={template.id}
-                  className={`p-4 border rounded-lg cursor-pointer transition-all ${
-                    selectedTemplate?.id === template.id
-                      ? "border-primary bg-primary/5 shadow-sm"
-                      : "border-border hover:border-primary/50"
-                  }`}
-                  onClick={() => setSelectedTemplate(template)}
-                >
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <h4 className="font-semibold">{template.name}</h4>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        {template.products.join(", ")}
-                      </p>
+            
+            {/* Kiválasztott töltők */}
+            {selectedTemplates.length > 0 && (
+              <div className="mb-3 p-3 bg-primary/10 rounded-lg border border-primary">
+                <p className="text-sm font-medium text-foreground mb-2">
+                  Kiválasztott töltők ({selectedTemplates.length}):
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {selectedTemplates.map((template) => (
+                    <div
+                      key={template.id}
+                      className="flex items-center gap-2 bg-primary/20 px-3 py-1 rounded-full text-sm"
+                    >
+                      <span>{template.name}</span>
+                      <button
+                        onClick={() => toggleTemplate(template)}
+                        className="hover:bg-primary/30 rounded-full p-0.5"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
                     </div>
-                    {selectedTemplate?.id === template.id && (
-                      <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center">
-                        <div className="w-2 h-2 rounded-full bg-white" />
-                      </div>
-                    )}
-                  </div>
+                  ))}
                 </div>
-              ))}
+              </div>
+            )}
+
+            <div className="space-y-2">
+              {chargerTemplates.map((template) => {
+                const isSelected = selectedTemplates.find(t => t.id === template.id);
+                return (
+                  <div
+                    key={template.id}
+                    className={`p-4 border rounded-lg cursor-pointer transition-all ${
+                      isSelected
+                        ? "border-primary bg-primary/5 shadow-sm"
+                        : "border-border hover:border-primary/50"
+                    }`}
+                    onClick={() => toggleTemplate(template)}
+                  >
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <h4 className="font-semibold">{template.name}</h4>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {template.products.join(", ")}
+                        </p>
+                      </div>
+                      {isSelected && (
+                        <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center">
+                          <div className="w-2 h-2 rounded-full bg-white" />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
@@ -656,7 +681,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
           {/* Generate gomb */}
           <Button
             onClick={generateEmail}
-            disabled={!selectedTemplate}
+            disabled={selectedTemplates.length === 0}
             size="lg"
             className="w-full"
           >
