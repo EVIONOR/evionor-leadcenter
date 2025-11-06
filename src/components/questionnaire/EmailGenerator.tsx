@@ -60,6 +60,28 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
     return cartUrls[productName] || "https://evionor.hu/webshop/";
   };
 
+  // Kép URL lekérése termék név alapján
+  const getChargerImageUrl = (productName: string): string => {
+    // Email esetén az evionor.hu domain-t használjuk
+    const baseUrl = "https://evionor.hu";
+    if (productName.includes("Zaptec Go")) {
+      return `${baseUrl}/images/zaptec-go.webp`;
+    }
+    if (productName.includes("Easee Charge Up")) {
+      return `${baseUrl}/images/easee-charge-up.webp`;
+    }
+    if (productName.includes("Charge Amps Luna")) {
+      return `${baseUrl}/images/charge-amps-luna.webp`;
+    }
+    if (productName.includes("AMINA 1") || productName.includes("Amina 1")) {
+      return `${baseUrl}/images/amina-1.webp`;
+    }
+    if (productName.includes("Charge Amps Halo")) {
+      return `${baseUrl}/images/charge-amps-halo.webp`;
+    }
+    return "";
+  };
+
   // Ár keresés a termék névből
   const findProductPrice = (productName: string): number => {
     const normalizedSearch = productName.toLowerCase()
@@ -369,6 +391,15 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
             <div style="margin-bottom: 32px; background-color: #f3f4f6; padding: 24px; border-radius: 12px; border: 2px solid #e5e7eb;">
                 <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 12px;">Ajánlott töltő ${templateIndex + 1}</h2>
                 <p style="margin: 0 0 20px 0; color: #0071e3; font-size: 16px; font-weight: 600;">${template.name}</p>
+                
+                <!-- Töltő kép -->
+                ${getChargerImageUrl(product) ? `
+                <div style="text-align: center; margin-bottom: 24px; padding: 20px; background-color: white; border-radius: 8px; border: 1px solid #e5e7eb;">
+                    <a href="${productUrl}" style="display: inline-block; text-decoration: none;">
+                        <img src="${getChargerImageUrl(product)}" alt="${product}" style="max-width: 280px; width: 100%; height: auto; display: block; margin: 0 auto;" />
+                    </a>
+                </div>
+                ` : ''}
                 
                 <div style="padding: 16px; background-color: white; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e5e7eb;">
                     <table style="width: 100%; border-collapse: collapse;">
