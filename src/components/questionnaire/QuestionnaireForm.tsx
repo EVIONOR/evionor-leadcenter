@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -89,6 +89,23 @@ export const QuestionnaireForm = () => {
       expansionAmperage: "",
     },
   });
+
+  useEffect(() => {
+    const prefillData = localStorage.getItem('prefill_lead_data');
+    if (prefillData) {
+      try {
+        const leadData = JSON.parse(prefillData);
+        Object.keys(leadData).forEach((key) => {
+          if (leadData[key]) {
+            form.setValue(key as keyof QuestionnaireData, leadData[key]);
+          }
+        });
+        localStorage.removeItem('prefill_lead_data');
+      } catch (error) {
+        console.error('Error loading prefill data:', error);
+      }
+    }
+  }, [form]);
 
   const loadTestData = () => {
     const testData: QuestionnaireData = {
