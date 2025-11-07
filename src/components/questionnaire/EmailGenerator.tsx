@@ -28,6 +28,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
   const [selectedTemplates, setSelectedTemplates] = useState<ChargerTemplate[]>([]);
   const [selectedAdditionals, setSelectedAdditionals] = useState<string[]>([]);
   const [generatedEmail, setGeneratedEmail] = useState("");
+  const [emailSubject, setEmailSubject] = useState("");
   const [senderName, setSenderName] = useState<string>("Nagy István");
 
   // Termék URL mapping (webshop product pages)
@@ -579,6 +580,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
     `.trim();
 
     setGeneratedEmail(email);
+    setEmailSubject(`Elektromos autó töltő ajánlat telepítéssel - ${data.contactName} - Evionor`);
     toast.success("Email sikeresen generálva!");
   };
 
@@ -752,6 +754,31 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
           </Button>
         </CardContent>
       </Card>
+
+      {/* Email tárgy */}
+      {emailSubject && (
+        <Card className="shadow-lg">
+          <CardHeader className="bg-gradient-to-r from-primary/5 to-secondary/5 border-b">
+            <CardTitle className="text-xl">Email tárgy</CardTitle>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-3 p-4 bg-muted rounded-lg">
+              <Mail className="h-5 w-5 text-muted-foreground flex-shrink-0" />
+              <p className="text-sm font-medium flex-1">{emailSubject}</p>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={async () => {
+                  await navigator.clipboard.writeText(emailSubject);
+                  toast.success("Email tárgy vágólapra másolva!");
+                }}
+              >
+                <Copy className="h-4 w-4" />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Generált email */}
       {generatedEmail && (
