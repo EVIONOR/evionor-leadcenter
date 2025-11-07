@@ -164,6 +164,9 @@ export const BasicInfoSection = ({ form }: BasicInfoSectionProps) => {
                     const city = getCityByZip(e.target.value);
                     if (city) {
                       form.setValue("city", city);
+                    } else if (e.target.value.length === 4) {
+                      // Ha 4 jegyű az irányítószám, de nincs találat, töröljük a város mezőt
+                      form.setValue("city", "");
                     }
                   }}
                   maxLength={4}
@@ -178,16 +181,29 @@ export const BasicInfoSection = ({ form }: BasicInfoSectionProps) => {
         <FormField
           control={form.control}
           name="city"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Város</FormLabel>
-              <FormControl>
-                <Input {...field} disabled className="bg-muted" />
-              </FormControl>
-              <FormDescription>Automatikusan kitöltődik</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
+          render={({ field }) => {
+            const zipCode = form.watch("zipCode");
+            const cityFound = zipCode && getCityByZip(zipCode);
+            const isDisabled = !!cityFound;
+            
+            return (
+              <FormItem>
+                <FormLabel>Város *</FormLabel>
+                <FormControl>
+                  <Input 
+                    {...field} 
+                    disabled={isDisabled} 
+                    className={isDisabled ? "bg-muted" : ""}
+                    placeholder={isDisabled ? "" : "pl. Pázmánd"}
+                  />
+                </FormControl>
+                <FormDescription>
+                  {isDisabled ? "Automatikusan kitöltődik" : "Adja meg kézzel a település nevét"}
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            );
+          }}
         />
       </div>
 
