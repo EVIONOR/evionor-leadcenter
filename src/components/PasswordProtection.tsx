@@ -9,7 +9,7 @@ interface PasswordProtectionProps {
 }
 
 // A jelszót itt lehet megváltoztatni
-const CORRECT_PASSWORD = "evionor2024";
+const CORRECT_PASSWORD = "evionor_2022";
 
 export const PasswordProtection = ({ onAuthenticated }: PasswordProtectionProps) => {
   const [password, setPassword] = useState("");
