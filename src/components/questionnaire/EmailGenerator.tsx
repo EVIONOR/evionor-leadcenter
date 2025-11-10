@@ -16,13 +16,44 @@ interface EmailGeneratorProps {
 
 const additionalItems = [
   "RFID Tag",
-  "Terhelésmenedzsment rendszer",
   "Szabadon álló oszlop",
   "Fali hátlap kábeltartóval",
   "Töltőkábel (3m / 5m / 7m / 10m)",
   "Kábel akasztó",
   "Type 2-es fejtartó",
 ];
+
+interface LoadManagementPackage {
+  name: string;
+  price: number;
+  url: string;
+}
+
+// Terhelésmenedzsment csomagok töltő brandenként
+const getLoadManagementPackage = (productName: string): LoadManagementPackage | null => {
+  if (productName.includes("Zaptec")) {
+    return {
+      name: "Zaptec Sense Terhelésmenedzsment",
+      price: 127000,
+      url: "https://evionor.hu/collections/all/products/zaptec-sense-gen-ct-clamp-csomag-ev-mero?_pos=14&_fid=c1e909eaa&_ss=c"
+    };
+  }
+  if (productName.includes("Easee")) {
+    return {
+      name: "Easee Equalizer Terhelésmenedzsment",
+      price: 143000,
+      url: "https://evionor.hu/collections/all/products/easee-equalizer-amp-csomag-ev-mero?_pos=9&_fid=c1e909eaa&_ss=c"
+    };
+  }
+  if (productName.includes("Charge Amps")) {
+    return {
+      name: "Charge Amps Amp Guard Terhelésmenedzment",
+      price: 132000,
+      url: "https://evionor.hu/collections/all/products/charge-amps-amp-guard-63a-ev-mero?_pos=10&_fid=53fe77cfa&_ss=c"
+    };
+  }
+  return null;
+};
 
 export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
   const [selectedTemplates, setSelectedTemplates] = useState<ChargerTemplate[]>([]);
@@ -394,7 +425,9 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
               const product = template.products[0];
               const chargerPrice = findProductPrice(product);
               const productUrl = getProductUrl(product);
-              const grandTotal = chargerPrice + (data.needsInstallation ? installationPrice : 0);
+              const loadManagementPackage = data.loadManagement ? getLoadManagementPackage(product) : null;
+              const loadManagementPrice = loadManagementPackage ? loadManagementPackage.price : 0;
+              const grandTotal = chargerPrice + (data.needsInstallation ? installationPrice : 0) + loadManagementPrice;
               
               return `
             ${templateIndex > 0 ? '<div style="margin: 32px 0; height: 2px; background: linear-gradient(90deg, transparent, #d1d5db 20%, #d1d5db 80%, transparent); opacity: 0.5;"></div>' : ''}
@@ -421,6 +454,17 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                         </tr>
                     </table>
                 </div>
+                
+                ${loadManagementPackage ? `
+                <div style="padding: 16px; background-color: white; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e5e7eb;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr>
+                            <td style="padding: 0; width: 65%;"><a href="${loadManagementPackage.url}" target="_blank" rel="noopener noreferrer" style="color: #111827; font-size: 16px; font-weight: 600; text-decoration: none; border-bottom: 2px solid #0071e3; transition: color 0.2s;" onMouseOver="this.style.color='#0071e3'" onMouseOut="this.style.color='#111827'">${loadManagementPackage.name}</a></td>
+                            <td style="padding: 0 0 0 20px; color: #0071e3; font-size: 18px; font-weight: 700; text-align: right;">${formatPrice(loadManagementPackage.price)}</td>
+                        </tr>
+                    </table>
+                </div>
+                ` : ''}
                 
                 <div style="margin-top: 20px; padding: 16px; background-color: white; border-radius: 8px; border: 1px solid #e5e7eb;">
                     <p style="margin: 0 0 12px 0; color: #374151; font-size: 14px; font-weight: 600;">Jellemzők:</p>
@@ -454,6 +498,12 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                             <td style="padding: 8px 0; color: #374151; font-size: 14px; width: 65%;">Töltő berendezés</td>
                             <td style="padding: 8px 0 8px 20px; color: #111827; font-size: 14px; font-weight: 500; text-align: right;">${formatPrice(chargerPrice)}</td>
                         </tr>
+                        ${loadManagementPackage ? `
+                        <tr>
+                            <td style="padding: 8px 0; color: #374151; font-size: 14px;">${loadManagementPackage.name}</td>
+                            <td style="padding: 8px 0 8px 20px; color: #111827; font-size: 14px; font-weight: 500; text-align: right;">${formatPrice(loadManagementPackage.price)}</td>
+                        </tr>
+                        ` : ""}
                         ${data.needsInstallation ? `
                         <tr>
                             <td style="padding: 8px 0; color: #374151; font-size: 14px;">Telepítés (${data.distanceFromBox}m)</td>
