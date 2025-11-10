@@ -426,8 +426,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
               const chargerPrice = findProductPrice(product);
               const productUrl = getProductUrl(product);
               const loadManagementPackage = data.loadManagement ? getLoadManagementPackage(product) : null;
-              const loadManagementPrice = loadManagementPackage ? loadManagementPackage.price : 0;
-              const grandTotal = chargerPrice + (data.needsInstallation ? installationPrice : 0) + loadManagementPrice;
+              const grandTotal = chargerPrice + (data.needsInstallation ? installationPrice : 0);
               
               return `
             ${templateIndex > 0 ? '<div style="margin: 32px 0; height: 2px; background: linear-gradient(90deg, transparent, #d1d5db 20%, #d1d5db 80%, transparent); opacity: 0.5;"></div>' : ''}
@@ -459,7 +458,7 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                 <div style="padding: 16px; background-color: white; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e5e7eb;">
                     <table style="width: 100%; border-collapse: collapse;">
                         <tr>
-                            <td style="padding: 0; width: 65%;"><a href="${loadManagementPackage.url}" target="_blank" rel="noopener noreferrer" style="color: #111827; font-size: 16px; font-weight: 600; text-decoration: none; border-bottom: 2px solid #0071e3; transition: color 0.2s;" onMouseOver="this.style.color='#0071e3'" onMouseOut="this.style.color='#111827'">${loadManagementPackage.name}</a></td>
+                            <td style="padding: 0; width: 65%;"><a href="${loadManagementPackage.url}" target="_blank" rel="noopener noreferrer" style="color: #111827; font-size: 16px; font-weight: 600; text-decoration: none; border-bottom: 2px solid #0071e3; transition: color 0.2s;" onMouseOver="this.style.color='#0071e3'" onMouseOut="this.style.color='#111827'">${loadManagementPackage.name} (opcionális)</a></td>
                             <td style="padding: 0 0 0 20px; color: #0071e3; font-size: 18px; font-weight: 700; text-align: right;">${formatPrice(loadManagementPackage.price)}</td>
                         </tr>
                     </table>
@@ -498,12 +497,6 @@ export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
                             <td style="padding: 8px 0; color: #374151; font-size: 14px; width: 65%;">Töltő berendezés</td>
                             <td style="padding: 8px 0 8px 20px; color: #111827; font-size: 14px; font-weight: 500; text-align: right;">${formatPrice(chargerPrice)}</td>
                         </tr>
-                        ${loadManagementPackage ? `
-                        <tr>
-                            <td style="padding: 8px 0; color: #374151; font-size: 14px;">${loadManagementPackage.name}</td>
-                            <td style="padding: 8px 0 8px 20px; color: #111827; font-size: 14px; font-weight: 500; text-align: right;">${formatPrice(loadManagementPackage.price)}</td>
-                        </tr>
-                        ` : ""}
                         ${data.needsInstallation ? `
                         <tr>
                             <td style="padding: 8px 0; color: #374151; font-size: 14px;">Telepítés (${data.distanceFromBox}m)</td>
