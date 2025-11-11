@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, ArrowLeft } from "lucide-react";
+import { Loader2, ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 
 const statusOptions: { value: LeadStatus; label: string }[] = [
   { value: 'new', label: 'New' },
@@ -16,27 +16,39 @@ const statusOptions: { value: LeadStatus; label: string }[] = [
   { value: 'rejected', label: 'Rejected' },
 ];
 
+const ITEMS_PER_PAGE = 20;
+
 export default function LeadManager() {
   const [responses, setResponses] = useState<QuestionnaireResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<LeadStatus | 'all'>('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
+
   useEffect(() => {
     fetchResponses();
-  }, []);
+  }, [statusFilter, currentPage]);
 
   const fetchResponses = async () => {
+    setLoading(true);
     try {
-      const result = await getQuestionnaireResponses();
-      console.log(result);
+      const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+      const result = await getQuestionnaireResponses({
+        limit: ITEMS_PER_PAGE,
+        offset,
+        status: statusFilter !== 'all' ? statusFilter : undefined,
+      });
 
       if (!result?.data) {
         throw new Error("No data received");
       }
 
       setResponses(result.data);
+      setTotalCount(result.count || 0);
     } catch (error) {
       console.error("Error fetching responses:", error);
       toast({
@@ -71,6 +83,11 @@ export default function LeadManager() {
     }
   };
 
+  const handleStatusFilterChange = (value: LeadStatus | 'all') => {
+    setStatusFilter(value);
+    setCurrentPage(1); // Reset to first page when filter changes
+  };
+
   const handleQualifyLead = (response: QuestionnaireResponse) => {
     const leadData = {
       contactName: response.name || "",
@@ -84,10 +101,6 @@ export default function LeadManager() {
     localStorage.setItem("prefill_lead_data", JSON.stringify(leadData));
     navigate("/");
   };
-
-  const filteredResponses = statusFilter === 'all' 
-    ? responses 
-    : responses.filter(r => r.status === statusFilter);
 
   if (loading) {
     return (
@@ -109,23 +122,28 @@ export default function LeadManager() {
             <h1 className="text-3xl font-bold">Questionnaire Responses</h1>
           </div>
           
-          <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as LeadStatus | 'all')}>
-            <SelectTrigger className="w-[180px] bg-background">
-              <SelectValue placeholder="Filter by status" />
-            </SelectTrigger>
-            <SelectContent className="bg-background z-50">
-              <SelectItem value="all">All Statuses</SelectItem>
-              {statusOptions.map(option => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className="flex items-center gap-4">
+            <div className="text-sm text-muted-foreground">
+              {totalCount} total {totalCount === 1 ? 'response' : 'responses'}
+            </div>
+            <Select value={statusFilter} onValueChange={(value) => handleStatusFilterChange(value as LeadStatus | 'all')}>
+              <SelectTrigger className="w-[180px] bg-background">
+                <SelectValue placeholder="Filter by status" />
+              </SelectTrigger>
+              <SelectContent className="bg-background z-50">
+                <SelectItem value="all">All Statuses</SelectItem>
+                {statusOptions.map(option => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
-        <div className="grid gap-4">
-          {filteredResponses.length === 0 ? (
+        <div className="grid gap-4 mb-6">
+          {responses.length === 0 ? (
             <Card>
               <CardContent className="pt-6">
                 <p className="text-center text-muted-foreground">
@@ -137,7 +155,7 @@ export default function LeadManager() {
               </CardContent>
             </Card>
           ) : (
-            filteredResponses.map((response) => (
+            responses.map((response) => (
               <Card key={response.id}>
                 <CardHeader>
                   <div className="flex items-start justify-between">
@@ -204,6 +222,57 @@ export default function LeadManager() {
             ))
           )}
         </div>
+
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+            >
+              <ChevronLeft className="h-4 w-4 mr-1" />
+              Previous
+            </Button>
+            
+            <div className="flex items-center gap-2">
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                let pageNum;
+                if (totalPages <= 5) {
+                  pageNum = i + 1;
+                } else if (currentPage <= 3) {
+                  pageNum = i + 1;
+                } else if (currentPage >= totalPages - 2) {
+                  pageNum = totalPages - 4 + i;
+                } else {
+                  pageNum = currentPage - 2 + i;
+                }
+
+                return (
+                  <Button
+                    key={pageNum}
+                    variant={currentPage === pageNum ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setCurrentPage(pageNum)}
+                    className="w-10"
+                  >
+                    {pageNum}
+                  </Button>
+                );
+              })}
+            </div>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+            >
+              Next
+              <ChevronRight className="h-4 w-4 ml-1" />
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

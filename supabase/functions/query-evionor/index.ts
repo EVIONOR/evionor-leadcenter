@@ -117,22 +117,45 @@ Deno.serve(async (req) => {
           throw new Error('Query parameters are required for custom_query action');
         }
 
-        console.log('Running custom query on table:', query.table);
+        console.log('Running custom query on table:', query.table, 'filters:', query.filters);
 
-        const queryBuilder = client.from(query.table).select(query.select || '*');
+        const queryBuilder = client.from(query.table).select(query.select || '*', { count: 'exact' });
 
+        // Apply filters
+        if (query.filters) {
+          Object.entries(query.filters).forEach(([key, value]) => {
+            if (value !== null && value !== undefined) {
+              queryBuilder.eq(key, value);
+            }
+          });
+        }
+
+        // Apply pagination
         if (query.limit) {
           queryBuilder.limit(query.limit);
         }
 
-        const { data: customData, error: customError } = await queryBuilder;
+        if (query.offset) {
+          queryBuilder.range(query.offset, query.offset + (query.limit || 100) - 1);
+        }
+
+        // Apply ordering
+        if (query.order) {
+          queryBuilder.order(query.order.column || 'created_at', { 
+            ascending: query.order.ascending !== false 
+          });
+        } else {
+          queryBuilder.order('created_at', { ascending: false });
+        }
+
+        const { data: customData, error: customError, count: totalCount } = await queryBuilder;
 
         if (customError) {
           console.error('Error running custom query:', customError);
           throw customError;
         }
 
-        result = { data: customData, count: customData?.length || 0 };
+        result = { data: customData, count: totalCount || 0 };
         break;
 
       case 'update':

@@ -8,13 +8,16 @@ import type { ProductClick, QuestionnaireResponse, RoiCalculatorResult } from ".
 /**
  * Query EVIONOR database tables through the edge function
  * @param table - Name of the table to query
- * @param options - Query options (limit, select, etc.)
+ * @param options - Query options (limit, select, filters, pagination, etc.)
  */
 export async function queryEvionorTable<T>(
   table: "product_clicks" | "questionnaire_responses" | "roi_calculator_results",
   options?: {
     limit?: number;
+    offset?: number;
     select?: string;
+    filters?: Record<string, any>;
+    order?: { column: string; ascending?: boolean };
   },
 ) {
   const { data, error } = await supabase.functions.invoke<{ data: T[]; count: number }>("query-evionor", {
@@ -23,7 +26,10 @@ export async function queryEvionorTable<T>(
       query: {
         table,
         select: options?.select || "*",
-        limit: options?.limit || 100,
+        limit: options?.limit || 20,
+        offset: options?.offset || 0,
+        filters: options?.filters,
+        order: options?.order,
       },
     },
   });
@@ -46,9 +52,24 @@ export async function getProductClicks(limit = 100) {
 /**
  * Get all questionnaire responses
  */
-export async function getQuestionnaireResponses(limit = 100) {
-  const result = queryEvionorTable<QuestionnaireResponse>("questionnaire_responses", { limit });
-  console.log({ result });
+export async function getQuestionnaireResponses(options?: {
+  limit?: number;
+  offset?: number;
+  status?: string;
+}) {
+  const filters: Record<string, any> = {};
+  
+  if (options?.status && options.status !== 'all') {
+    filters.status = options.status;
+  }
+
+  const result = queryEvionorTable<QuestionnaireResponse>("questionnaire_responses", { 
+    limit: options?.limit || 20,
+    offset: options?.offset || 0,
+    filters: Object.keys(filters).length > 0 ? filters : undefined,
+    order: { column: 'created_at', ascending: false }
+  });
+  
   return result;
 }
 
