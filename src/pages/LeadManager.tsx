@@ -6,6 +6,7 @@ import type { QuestionnaireResponse, LeadStatus } from "@/integrations/evionor/t
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -16,8 +17,6 @@ const statusOptions: { value: LeadStatus; label: string }[] = [
   { value: "converted", label: "Converted" },
   { value: "rejected", label: "Rejected" },
 ];
-
-const ITEMS_PER_PAGE = 10;
 
 export default function LeadManager() {
   const [responses, setResponses] = useState<QuestionnaireResponse[]>([]);
@@ -32,8 +31,9 @@ export default function LeadManager() {
   );
 
   const [currentPage, setCurrentPage] = useQueryState("page", parseAsInteger.withDefault(1));
+  const [itemsPerPage, setItemsPerPage] = useQueryState("perPage", parseAsInteger.withDefault(10));
 
-  const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(totalCount / itemsPerPage);
 
   useEffect(() => {
     let cancelled = false;
@@ -41,9 +41,9 @@ export default function LeadManager() {
     const fetchResponses = async () => {
       setLoading(true);
       try {
-        const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+        const offset = (currentPage - 1) * itemsPerPage;
         const result = await getQuestionnaireResponses({
-          limit: ITEMS_PER_PAGE,
+          limit: itemsPerPage,
           offset,
           status: statusFilter !== "all" ? statusFilter : undefined,
         });
@@ -79,7 +79,7 @@ export default function LeadManager() {
     return () => {
       cancelled = true;
     };
-  }, [statusFilter, currentPage, toast]);
+  }, [statusFilter, currentPage, itemsPerPage, toast]);
 
   const handleStatusChange = async (id: string, newStatus: LeadStatus) => {
     try {
@@ -102,9 +102,9 @@ export default function LeadManager() {
       console.error("Error updating status:", error);
 
       // Revert optimistic update on error by refetching
-      const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+      const offset = (currentPage - 1) * itemsPerPage;
       const result = await getQuestionnaireResponses({
-        limit: ITEMS_PER_PAGE,
+        limit: itemsPerPage,
         offset,
         status: statusFilter !== "all" ? statusFilter : undefined,
       });
@@ -262,7 +262,27 @@ export default function LeadManager() {
         </div>
 
         {totalPages > 1 && (
-          <div className="flex items-center justify-center gap-2">
+          <div className="flex items-center justify-center gap-4">
+            <div className="flex items-center gap-2">
+              <label htmlFor="perPage" className="text-sm text-muted-foreground whitespace-nowrap">
+                Per page:
+              </label>
+              <Input
+                id="perPage"
+                type="number"
+                min="1"
+                max="100"
+                value={itemsPerPage}
+                onChange={(e) => {
+                  const value = parseInt(e.target.value);
+                  if (value > 0 && value <= 100) {
+                    setItemsPerPage(value);
+                    setCurrentPage(1);
+                  }
+                }}
+                className="w-20"
+              />
+            </div>
             <Button
               variant="outline"
               size="sm"
