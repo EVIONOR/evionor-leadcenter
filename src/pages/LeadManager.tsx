@@ -9,11 +9,11 @@ import { useToast } from "@/hooks/use-toast";
 import { Loader2, ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 
 const statusOptions: { value: LeadStatus; label: string }[] = [
-  { value: 'new', label: 'New' },
-  { value: 'contacted', label: 'Contacted' },
-  { value: 'qualified', label: 'Qualified' },
-  { value: 'converted', label: 'Converted' },
-  { value: 'rejected', label: 'Rejected' },
+  { value: "new", label: "New" },
+  { value: "contacted", label: "Contacted" },
+  { value: "qualified", label: "Qualified" },
+  { value: "converted", label: "Converted" },
+  { value: "rejected", label: "Rejected" },
 ];
 
 const ITEMS_PER_PAGE = 20;
@@ -21,7 +21,7 @@ const ITEMS_PER_PAGE = 20;
 export default function LeadManager() {
   const [responses, setResponses] = useState<QuestionnaireResponse[]>([]);
   const [loading, setLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState<LeadStatus | 'all'>('new');
+  const [statusFilter, setStatusFilter] = useState<LeadStatus | "all">("new");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const navigate = useNavigate();
@@ -40,7 +40,7 @@ export default function LeadManager() {
       const result = await getQuestionnaireResponses({
         limit: ITEMS_PER_PAGE,
         offset,
-        status: statusFilter !== 'all' ? statusFilter : undefined,
+        status: statusFilter !== "all" ? statusFilter : undefined,
       });
 
       if (!result?.data) {
@@ -64,11 +64,9 @@ export default function LeadManager() {
   const handleStatusChange = async (id: string, newStatus: LeadStatus) => {
     try {
       await updateQuestionnaireStatus(id, newStatus);
-      
-      setResponses(prev => 
-        prev.map(r => r.id === id ? { ...r, status: newStatus } : r)
-      );
-      
+
+      setResponses((prev) => prev.map((r) => (r.id === id ? { ...r, status: newStatus } : r)));
+
       toast({
         title: "Status Updated",
         description: `Lead status changed to ${newStatus}`,
@@ -83,7 +81,7 @@ export default function LeadManager() {
     }
   };
 
-  const handleStatusFilterChange = (value: LeadStatus | 'all') => {
+  const handleStatusFilterChange = (value: LeadStatus | "all") => {
     setStatusFilter(value);
     setCurrentPage(1); // Reset to first page when filter changes
   };
@@ -121,18 +119,21 @@ export default function LeadManager() {
             </Button>
             <h1 className="text-3xl font-bold">Questionnaire Responses</h1>
           </div>
-          
+
           <div className="flex items-center gap-4">
             <div className="text-sm text-muted-foreground">
-              {totalCount} total {totalCount === 1 ? 'response' : 'responses'}
+              {totalCount} total {totalCount === 1 ? "response" : "responses"}
             </div>
-            <Select value={statusFilter} onValueChange={(value) => handleStatusFilterChange(value as LeadStatus | 'all')}>
+            <Select
+              value={statusFilter}
+              onValueChange={(value) => handleStatusFilterChange(value as LeadStatus | "all")}
+            >
               <SelectTrigger className="w-[180px] bg-background">
                 <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
               <SelectContent className="bg-background z-50">
                 <SelectItem value="all">All Statuses</SelectItem>
-                {statusOptions.map(option => (
+                {statusOptions.map((option) => (
                   <SelectItem key={option.value} value={option.value}>
                     {option.label}
                   </SelectItem>
@@ -147,10 +148,9 @@ export default function LeadManager() {
             <Card>
               <CardContent className="pt-6">
                 <p className="text-center text-muted-foreground">
-                  {statusFilter === 'all' 
-                    ? 'No questionnaire responses found in EVIONOR database.'
-                    : `No responses with status "${statusFilter}".`
-                  }
+                  {statusFilter === "all"
+                    ? "No questionnaire responses found in EVIONOR database."
+                    : `No responses with status "${statusFilter}".`}
                 </p>
               </CardContent>
             </Card>
@@ -163,21 +163,26 @@ export default function LeadManager() {
                       <CardTitle className="text-base">{response.name || "No Name"}</CardTitle>
                       <p className="text-xs text-muted-foreground">{new Date(response.created_at).toLocaleString()}</p>
                     </div>
-                    <Select 
-                      value={response.status} 
-                      onValueChange={(value) => handleStatusChange(response.id, value as LeadStatus)}
-                    >
-                      <SelectTrigger className="w-[140px] bg-background">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent className="bg-background z-50">
-                        {statusOptions.map(option => (
-                          <SelectItem key={option.value} value={option.value}>
-                            {option.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <div className="flex items-center gap-4">
+                      <Button variant="default" size="sm" onClick={() => handleQualifyLead(response)}>
+                        Fill Form
+                      </Button>
+                      <Select
+                        value={response.status}
+                        onValueChange={(value) => handleStatusChange(response.id, value as LeadStatus)}
+                      >
+                        <SelectTrigger className="w-[140px] bg-background">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="bg-background z-50">
+                          {statusOptions.map((option) => (
+                            <SelectItem key={option.value} value={option.value}>
+                              {option.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent className="pt-0">
@@ -212,11 +217,6 @@ export default function LeadManager() {
                       <p className="text-xs font-semibold">Phases</p>
                       <p className="text-xs text-muted-foreground">{response.phases || "N/A"}</p>
                     </div>
-                    <div className="flex items-end">
-                      <Button variant="default" size="sm" onClick={() => handleQualifyLead(response)}>
-                        Fill Form
-                      </Button>
-                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -229,13 +229,13 @@ export default function LeadManager() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
               disabled={currentPage === 1}
             >
               <ChevronLeft className="h-4 w-4 mr-1" />
               Previous
             </Button>
-            
+
             <div className="flex items-center gap-2">
               {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                 let pageNum;
@@ -266,7 +266,7 @@ export default function LeadManager() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
             >
               Next
