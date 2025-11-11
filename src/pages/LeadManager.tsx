@@ -65,13 +65,8 @@ export default function LeadManager() {
     try {
       await updateQuestionnaireStatus(id, newStatus);
 
-      // Remove from view if it no longer matches the filter
-      if (statusFilter !== "all" && newStatus !== statusFilter) {
-        setResponses((prev) => prev.filter((r) => r.id !== id));
-        setTotalCount((prev) => prev - 1);
-      } else {
-        setResponses((prev) => prev.map((r) => (r.id === id ? { ...r, status: newStatus } : r)));
-      }
+      // Refetch data to ensure we have up-to-date information
+      await fetchResponses();
 
       toast({
         title: "Status Updated",
