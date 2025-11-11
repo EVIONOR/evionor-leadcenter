@@ -4364,6 +4364,7 @@ const zipCodes = {
   "3723": "Zubogy",
 };
 
+
 export const getCityByZip = (zip: string): string => {
   return zipCodes[zip] || "";
 };
