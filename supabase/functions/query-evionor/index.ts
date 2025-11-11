@@ -151,8 +151,13 @@ Deno.serve(async (req) => {
         const { data: customData, error: customError, count: totalCount } = await queryBuilder;
 
         if (customError) {
-          console.error('Error running custom query:', customError);
-          throw customError;
+          console.error('Error running custom query:', {
+            message: customError.message,
+            details: customError.details,
+            hint: customError.hint,
+            code: customError.code
+          });
+          throw new Error(`Query failed: ${customError.message} (${customError.code})`);
         }
 
         result = { data: customData, count: totalCount || 0 };
@@ -194,10 +199,18 @@ Deno.serve(async (req) => {
       }
     );
   } catch (error) {
-    console.error('Error in query-evionor function:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    const errorDetails = error instanceof Error 
+      ? { message: error.message, stack: error.stack }
+      : { message: String(error) };
+    
+    console.error('Error in query-evionor function:', errorDetails);
+    
     return new Response(
-      JSON.stringify({ success: false, error: errorMessage }),
+      JSON.stringify({ 
+        success: false, 
+        error: errorDetails.message,
+        details: errorDetails
+      }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 400 
