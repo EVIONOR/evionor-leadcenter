@@ -16,7 +16,7 @@ const statusOptions: { value: LeadStatus; label: string }[] = [
   { value: "rejected", label: "Rejected" },
 ];
 
-const ITEMS_PER_PAGE = 20;
+const ITEMS_PER_PAGE = 10;
 
 export default function LeadManager() {
   const [responses, setResponses] = useState<QuestionnaireResponse[]>([]);
