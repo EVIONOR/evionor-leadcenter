@@ -86,11 +86,18 @@ export default function LeadManager() {
 
   const handleStatusChange = async (id: string, newStatus: LeadStatus) => {
     try {
-      await updateQuestionnaireStatus(id, newStatus);
+      // Optimistic update: remove item from list if it no longer matches filter
+      if (statusFilter !== "all" && statusFilter !== newStatus) {
+        setResponses(prev => prev.filter(r => r.id !== id));
+        setTotalCount(prev => Math.max(0, prev - 1));
+      } else {
+        // Update the item in the list if it still matches the filter
+        setResponses(prev => 
+          prev.map(r => r.id === id ? { ...r, status: newStatus } : r)
+        );
+      }
 
-      // Force re-fetch by triggering useEffect dependencies
-      // This ensures the latest data is loaded without race conditions
-      setStatusFilter((prev) => prev);
+      await updateQuestionnaireStatus(id, newStatus);
 
       toast({
         title: "Status Updated",
@@ -98,6 +105,20 @@ export default function LeadManager() {
       });
     } catch (error) {
       console.error("Error updating status:", error);
+      
+      // Revert optimistic update on error by refetching
+      const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+      const result = await getQuestionnaireResponses({
+        limit: ITEMS_PER_PAGE,
+        offset,
+        status: statusFilter !== "all" ? statusFilter : undefined,
+      });
+      
+      if (result?.data) {
+        setResponses(result.data);
+        setTotalCount(result.count || 0);
+      }
+      
       toast({
         title: "Error",
         description: "Failed to update lead status",
