@@ -39,43 +39,58 @@ export default function LeadManager() {
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
 
   useEffect(() => {
-    fetchResponses();
-  }, [statusFilter, currentPage]);
+    let cancelled = false;
+    
+    const fetchResponses = async () => {
+      setLoading(true);
+      try {
+        const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+        const result = await getQuestionnaireResponses({
+          limit: ITEMS_PER_PAGE,
+          offset,
+          status: statusFilter !== "all" ? statusFilter : undefined,
+        });
 
-  const fetchResponses = async () => {
-    setLoading(true);
-    try {
-      const offset = (currentPage - 1) * ITEMS_PER_PAGE;
-      const result = await getQuestionnaireResponses({
-        limit: ITEMS_PER_PAGE,
-        offset,
-        status: statusFilter !== "all" ? statusFilter : undefined,
-      });
+        if (!result?.data) {
+          throw new Error("No data received");
+        }
 
-      if (!result?.data) {
-        throw new Error("No data received");
+        // Only update state if this request hasn't been cancelled
+        if (!cancelled) {
+          setResponses(result.data);
+          setTotalCount(result.count || 0);
+        }
+      } catch (error) {
+        if (!cancelled) {
+          console.error("Error fetching responses:", error);
+          toast({
+            title: "Error",
+            description: "Failed to fetch questionnaire responses from EVIONOR database",
+            variant: "destructive",
+          });
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
+    };
 
-      setResponses(result.data);
-      setTotalCount(result.count || 0);
-    } catch (error) {
-      console.error("Error fetching responses:", error);
-      toast({
-        title: "Error",
-        description: "Failed to fetch questionnaire responses from EVIONOR database",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+    fetchResponses();
+
+    // Cleanup function to cancel the request if filter/page changes before completion
+    return () => {
+      cancelled = true;
+    };
+  }, [statusFilter, currentPage, toast]);
 
   const handleStatusChange = async (id: string, newStatus: LeadStatus) => {
     try {
       await updateQuestionnaireStatus(id, newStatus);
 
-      // Refetch data to ensure we have up-to-date information
-      await fetchResponses();
+      // Force re-fetch by triggering useEffect dependencies
+      // This ensures the latest data is loaded without race conditions
+      setStatusFilter((prev) => prev);
 
       toast({
         title: "Status Updated",
