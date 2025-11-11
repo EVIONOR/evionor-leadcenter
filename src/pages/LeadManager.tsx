@@ -28,19 +28,16 @@ export default function LeadManager() {
 
   const [statusFilter, setStatusFilter] = useQueryState(
     "status",
-    parseAsStringLiteral(["new", "contacted", "qualified", "converted", "rejected", "all"] as const).withDefault("new")
+    parseAsStringLiteral(["new", "contacted", "qualified", "converted", "rejected", "all"] as const).withDefault("new"),
   );
 
-  const [currentPage, setCurrentPage] = useQueryState(
-    "page",
-    parseAsInteger.withDefault(1)
-  );
+  const [currentPage, setCurrentPage] = useQueryState("page", parseAsInteger.withDefault(1));
 
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
 
   useEffect(() => {
     let cancelled = false;
-    
+
     const fetchResponses = async () => {
       setLoading(true);
       try {
@@ -88,13 +85,11 @@ export default function LeadManager() {
     try {
       // Optimistic update: remove item from list if it no longer matches filter
       if (statusFilter !== "all" && statusFilter !== newStatus) {
-        setResponses(prev => prev.filter(r => r.id !== id));
-        setTotalCount(prev => Math.max(0, prev - 1));
+        setResponses((prev) => prev.filter((r) => r.id !== id));
+        setTotalCount((prev) => Math.max(0, prev - 1));
       } else {
         // Update the item in the list if it still matches the filter
-        setResponses(prev => 
-          prev.map(r => r.id === id ? { ...r, status: newStatus } : r)
-        );
+        setResponses((prev) => prev.map((r) => (r.id === id ? { ...r, status: newStatus } : r)));
       }
 
       await updateQuestionnaireStatus(id, newStatus);
@@ -105,7 +100,7 @@ export default function LeadManager() {
       });
     } catch (error) {
       console.error("Error updating status:", error);
-      
+
       // Revert optimistic update on error by refetching
       const offset = (currentPage - 1) * ITEMS_PER_PAGE;
       const result = await getQuestionnaireResponses({
@@ -113,12 +108,12 @@ export default function LeadManager() {
         offset,
         status: statusFilter !== "all" ? statusFilter : undefined,
       });
-      
+
       if (result?.data) {
         setResponses(result.data);
         setTotalCount(result.count || 0);
       }
-      
+
       toast({
         title: "Error",
         description: "Failed to update lead status",
@@ -249,20 +244,20 @@ export default function LeadManager() {
                       <p className="text-sm font-semibold">Timeline</p>
                       <p className="text-sm text-muted-foreground">{response.timeline || "N/A"}</p>
                     </div>
-                    <div>
+                    {/* <div>
                       <p className="text-sm font-semibold">Car</p>
                       <p className="text-sm text-muted-foreground">
                         {response.car_brand} {response.car_model || "N/A"}
                       </p>
-                    </div>
-                    <div>
+                    </div> */}
+                    {/* <div>
                       <p className="text-sm font-semibold">Annual KM</p>
                       <p className="text-sm text-muted-foreground">{response.km_per_year?.toLocaleString() || "N/A"}</p>
-                    </div>
-                    <div>
+                    </div> */}
+                    {/* <div>
                       <p className="text-sm font-semibold">Phases</p>
                       <p className="text-sm text-muted-foreground">{response.phases || "N/A"}</p>
-                    </div>
+                    </div> */}
                   </div>
                 </CardContent>
               </Card>
