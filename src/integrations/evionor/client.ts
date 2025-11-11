@@ -3,7 +3,13 @@
 // Do not use this client directly in the frontend - always go through edge functions
 
 import { supabase } from "@/integrations/supabase/client";
-import type { ProductClick, QuestionnaireResponse, RoiCalculatorResult } from "./types";
+import type {
+  ProductClick,
+  QuestionnaireResponse,
+  RoiCalculatorResult,
+  SavedQuestionnaireResponse,
+  SavedQuestionnaireResponseInsert,
+} from "./types";
 
 /**
  * Query EVIONOR database tables through the edge function
@@ -97,6 +103,28 @@ export async function updateQuestionnaireStatus(id: string, status: string) {
 
   if (error) {
     console.error("Error updating questionnaire status:", error);
+    throw error;
+  }
+
+  return data;
+}
+
+/**
+ * Save a saved questionnaire response
+ */
+export async function saveSavedQuestionnaireResponse(
+  responseData: SavedQuestionnaireResponseInsert
+) {
+  const { data, error } = await supabase.functions.invoke<{ data: SavedQuestionnaireResponse }>("query-evionor", {
+    body: {
+      action: "insert",
+      table: "saved_questionnaire_responses",
+      data: responseData,
+    },
+  });
+
+  if (error) {
+    console.error("Error saving questionnaire response:", error);
     throw error;
   }
 

@@ -2,17 +2,97 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { QuestionnaireData } from "@/types/questionnaire";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { Save } from "lucide-react";
+import { saveSavedQuestionnaireResponse } from "@/integrations/evionor/client";
+import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface ClientSummaryProps {
   data: QuestionnaireData;
+  originalResponseId?: string;
 }
 
-export const ClientSummary = ({ data }: ClientSummaryProps) => {
+export const ClientSummary = ({ data, originalResponseId }: ClientSummaryProps) => {
+  const { toast } = useToast();
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleSave = async () => {
+    try {
+      setIsSaving(true);
+      
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      const responseData = {
+        original_response_id: originalResponseId || null,
+        contact_name: data.contactName,
+        email: data.email,
+        phone_number: data.phoneNumber,
+        car_brand: data.carBrand,
+        car_model: data.carModel,
+        custom_car: data.customCar || null,
+        zip_code: data.zipCode,
+        city: data.city,
+        phases: data.phases,
+        amperage: data.amperage,
+        install_location: data.installLocation,
+        building_type: data.buildingType || null,
+        needs_installation: data.needsInstallation,
+        needs_electrical_planning: data.needsElectricalPlanning,
+        indoor_outdoor: data.indoorOutdoor,
+        mounting_surface: data.mountingSurface || null,
+        needs_backplate: data.needsBackplate,
+        needs_pole: data.needsPole,
+        distance_from_box: data.distanceFromBox,
+        space_in_box: data.spaceInBox,
+        groundwork_wall_penetration: data.groundworkWallPenetration || null,
+        other_comments: data.otherComments || null,
+        solar_integration: data.solarIntegration,
+        load_management: data.loadManagement,
+        built_in_cable: data.builtInCable,
+        needs_app: data.needsApp,
+        infrastructure_development: data.infrastructureDevelopment,
+        infrastructure_details: data.infrastructureDetails || null,
+        overvoltage_protection: data.overvoltageProtection,
+        network_expansion: data.networkExpansion,
+        expansion_phase: data.expansionPhase || null,
+        expansion_amperage: data.expansionAmperage || null,
+        created_by: user?.id || null,
+      };
+
+      await saveSavedQuestionnaireResponse(responseData);
+
+      toast({
+        title: "Sikeres mentés",
+        description: "A kérdőív adatok sikeresen mentésre kerültek az EVIONOR adatbázisba.",
+      });
+    } catch (error) {
+      console.error("Error saving questionnaire:", error);
+      toast({
+        title: "Mentési hiba",
+        description: "Nem sikerült menteni a kérdőív adatokat. Kérjük próbálja újra.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   return (
     <Card className="shadow-lg">
       <CardHeader className="bg-gradient-to-r from-primary/5 to-secondary/5 border-b">
-        <CardTitle className="text-2xl">Ügyfél összefoglaló</CardTitle>
-        <CardDescription>Kitöltött kérdőív adatai</CardDescription>
+        <div className="flex justify-between items-start">
+          <div>
+            <CardTitle className="text-2xl">Ügyfél összefoglaló</CardTitle>
+            <CardDescription>Kitöltött kérdőív adatai</CardDescription>
+          </div>
+          <Button onClick={handleSave} disabled={isSaving} className="gap-2">
+            <Save className="w-4 h-4" />
+            {isSaving ? "Mentés..." : "Mentés EVIONOR-ba"}
+          </Button>
+        </div>
       </CardHeader>
       <CardContent className="pt-6 space-y-6">
         {/* Kapcsolattartó adatok */}

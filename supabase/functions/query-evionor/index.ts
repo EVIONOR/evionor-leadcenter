@@ -22,7 +22,7 @@ Deno.serve(async (req) => {
 
     console.log('Connecting to EVIONOR Supabase:', evionorUrl);
 
-    const { action, table, query, update } = await req.json();
+    const { action, table, query, update, data: insertData } = await req.json();
     
     // Use service key for all queries to bypass RLS
     const useServiceKey = true;
@@ -197,6 +197,27 @@ Deno.serve(async (req) => {
         }
 
         result = { data: updatedData };
+        break;
+
+      case 'insert':
+        if (!table || !insertData) {
+          throw new Error('Insert action requires: table and data');
+        }
+
+        console.log('Inserting record into table:', table);
+
+        const { data: insertedData, error: insertError } = await client
+          .from(table)
+          .insert(insertData)
+          .select()
+          .single();
+
+        if (insertError) {
+          console.error('Error inserting record:', insertError);
+          throw insertError;
+        }
+
+        result = { data: insertedData };
         break;
 
       default:

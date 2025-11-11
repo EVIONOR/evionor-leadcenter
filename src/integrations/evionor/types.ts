@@ -152,6 +152,86 @@ export interface RoiCalculatorResultUpdate {
   created_at?: string;
 }
 
+export interface SavedQuestionnaireResponse {
+  id: string;
+  original_response_id: string | null;
+  contact_name: string;
+  email: string;
+  phone_number: string;
+  car_brand: string;
+  car_model: string;
+  custom_car: string | null;
+  zip_code: string;
+  city: string;
+  phases: string;
+  amperage: string;
+  install_location: string;
+  building_type: string | null;
+  needs_installation: boolean;
+  needs_electrical_planning: boolean;
+  indoor_outdoor: string;
+  mounting_surface: string | null;
+  needs_backplate: boolean;
+  needs_pole: boolean;
+  distance_from_box: string;
+  space_in_box: string;
+  groundwork_wall_penetration: string | null;
+  other_comments: string | null;
+  solar_integration: string;
+  load_management: boolean;
+  built_in_cable: boolean;
+  needs_app: boolean;
+  infrastructure_development: boolean;
+  infrastructure_details: string | null;
+  overvoltage_protection: boolean;
+  network_expansion: boolean;
+  expansion_phase: string | null;
+  expansion_amperage: string | null;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface SavedQuestionnaireResponseInsert {
+  id?: string;
+  original_response_id?: string | null;
+  contact_name: string;
+  email: string;
+  phone_number: string;
+  car_brand: string;
+  car_model: string;
+  custom_car?: string | null;
+  zip_code: string;
+  city: string;
+  phases: string;
+  amperage: string;
+  install_location: string;
+  building_type?: string | null;
+  needs_installation?: boolean;
+  needs_electrical_planning?: boolean;
+  indoor_outdoor: string;
+  mounting_surface?: string | null;
+  needs_backplate?: boolean;
+  needs_pole?: boolean;
+  distance_from_box: string;
+  space_in_box: string;
+  groundwork_wall_penetration?: string | null;
+  other_comments?: string | null;
+  solar_integration: string;
+  load_management?: boolean;
+  built_in_cable?: boolean;
+  needs_app?: boolean;
+  infrastructure_development?: boolean;
+  infrastructure_details?: string | null;
+  overvoltage_protection?: boolean;
+  network_expansion?: boolean;
+  expansion_phase?: string | null;
+  expansion_amperage?: string | null;
+  created_by?: string | null;
+  created_at?: string;
+  updated_at?: string;
+}
+
 // Database type
 export interface EvionorDatabase {
   public: {
@@ -170,6 +250,11 @@ export interface EvionorDatabase {
         Row: RoiCalculatorResult;
         Insert: RoiCalculatorResultInsert;
         Update: RoiCalculatorResultUpdate;
+      };
+      saved_questionnaire_responses: {
+        Row: SavedQuestionnaireResponse;
+        Insert: SavedQuestionnaireResponseInsert;
+        Update: Partial<SavedQuestionnaireResponseInsert>;
       };
     };
   };
