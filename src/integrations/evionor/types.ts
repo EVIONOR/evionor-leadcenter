@@ -11,6 +11,8 @@ export interface ProductClick {
   clicked_at: string;
 }
 
+export type LeadStatus = 'new' | 'contacted' | 'qualified' | 'converted' | 'rejected';
+
 export interface QuestionnaireResponse {
   id: string;
   car_brand: string;
@@ -22,6 +24,7 @@ export interface QuestionnaireResponse {
   name: string;
   email: string;
   phone: string;
+  status: LeadStatus;
   created_at: string;
 }
 
@@ -71,6 +74,7 @@ export interface QuestionnaireResponseInsert {
   name: string;
   email: string;
   phone: string;
+  status?: LeadStatus;
   created_at?: string;
 }
 
@@ -120,6 +124,7 @@ export interface QuestionnaireResponseUpdate {
   name?: string;
   email?: string;
   phone?: string;
+  status?: LeadStatus;
   created_at?: string;
 }
 

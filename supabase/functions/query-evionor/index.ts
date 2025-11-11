@@ -22,14 +22,18 @@ Deno.serve(async (req) => {
 
     console.log('Connecting to EVIONOR Supabase:', evionorUrl);
 
-    const { action, table, query } = await req.json();
+    const { action, table, query, update } = await req.json();
     
     // Use service key for all queries to bypass RLS
     const useServiceKey = true;
     const apiKey = useServiceKey && evionorServiceKey ? evionorServiceKey : evionorAnonKey;
     
     // Create client for EVIONOR Supabase
-    const evionorSupabase = createClient(evionorUrl, apiKey);
+    const client = createClient(evionorUrl, apiKey, {
+      auth: {
+        persistSession: false
+      }
+    });
 
     console.log('Action requested:', action, 'Using service key:', useServiceKey);
 
@@ -38,7 +42,7 @@ Deno.serve(async (req) => {
     switch (action) {
       case 'list_tables':
         // Query pg_catalog to list tables using service key
-        const { data: tables, error: tablesError } = await evionorSupabase.rpc('get_tables_list');
+        const { data: tables, error: tablesError } = await client.rpc('get_tables_list');
         
         if (tablesError) {
           console.error('Error listing tables:', tablesError);
@@ -76,7 +80,7 @@ Deno.serve(async (req) => {
         console.log('Getting schema for table:', table);
         
         // Query information about columns
-        const { data: columns, error: schemaError } = await evionorSupabase.rpc('get_table_schema', { table_name: table });
+        const { data: columns, error: schemaError } = await client.rpc('get_table_schema', { table_name: table });
         
         if (schemaError) {
           console.error('Error getting schema:', schemaError);
@@ -95,7 +99,7 @@ Deno.serve(async (req) => {
 
         console.log('Querying table:', table);
 
-        const { data, error } = await evionorSupabase
+        const { data, error } = await client
           .from(table)
           .select('*')
           .limit(100);
@@ -115,7 +119,7 @@ Deno.serve(async (req) => {
 
         console.log('Running custom query on table:', query.table);
 
-        const queryBuilder = evionorSupabase.from(query.table).select(query.select || '*');
+        const queryBuilder = client.from(query.table).select(query.select || '*');
 
         if (query.limit) {
           queryBuilder.limit(query.limit);
@@ -129,6 +133,28 @@ Deno.serve(async (req) => {
         }
 
         result = { data: customData, count: customData?.length || 0 };
+        break;
+
+      case 'update':
+        if (!update || !update.id || !table || !update.data) {
+          throw new Error('Update action requires: table, update.id, and update.data');
+        }
+
+        console.log('Updating record in table:', table, 'id:', update.id);
+
+        const { data: updatedData, error: updateError } = await client
+          .from(table)
+          .update(update.data)
+          .eq('id', update.id)
+          .select()
+          .single();
+
+        if (updateError) {
+          console.error('Error updating record:', updateError);
+          throw updateError;
+        }
+
+        result = { data: updatedData };
         break;
 
       default:

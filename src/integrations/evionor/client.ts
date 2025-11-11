@@ -58,3 +58,26 @@ export async function getQuestionnaireResponses(limit = 100) {
 export async function getRoiCalculatorResults(limit = 100) {
   return queryEvionorTable<RoiCalculatorResult>("roi_calculator_results", { limit });
 }
+
+/**
+ * Update questionnaire response status
+ */
+export async function updateQuestionnaireStatus(id: string, status: string) {
+  const { data, error } = await supabase.functions.invoke<{ data: QuestionnaireResponse }>("query-evionor", {
+    body: {
+      action: "update",
+      table: "questionnaire_responses",
+      update: {
+        id,
+        data: { status }
+      }
+    },
+  });
+
+  if (error) {
+    console.error("Error updating questionnaire status:", error);
+    throw error;
+  }
+
+  return data;
+}
