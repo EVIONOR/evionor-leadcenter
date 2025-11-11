@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useQueryState, parseAsInteger, parseAsStringLiteral } from "nuqs";
 import { getQuestionnaireResponses, updateQuestionnaireStatus } from "@/integrations/evionor/client";
 import type { QuestionnaireResponse, LeadStatus } from "@/integrations/evionor/types";
 import { Button } from "@/components/ui/button";
@@ -21,11 +22,19 @@ const ITEMS_PER_PAGE = 10;
 export default function LeadManager() {
   const [responses, setResponses] = useState<QuestionnaireResponse[]>([]);
   const [loading, setLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState<LeadStatus | "all">("new");
-  const [currentPage, setCurrentPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  const [statusFilter, setStatusFilter] = useQueryState(
+    "status",
+    parseAsStringLiteral(["new", "contacted", "qualified", "converted", "rejected", "all"] as const).withDefault("new")
+  );
+
+  const [currentPage, setCurrentPage] = useQueryState(
+    "page",
+    parseAsInteger.withDefault(1)
+  );
 
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
 
@@ -82,9 +91,9 @@ export default function LeadManager() {
     }
   };
 
-  const handleStatusFilterChange = (value: LeadStatus | "all") => {
-    setStatusFilter(value);
-    setCurrentPage(1); // Reset to first page when filter changes
+  const handleStatusFilterChange = async (value: LeadStatus | "all") => {
+    await setStatusFilter(value);
+    await setCurrentPage(1); // Reset to first page when filter changes
   };
 
   const handleQualifyLead = (response: QuestionnaireResponse) => {
