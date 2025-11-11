@@ -20,14 +20,15 @@ export default function LeadManager() {
   const fetchResponses = async () => {
     try {
       const result = await getQuestionnaireResponses();
-      
+      console.log(result);
+
       if (!result?.data) {
-        throw new Error('No data received');
+        throw new Error("No data received");
       }
 
       setResponses(result.data);
     } catch (error) {
-      console.error('Error fetching responses:', error);
+      console.error("Error fetching responses:", error);
       toast({
         title: "Error",
         description: "Failed to fetch questionnaire responses from EVIONOR database",
@@ -40,16 +41,16 @@ export default function LeadManager() {
 
   const handleQualifyLead = (response: QuestionnaireResponse) => {
     const leadData = {
-      contactName: response.name || '',
-      email: response.email || '',
-      phoneNumber: response.phone || '',
-      carBrand: response.car_brand || '',
-      carModel: response.car_model || '',
-      location: response.location || '',
+      contactName: response.name || "",
+      email: response.email || "",
+      phoneNumber: response.phone || "",
+      carBrand: response.car_brand || "",
+      carModel: response.car_model || "",
+      location: response.location || "",
     };
-    
-    localStorage.setItem('prefill_lead_data', JSON.stringify(leadData));
-    navigate('/');
+
+    localStorage.setItem("prefill_lead_data", JSON.stringify(leadData));
+    navigate("/");
   };
 
   if (loading) {
@@ -64,11 +65,7 @@ export default function LeadManager() {
     <div className="min-h-screen bg-background p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center gap-4 mb-6">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => navigate('/')}
-          >
+          <Button variant="outline" size="sm" onClick={() => navigate("/")}>
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Questionnaire
           </Button>
@@ -88,52 +85,44 @@ export default function LeadManager() {
             responses.map((response) => (
               <Card key={response.id}>
                 <CardHeader>
-                  <CardTitle>{response.name || 'No Name'}</CardTitle>
-                  <p className="text-sm text-muted-foreground">
-                    {new Date(response.created_at).toLocaleString()}
-                  </p>
+                  <CardTitle>{response.name || "No Name"}</CardTitle>
+                  <p className="text-sm text-muted-foreground">{new Date(response.created_at).toLocaleString()}</p>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-2 gap-4 mb-4">
                     <div>
                       <p className="text-sm font-semibold">Email</p>
-                      <p className="text-sm text-muted-foreground">{response.email || 'N/A'}</p>
+                      <p className="text-sm text-muted-foreground">{response.email || "N/A"}</p>
                     </div>
                     <div>
                       <p className="text-sm font-semibold">Phone</p>
-                      <p className="text-sm text-muted-foreground">{response.phone || 'N/A'}</p>
+                      <p className="text-sm text-muted-foreground">{response.phone || "N/A"}</p>
                     </div>
                     <div>
                       <p className="text-sm font-semibold">Car</p>
                       <p className="text-sm text-muted-foreground">
-                        {response.car_brand} {response.car_model || 'N/A'}
+                        {response.car_brand} {response.car_model || "N/A"}
                       </p>
                     </div>
                     <div>
                       <p className="text-sm font-semibold">Location</p>
-                      <p className="text-sm text-muted-foreground">
-                        {response.location || 'N/A'}
-                      </p>
+                      <p className="text-sm text-muted-foreground">{response.location || "N/A"}</p>
                     </div>
                     <div>
                       <p className="text-sm font-semibold">Annual KM</p>
-                      <p className="text-sm text-muted-foreground">{response.km_per_year?.toLocaleString() || 'N/A'}</p>
+                      <p className="text-sm text-muted-foreground">{response.km_per_year?.toLocaleString() || "N/A"}</p>
                     </div>
                     <div>
                       <p className="text-sm font-semibold">Phases</p>
-                      <p className="text-sm text-muted-foreground">{response.phases || 'N/A'}</p>
+                      <p className="text-sm text-muted-foreground">{response.phases || "N/A"}</p>
                     </div>
                     <div>
                       <p className="text-sm font-semibold">Timeline</p>
-                      <p className="text-sm text-muted-foreground">{response.timeline || 'N/A'}</p>
+                      <p className="text-sm text-muted-foreground">{response.timeline || "N/A"}</p>
                     </div>
                   </div>
 
-                  <Button
-                    variant="default"
-                    size="sm"
-                    onClick={() => handleQualifyLead(response)}
-                  >
+                  <Button variant="default" size="sm" onClick={() => handleQualifyLead(response)}>
                     Fill Form with This Data
                   </Button>
                 </CardContent>
