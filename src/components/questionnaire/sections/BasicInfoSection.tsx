@@ -78,7 +78,7 @@ export const BasicInfoSection = ({ form }: BasicInfoSectionProps) => {
                   field.onChange(value);
                   form.setValue("carModel", "");
                 }} 
-                defaultValue={field.value}
+                value={field.value}
               >
                 <FormControl>
                   <SelectTrigger>
@@ -106,7 +106,7 @@ export const BasicInfoSection = ({ form }: BasicInfoSectionProps) => {
               <FormLabel>Autó típus *</FormLabel>
               <Select 
                 onValueChange={field.onChange} 
-                defaultValue={field.value}
+                value={field.value}
                 disabled={!selectedBrand}
               >
                 <FormControl>
