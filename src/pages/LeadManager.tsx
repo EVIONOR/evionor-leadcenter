@@ -198,35 +198,12 @@ export default function LeadManager() {
           ) : (
             responses.map((response) => (
               <Card key={response.id}>
-                <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <CardTitle className="text-lg">{response.name || "No Name"}</CardTitle>
-                      <p className="text-sm text-muted-foreground">{new Date(response.created_at).toLocaleString()}</p>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <Button variant="default" size="sm" onClick={() => handleQualifyLead(response)}>
-                        Fill Form
-                      </Button>
-                      <Select
-                        value={response.status}
-                        onValueChange={(value) => handleStatusChange(response.id, value as LeadStatus)}
-                      >
-                        <SelectTrigger className="w-[140px] bg-background">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent className="bg-background z-50">
-                          {statusOptions.map((option) => (
-                            <SelectItem key={option.value} value={option.value}>
-                              {option.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                </CardHeader>
+                <div className="flex items-start justify-between"></div>
                 <CardContent className="pt-0">
+                  <div>
+                    <CardTitle className="text-lg">{response.name || "No Name"}</CardTitle>
+                    <p className="text-sm text-muted-foreground">{new Date(response.created_at).toLocaleString()}</p>
+                  </div>
                   <div className="grid grid-cols-4 gap-3 mb-3">
                     <div>
                       <p className="text-sm font-semibold">Email</p>
@@ -258,6 +235,26 @@ export default function LeadManager() {
                       <p className="text-sm font-semibold">Phases</p>
                       <p className="text-sm text-muted-foreground">{response.phases || "N/A"}</p>
                     </div> */}
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <Button variant="default" size="sm" onClick={() => handleQualifyLead(response)}>
+                      Fill Form
+                    </Button>
+                    <Select
+                      value={response.status}
+                      onValueChange={(value) => handleStatusChange(response.id, value as LeadStatus)}
+                    >
+                      <SelectTrigger className="w-[140px] bg-background">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="bg-background z-50">
+                        {statusOptions.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                 </CardContent>
               </Card>
