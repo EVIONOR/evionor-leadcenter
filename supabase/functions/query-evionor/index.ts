@@ -13,31 +13,79 @@ Deno.serve(async (req) => {
 
   try {
     const evionorUrl = Deno.env.get('EVIONOR_SUPABASE_URL');
-    const evionorKey = Deno.env.get('EVIONOR_SUPABASE_ANON_KEY');
+    const evionorAnonKey = Deno.env.get('EVIONOR_SUPABASE_ANON_KEY');
+    const evionorServiceKey = Deno.env.get('EVIONOR_SUPABASE_SERVICE_KEY');
 
-    if (!evionorUrl || !evionorKey) {
+    if (!evionorUrl || !evionorAnonKey) {
       throw new Error('EVIONOR Supabase credentials not configured');
     }
 
     console.log('Connecting to EVIONOR Supabase:', evionorUrl);
 
-    // Create client for EVIONOR Supabase
-    const evionorSupabase = createClient(evionorUrl, evionorKey);
-
     const { action, table, query } = await req.json();
+    
+    // Use service key for schema queries, anon key for data queries
+    const useServiceKey = action === 'list_tables' || action === 'get_schema';
+    const apiKey = useServiceKey && evionorServiceKey ? evionorServiceKey : evionorAnonKey;
+    
+    // Create client for EVIONOR Supabase
+    const evionorSupabase = createClient(evionorUrl, apiKey);
 
-    console.log('Action requested:', action);
+    console.log('Action requested:', action, 'Using service key:', useServiceKey);
 
     let result;
 
     switch (action) {
       case 'list_tables':
-        // Note: Cannot query information_schema via REST API
-        // Return a message asking for specific table names
-        result = { 
-          message: 'Cannot list tables via REST API. Please provide specific table names to query.',
-          suggestion: 'Use action "query_table" with a table name, or check your EVIONOR Supabase dashboard for available tables.'
-        };
+        // Query pg_catalog to list tables using service key
+        const { data: tables, error: tablesError } = await evionorSupabase.rpc('get_tables_list');
+        
+        if (tablesError) {
+          console.error('Error listing tables:', tablesError);
+          // Fallback: try direct query
+          const response = await fetch(`${evionorUrl}/rest/v1/rpc/get_tables_list`, {
+            method: 'POST',
+            headers: {
+              'apikey': apiKey,
+              'Authorization': `Bearer ${apiKey}`,
+              'Content-Type': 'application/json'
+            }
+          });
+          
+          if (!response.ok) {
+            // If RPC doesn't exist, return instructions
+            result = { 
+              tables: [],
+              message: 'Could not list tables. This requires a custom RPC function in your EVIONOR database.',
+              instruction: 'Create this function in your EVIONOR Supabase SQL editor:\n\nCREATE OR REPLACE FUNCTION get_tables_list()\nRETURNS TABLE (table_name text, table_schema text) \nLANGUAGE sql\nSECURITY DEFINER\nAS $$\n  SELECT tablename::text, schemaname::text \n  FROM pg_tables \n  WHERE schemaname = \'public\'\n  ORDER BY tablename;\n$$;'
+            };
+          } else {
+            const data = await response.json();
+            result = { tables: data };
+          }
+        } else {
+          result = { tables };
+        }
+        break;
+      
+      case 'get_schema':
+        if (!table) {
+          throw new Error('Table name is required for get_schema action');
+        }
+        
+        console.log('Getting schema for table:', table);
+        
+        // Query information about columns
+        const { data: columns, error: schemaError } = await evionorSupabase.rpc('get_table_schema', { table_name: table });
+        
+        if (schemaError) {
+          console.error('Error getting schema:', schemaError);
+          result = {
+            message: 'Could not get schema. Create this RPC function in EVIONOR Supabase:\n\nCREATE OR REPLACE FUNCTION get_table_schema(table_name text)\nRETURNS TABLE (\n  column_name text,\n  data_type text,\n  is_nullable text\n)\nLANGUAGE sql\nSECURITY DEFINER\nAS $$\n  SELECT \n    column_name::text,\n    data_type::text,\n    is_nullable::text\n  FROM information_schema.columns\n  WHERE table_schema = \'public\'\n    AND table_name = $1\n  ORDER BY ordinal_position;\n$$;'
+          };
+        } else {
+          result = { schema: columns };
+        }
         break;
 
       case 'query_table':
