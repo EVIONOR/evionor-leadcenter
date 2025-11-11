@@ -117,7 +117,7 @@ Deno.serve(async (req) => {
           throw new Error('Query parameters are required for custom_query action');
         }
 
-        console.log('Running custom query on table:', query.table, 'filters:', query.filters);
+        console.log('Running custom query on table:', query.table, 'filters:', query.filters, 'limit:', query.limit, 'offset:', query.offset);
 
         const queryBuilder = client.from(query.table).select(query.select || '*', { count: 'exact' });
 
@@ -125,6 +125,7 @@ Deno.serve(async (req) => {
         if (query.filters) {
           Object.entries(query.filters).forEach(([key, value]) => {
             if (value !== null && value !== undefined) {
+              console.log(`Applying filter: ${key} = ${value}`);
               queryBuilder.eq(key, value);
             }
           });
@@ -148,18 +149,31 @@ Deno.serve(async (req) => {
           queryBuilder.order('created_at', { ascending: false });
         }
 
+        console.log('Executing query...');
         const { data: customData, error: customError, count: totalCount } = await queryBuilder;
 
         if (customError) {
+          // Log the full error object
+          console.error('Full error object:', JSON.stringify(customError, null, 2));
+          console.error('Error type:', typeof customError);
+          console.error('Error keys:', Object.keys(customError));
+          
+          const errorMsg = typeof customError.message === 'string' 
+            ? customError.message 
+            : JSON.stringify(customError.message || customError);
+          
           console.error('Error running custom query:', {
             message: customError.message,
             details: customError.details,
             hint: customError.hint,
-            code: customError.code
+            code: customError.code,
+            fullError: customError
           });
-          throw new Error(`Query failed: ${customError.message} (${customError.code})`);
+          
+          throw new Error(`Query failed: ${errorMsg}${customError.code ? ` (code: ${customError.code})` : ''}`);
         }
 
+        console.log('Query successful, rows returned:', customData?.length);
         result = { data: customData, count: totalCount || 0 };
         break;
 
