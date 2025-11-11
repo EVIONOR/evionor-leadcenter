@@ -31,7 +31,7 @@ export default function LeadManager() {
   );
 
   const [currentPage, setCurrentPage] = useQueryState("page", parseAsInteger.withDefault(1));
-  const [itemsPerPage, setItemsPerPage] = useQueryState("perPage", parseAsInteger.withDefault(10));
+  const [itemsPerPage, setItemsPerPage] = useQueryState("perPage", parseAsInteger.withDefault(15));
 
   const totalPages = Math.ceil(totalCount / itemsPerPage);
 
