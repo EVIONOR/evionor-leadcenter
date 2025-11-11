@@ -2,3 +2,6 @@ project_id = "rhbfjjfbulppqhjjxofh"
 
 [functions.receive-lead]
 verify_jwt = false
+
+[functions.query-evionor]
+verify_jwt = false
