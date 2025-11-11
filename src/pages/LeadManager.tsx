@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { getQuestionnaireResponses } from "@/integrations/evionor/client";
+import type { QuestionnaireResponse } from "@/integrations/evionor/types";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -14,18 +15,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-interface Lead {
-  id: string;
-  contact_name: string | null;
-  email: string | null;
-  phone_number: string | null;
-  car_brand: string | null;
-  car_model: string | null;
-  zip_code: string | null;
-  city: string | null;
+interface Lead extends QuestionnaireResponse {
   status: string;
-  raw_data: any;
-  created_at: string;
 }
 
 export default function LeadManager() {
@@ -41,18 +32,24 @@ export default function LeadManager() {
 
   const fetchLeads = async () => {
     try {
-      const { data, error } = await supabase
-        .from('leads')
-        .select('*')
-        .order('created_at', { ascending: false });
+      const result = await getQuestionnaireResponses();
+      
+      if (!result?.data) {
+        throw new Error('No data received');
+      }
 
-      if (error) throw error;
-      setLeads(data || []);
+      // Map questionnaire responses to leads with default status
+      const leadsWithStatus = result.data.map((response: QuestionnaireResponse) => ({
+        ...response,
+        status: 'new' // Default status since EVIONOR DB doesn't have status field
+      }));
+
+      setLeads(leadsWithStatus);
     } catch (error) {
       console.error('Error fetching leads:', error);
       toast({
         title: "Error",
-        description: "Failed to fetch leads",
+        description: "Failed to fetch leads from EVIONOR database",
         variant: "destructive",
       });
     } finally {
@@ -61,41 +58,25 @@ export default function LeadManager() {
   };
 
   const updateLeadStatus = async (leadId: string, newStatus: string) => {
-    try {
-      const { error } = await supabase
-        .from('leads')
-        .update({ status: newStatus })
-        .eq('id', leadId);
+    // Note: Status updates are client-side only since EVIONOR DB is read-only
+    setLeads(leads.map(lead => 
+      lead.id === leadId ? { ...lead, status: newStatus } : lead
+    ));
 
-      if (error) throw error;
-
-      setLeads(leads.map(lead => 
-        lead.id === leadId ? { ...lead, status: newStatus } : lead
-      ));
-
-      toast({
-        title: "Success",
-        description: `Lead status updated to ${newStatus}`,
-      });
-    } catch (error) {
-      console.error('Error updating lead:', error);
-      toast({
-        title: "Error",
-        description: "Failed to update lead status",
-        variant: "destructive",
-      });
-    }
+    toast({
+      title: "Success",
+      description: `Lead status updated to ${newStatus} (local only)`,
+    });
   };
 
   const handleQualifyLead = (lead: Lead) => {
     const leadData = {
-      contactName: lead.contact_name || '',
+      contactName: lead.name || '',
       email: lead.email || '',
-      phoneNumber: lead.phone_number || '',
+      phoneNumber: lead.phone || '',
       carBrand: lead.car_brand || '',
       carModel: lead.car_model || '',
-      zipCode: lead.zip_code || '',
-      city: lead.city || '',
+      location: lead.location || '',
     };
     
     localStorage.setItem('prefill_lead_data', JSON.stringify(leadData));
@@ -161,10 +142,7 @@ export default function LeadManager() {
             <Card>
               <CardContent className="pt-6">
                 <p className="text-center text-muted-foreground">
-                  No leads found. Configure Make.com to send data to: <br />
-                  <code className="mt-2 inline-block bg-muted px-2 py-1 rounded">
-                    {window.location.origin}/functions/v1/receive-lead
-                  </code>
+                  No questionnaire responses found in EVIONOR database.
                 </p>
               </CardContent>
             </Card>
@@ -173,17 +151,17 @@ export default function LeadManager() {
               <Card key={lead.id}>
                 <CardHeader>
                   <div className="flex items-start justify-between">
-                    <div>
-                      <CardTitle className="flex items-center gap-2">
-                        {lead.contact_name || 'No Name'}
-                        <Badge className={getStatusColor(lead.status)}>
-                          {lead.status}
-                        </Badge>
-                      </CardTitle>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        {new Date(lead.created_at).toLocaleString()}
-                      </p>
-                    </div>
+                  <div>
+                    <CardTitle className="flex items-center gap-2">
+                      {lead.name || 'No Name'}
+                      <Badge className={getStatusColor(lead.status)}>
+                        {lead.status}
+                      </Badge>
+                    </CardTitle>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {new Date(lead.created_at).toLocaleString()}
+                    </p>
+                  </div>
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -194,7 +172,7 @@ export default function LeadManager() {
                     </div>
                     <div>
                       <p className="text-sm font-semibold">Phone</p>
-                      <p className="text-sm text-muted-foreground">{lead.phone_number || 'N/A'}</p>
+                      <p className="text-sm text-muted-foreground">{lead.phone || 'N/A'}</p>
                     </div>
                     <div>
                       <p className="text-sm font-semibold">Car</p>
@@ -205,7 +183,7 @@ export default function LeadManager() {
                     <div>
                       <p className="text-sm font-semibold">Location</p>
                       <p className="text-sm text-muted-foreground">
-                        {lead.zip_code} {lead.city || 'N/A'}
+                        {lead.location || 'N/A'}
                       </p>
                     </div>
                   </div>
