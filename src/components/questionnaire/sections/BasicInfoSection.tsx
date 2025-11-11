@@ -14,6 +14,15 @@ export const BasicInfoSection = ({ form }: BasicInfoSectionProps) => {
   const selectedBrand = form.watch("carBrand");
   const selectedModel = form.watch("carModel");
   const availableModels = selectedBrand ? getModelsByBrand(selectedBrand) : [];
+  
+  // Check if the selected model exists in available models
+  const isCustomModel = selectedModel && !availableModels.includes(selectedModel) && selectedModel !== "Egyéb modell";
+  
+  // Add the custom model to the list if it doesn't exist
+  const modelsToShow = isCustomModel 
+    ? [...availableModels, selectedModel] 
+    : availableModels;
+  
   const showCustomField = selectedBrand === "Egyéb" || selectedModel === "Egyéb modell";
   return (
     <div className="space-y-6">
@@ -115,7 +124,7 @@ export const BasicInfoSection = ({ form }: BasicInfoSectionProps) => {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent className="max-h-[300px]">
-                  {availableModels.map((model) => (
+                  {modelsToShow.map((model) => (
                     <SelectItem key={model} value={model}>
                       {model}
                     </SelectItem>
