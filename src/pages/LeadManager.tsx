@@ -160,8 +160,8 @@ export default function LeadManager() {
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between">
                     <div>
-                      <CardTitle className="text-base">{response.name || "No Name"}</CardTitle>
-                      <p className="text-xs text-muted-foreground">{new Date(response.created_at).toLocaleString()}</p>
+                      <CardTitle className="text-lg">{response.name || "No Name"}</CardTitle>
+                      <p className="text-sm text-muted-foreground">{new Date(response.created_at).toLocaleString()}</p>
                     </div>
                     <div className="flex items-center gap-4">
                       <Button variant="default" size="sm" onClick={() => handleQualifyLead(response)}>
@@ -188,34 +188,34 @@ export default function LeadManager() {
                 <CardContent className="pt-0">
                   <div className="grid grid-cols-4 gap-3 mb-3">
                     <div>
-                      <p className="text-xs font-semibold">Email</p>
-                      <p className="text-xs text-muted-foreground truncate">{response.email || "N/A"}</p>
+                      <p className="text-sm font-semibold">Email</p>
+                      <p className="text-sm text-muted-foreground truncate">{response.email || "N/A"}</p>
                     </div>
                     <div>
-                      <p className="text-xs font-semibold">Phone</p>
-                      <p className="text-xs text-muted-foreground">{response.phone || "N/A"}</p>
+                      <p className="text-sm font-semibold">Phone</p>
+                      <p className="text-sm text-muted-foreground">{response.phone || "N/A"}</p>
                     </div>
                     <div>
-                      <p className="text-xs font-semibold">Location</p>
-                      <p className="text-xs text-muted-foreground">{response.location || "N/A"}</p>
+                      <p className="text-sm font-semibold">Location</p>
+                      <p className="text-sm text-muted-foreground">{response.location || "N/A"}</p>
                     </div>
                     <div>
-                      <p className="text-xs font-semibold">Timeline</p>
-                      <p className="text-xs text-muted-foreground">{response.timeline || "N/A"}</p>
+                      <p className="text-sm font-semibold">Timeline</p>
+                      <p className="text-sm text-muted-foreground">{response.timeline || "N/A"}</p>
                     </div>
                     <div>
-                      <p className="text-xs font-semibold">Car</p>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-sm font-semibold">Car</p>
+                      <p className="text-sm text-muted-foreground">
                         {response.car_brand} {response.car_model || "N/A"}
                       </p>
                     </div>
                     <div>
-                      <p className="text-xs font-semibold">Annual KM</p>
-                      <p className="text-xs text-muted-foreground">{response.km_per_year?.toLocaleString() || "N/A"}</p>
+                      <p className="text-sm font-semibold">Annual KM</p>
+                      <p className="text-sm text-muted-foreground">{response.km_per_year?.toLocaleString() || "N/A"}</p>
                     </div>
                     <div>
-                      <p className="text-xs font-semibold">Phases</p>
-                      <p className="text-xs text-muted-foreground">{response.phases || "N/A"}</p>
+                      <p className="text-sm font-semibold">Phases</p>
+                      <p className="text-sm text-muted-foreground">{response.phases || "N/A"}</p>
                     </div>
                   </div>
                 </CardContent>
