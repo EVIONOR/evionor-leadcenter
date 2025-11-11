@@ -21,7 +21,7 @@ const ITEMS_PER_PAGE = 20;
 export default function LeadManager() {
   const [responses, setResponses] = useState<QuestionnaireResponse[]>([]);
   const [loading, setLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState<LeadStatus | 'all'>('all');
+  const [statusFilter, setStatusFilter] = useState<LeadStatus | 'all'>('new');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const navigate = useNavigate();
@@ -157,11 +157,11 @@ export default function LeadManager() {
           ) : (
             responses.map((response) => (
               <Card key={response.id}>
-                <CardHeader>
+                <CardHeader className="pb-3">
                   <div className="flex items-start justify-between">
                     <div>
-                      <CardTitle>{response.name || "No Name"}</CardTitle>
-                      <p className="text-sm text-muted-foreground">{new Date(response.created_at).toLocaleString()}</p>
+                      <CardTitle className="text-base">{response.name || "No Name"}</CardTitle>
+                      <p className="text-xs text-muted-foreground">{new Date(response.created_at).toLocaleString()}</p>
                     </div>
                     <Select 
                       value={response.status} 
@@ -180,37 +180,37 @@ export default function LeadManager() {
                     </Select>
                   </div>
                 </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 gap-4 mb-4">
+                <CardContent className="pt-0">
+                  <div className="grid grid-cols-2 gap-3 mb-3">
                     <div>
-                      <p className="text-sm font-semibold">Email</p>
-                      <p className="text-sm text-muted-foreground">{response.email || "N/A"}</p>
+                      <p className="text-xs font-semibold">Email</p>
+                      <p className="text-xs text-muted-foreground">{response.email || "N/A"}</p>
                     </div>
                     <div>
-                      <p className="text-sm font-semibold">Phone</p>
-                      <p className="text-sm text-muted-foreground">{response.phone || "N/A"}</p>
+                      <p className="text-xs font-semibold">Phone</p>
+                      <p className="text-xs text-muted-foreground">{response.phone || "N/A"}</p>
                     </div>
                     <div>
-                      <p className="text-sm font-semibold">Car</p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-xs font-semibold">Car</p>
+                      <p className="text-xs text-muted-foreground">
                         {response.car_brand} {response.car_model || "N/A"}
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm font-semibold">Location</p>
-                      <p className="text-sm text-muted-foreground">{response.location || "N/A"}</p>
+                      <p className="text-xs font-semibold">Location</p>
+                      <p className="text-xs text-muted-foreground">{response.location || "N/A"}</p>
                     </div>
                     <div>
-                      <p className="text-sm font-semibold">Annual KM</p>
-                      <p className="text-sm text-muted-foreground">{response.km_per_year?.toLocaleString() || "N/A"}</p>
+                      <p className="text-xs font-semibold">Annual KM</p>
+                      <p className="text-xs text-muted-foreground">{response.km_per_year?.toLocaleString() || "N/A"}</p>
                     </div>
                     <div>
-                      <p className="text-sm font-semibold">Phases</p>
-                      <p className="text-sm text-muted-foreground">{response.phases || "N/A"}</p>
+                      <p className="text-xs font-semibold">Phases</p>
+                      <p className="text-xs text-muted-foreground">{response.phases || "N/A"}</p>
                     </div>
                     <div>
-                      <p className="text-sm font-semibold">Timeline</p>
-                      <p className="text-sm text-muted-foreground">{response.timeline || "N/A"}</p>
+                      <p className="text-xs font-semibold">Timeline</p>
+                      <p className="text-xs text-muted-foreground">{response.timeline || "N/A"}</p>
                     </div>
                   </div>
 
