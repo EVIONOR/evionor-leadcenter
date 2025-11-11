@@ -16,7 +16,11 @@ import { ArrowRight, ArrowLeft, TestTube } from "lucide-react";
 const formSchema = z.object({
   contactName: z.string().trim().min(1, "Kötelező mező").max(100, "Maximum 100 karakter"),
   email: z.string().trim().email("Érvényes email cím szükséges").max(255, "Maximum 255 karakter"),
-  phoneNumber: z.string().trim().min(1, "Kötelező mező").regex(/^[\d\s+()-]+$/, "Érvényes telefonszám formátum szükséges"),
+  phoneNumber: z
+    .string()
+    .trim()
+    .min(1, "Kötelező mező")
+    .regex(/^[\d\s+()-]+$/, "Érvényes telefonszám formátum szükséges"),
   carBrand: z.string().min(1, "Kötelező mező"),
   carModel: z.string().min(1, "Kötelező mező"),
   customCar: z.string().optional(),
@@ -91,7 +95,8 @@ export const QuestionnaireForm = () => {
   });
 
   useEffect(() => {
-    const prefillData = localStorage.getItem('prefill_lead_data');
+    const prefillData = localStorage.getItem("prefill_lead_data");
+    console.log(prefillData);
     if (prefillData) {
       try {
         const leadData = JSON.parse(prefillData);
@@ -100,9 +105,9 @@ export const QuestionnaireForm = () => {
             form.setValue(key as keyof QuestionnaireData, leadData[key]);
           }
         });
-        localStorage.removeItem('prefill_lead_data');
+        localStorage.removeItem("prefill_lead_data");
       } catch (error) {
-        console.error('Error loading prefill data:', error);
+        console.error("Error loading prefill data:", error);
       }
     }
   }, [form]);
@@ -196,10 +201,10 @@ export const QuestionnaireForm = () => {
                 Kérjük, töltse ki az alábbi kérdőívet, hogy pontos ajánlatot készíthessünk az Ön számára.
               </CardDescription>
             </div>
-            <Button 
-              type="button" 
-              variant="outline" 
-              size="sm" 
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
               onClick={loadTestData}
               className="flex items-center gap-2"
             >
@@ -214,7 +219,7 @@ export const QuestionnaireForm = () => {
               <BasicInfoSection form={form} />
               <InstallationSection form={form} />
               <ChargerSpecsSection form={form} />
-              
+
               <div className="flex justify-end pt-6 border-t">
                 <Button type="submit" size="lg" className="min-w-[200px]">
                   Összefoglaló megtekintése
