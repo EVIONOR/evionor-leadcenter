@@ -24,8 +24,8 @@ Deno.serve(async (req) => {
 
     const { action, table, query } = await req.json();
     
-    // Use service key for schema queries, anon key for data queries
-    const useServiceKey = action === 'list_tables' || action === 'get_schema';
+    // Use service key for all queries to bypass RLS
+    const useServiceKey = true;
     const apiKey = useServiceKey && evionorServiceKey ? evionorServiceKey : evionorAnonKey;
     
     // Create client for EVIONOR Supabase
