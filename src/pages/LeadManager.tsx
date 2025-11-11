@@ -198,7 +198,7 @@ export default function LeadManager() {
           ) : (
             responses.map((response) => (
               <Card key={response.id}>
-                <CardContent className="flex items-center gap-4 justify-between p-6">
+                <CardContent className="flex items-center gap-8 justify-start p-6">
                   <div>
                     <CardTitle className="text-lg">{response.name || "No Name"}</CardTitle>
                     <p className="text-sm text-muted-foreground">{new Date(response.created_at).toLocaleString()}</p>
