@@ -9,6 +9,8 @@ import { Copy, Mail, X } from "lucide-react";
 import { toast } from "sonner";
 import { additionalItemPrices, formatPrice, priceList } from "@/data/priceList";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { saveSavedQuestionnaireResponse } from "@/integrations/evionor/client";
+import { supabase } from "@/integrations/supabase/client";
 
 interface EmailGeneratorProps {
   data: QuestionnaireData;
@@ -357,8 +359,61 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
     return "";
   };
 
-  const generateEmail = () => {
+  const generateEmail = async () => {
     if (selectedTemplates.length === 0) return;
+
+    // Mentés az Evionorba
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      const responseData = {
+        original_response_id: null,
+        contact_name: data.contactName,
+        email: data.email,
+        phone_number: data.phoneNumber,
+        car_brand: data.carBrand,
+        car_model: data.carModel,
+        custom_car: data.customCar || null,
+        zip_code: data.zipCode || "N/A",
+        city: data.city || "Nincs megadva",
+        phases: data.phases,
+        amperage: data.amperage,
+        install_location: data.installLocation,
+        building_type: data.buildingType || null,
+        needs_installation: data.needsInstallation,
+        needs_electrical_planning: data.needsElectricalPlanning,
+        indoor_outdoor: data.indoorOutdoor,
+        mounting_surface: data.mountingSurface || null,
+        needs_backplate: data.needsBackplate,
+        needs_pole: data.needsPole,
+        distance_from_box: data.distanceFromBox,
+        space_in_box: data.spaceInBox,
+        groundwork_wall_penetration: data.groundworkWallPenetration || null,
+        other_comments: data.otherComments || null,
+        solar_integration: data.solarIntegration,
+        load_management: data.loadManagement,
+        built_in_cable: data.builtInCable,
+        needs_app: data.needsApp,
+        infrastructure_development: data.infrastructureDevelopment,
+        infrastructure_details: data.infrastructureDetails || null,
+        overvoltage_protection: data.overvoltageProtection,
+        network_expansion: data.networkExpansion,
+        expansion_phase: data.expansionPhase || null,
+        expansion_amperage: data.expansionAmperage || null,
+        created_by: user?.id || null,
+      };
+
+      await saveSavedQuestionnaireResponse(responseData);
+
+      toast.success("Sikeres mentés az EVIONOR-ba", {
+        description: "A kérdőív adatok mentésre kerültek és az email elkészült.",
+      });
+    } catch (error) {
+      console.error("Error saving to EVIONOR:", error);
+      toast.error("Mentési hiba", {
+        description: "Nem sikerült menteni az adatokat az EVIONOR-ba, de az email elkészült.",
+      });
+    }
 
     // Telepítési ár a távolság alapján
     const distance = parseFloat(data.distanceFromBox) || 0;
