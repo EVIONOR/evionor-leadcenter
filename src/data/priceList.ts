@@ -6,7 +6,7 @@ export interface ProductPrice {
 
 export const priceList: ProductPrice[] = [
   // Amina
-  { name: "AMINA 1 - 7.4kW (nincs kilógó kábel)", price: 195000, category: "töltő" },
+  { name: "AMINA 1 - 7.4kW (nincs kilógó kábel)", price: 248000, category: "töltő" },
   { name: "Amina S 13kW 20A", price: 253000, category: "töltő" },
   { name: "Amina S 22kW 32A", price: 295000, category: "töltő" },
   { name: "Amina C 22kW", price: 378000, category: "töltő" },
