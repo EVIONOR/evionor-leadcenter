@@ -707,10 +707,23 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
               <CardDescription className="mt-1">Válasszon töltőket és kiegészítőket az ajánlathoz</CardDescription>
             </div>
             {generatedEmail && (
-              <Button variant="outline" size="sm" onClick={copyToClipboard}>
-                <Copy className="mr-2 h-4 w-4" />
-                Email másolása
-              </Button>
+              <div className="flex gap-2">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={async () => {
+                    await navigator.clipboard.writeText(emailSubject);
+                    toast.success("Email tárgy vágólapra másolva!");
+                  }}
+                >
+                  <Copy className="mr-2 h-4 w-4" />
+                  Tárgy másolása
+                </Button>
+                <Button variant="outline" size="sm" onClick={copyToClipboard}>
+                  <Copy className="mr-2 h-4 w-4" />
+                  Email másolása
+                </Button>
+              </div>
             )}
           </div>
         </CardHeader>
