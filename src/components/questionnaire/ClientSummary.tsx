@@ -6,15 +6,16 @@ import { Button } from "@/components/ui/button";
 import { Save } from "lucide-react";
 import { saveSavedQuestionnaireResponse } from "@/integrations/evionor/client";
 import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 interface ClientSummaryProps {
   data: QuestionnaireData;
   originalResponseId?: string;
+  autoSave?: boolean;
 }
 
-export const ClientSummary = ({ data, originalResponseId }: ClientSummaryProps) => {
+export const ClientSummary = ({ data, originalResponseId, autoSave = false }: ClientSummaryProps) => {
   const { toast } = useToast();
   const [isSaving, setIsSaving] = useState(false);
 
@@ -79,6 +80,12 @@ export const ClientSummary = ({ data, originalResponseId }: ClientSummaryProps) 
       setIsSaving(false);
     }
   };
+
+  useEffect(() => {
+    if (autoSave && !isSaving) {
+      handleSave();
+    }
+  }, [autoSave]);
 
   return (
     <Card className="shadow-lg">

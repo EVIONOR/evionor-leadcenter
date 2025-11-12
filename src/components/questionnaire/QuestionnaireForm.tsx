@@ -219,7 +219,7 @@ export const QuestionnaireForm = () => {
     
     return (
       <div className="container max-w-6xl mx-auto py-8 px-4">
-        <ClientSummary data={formData} />
+        <ClientSummary data={formData} autoSave={autoMode} />
         <div className="flex gap-4 mt-6">
           <Button variant="outline" onClick={() => {
             setStep("form");
