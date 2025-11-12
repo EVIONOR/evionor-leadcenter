@@ -701,8 +701,18 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
     <div className="space-y-6">
       <Card className="shadow-lg">
         <CardHeader className="bg-gradient-to-r from-primary/5 to-secondary/5 border-b">
-          <CardTitle className="text-2xl">Email generátor</CardTitle>
-          <CardDescription>Válasszon töltőket és kiegészítőket az ajánlathoz</CardDescription>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="text-2xl">Email generátor</CardTitle>
+              <CardDescription className="mt-1">Válasszon töltőket és kiegészítőket az ajánlathoz</CardDescription>
+            </div>
+            {generatedEmail && (
+              <Button variant="outline" size="sm" onClick={copyToClipboard}>
+                <Copy className="mr-2 h-4 w-4" />
+                Email másolása
+              </Button>
+            )}
+          </div>
         </CardHeader>
         <CardContent className="pt-6 space-y-6">
           {/* Ajánlatküldő neve */}
