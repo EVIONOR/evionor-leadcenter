@@ -55,6 +55,7 @@ const formSchema = z.object({
 export const QuestionnaireForm = () => {
   const [step, setStep] = useState<"form" | "summary" | "email">("form");
   const [formData, setFormData] = useState<QuestionnaireData | null>(null);
+  const [autoMode, setAutoMode] = useState(false);
 
   const form = useForm<QuestionnaireData>({
     resolver: zodResolver(formSchema),
@@ -153,17 +154,72 @@ export const QuestionnaireForm = () => {
     });
   };
 
+  const loadAutofillData = () => {
+    const autofillData: QuestionnaireData = {
+      contactName: "Teszt Felhasználó",
+      email: "teszt@example.com",
+      phoneNumber: "+36 20 123 4567",
+      carBrand: "Tesla",
+      carModel: "Model 3",
+      customCar: "",
+      zipCode: "1011",
+      city: "Budapest",
+      phases: "3",
+      amperage: "32",
+      installLocation: "Garázs",
+      buildingType: "családi_ház",
+      needsInstallation: true,
+      needsElectricalPlanning: false,
+      indoorOutdoor: "beltér",
+      mountingSurface: "beton",
+      needsBackplate: false,
+      needsPole: false,
+      distanceFromBox: "10",
+      spaceInBox: "nemtudom",
+      groundworkWallPenetration: "",
+      otherComments: "",
+      solarIntegration: "nem",
+      loadManagement: false,
+      builtInCable: false,
+      needsApp: true,
+      infrastructureDevelopment: false,
+      infrastructureDetails: "",
+      overvoltageProtection: false,
+      networkExpansion: false,
+      expansionPhase: "",
+      expansionAmperage: "",
+    };
+
+    Object.keys(autofillData).forEach((key) => {
+      form.setValue(key as keyof QuestionnaireData, autofillData[key as keyof QuestionnaireData]);
+    });
+
+    setAutoMode(true);
+    setTimeout(() => {
+      form.handleSubmit(onSubmit)();
+    }, 100);
+  };
+
   const onSubmit = (data: QuestionnaireData) => {
     setFormData(data);
     setStep("summary");
   };
 
   if (step === "summary" && formData) {
+    if (autoMode) {
+      setTimeout(() => {
+        setStep("email");
+      }, 500);
+    }
+    
     return (
       <div className="container max-w-6xl mx-auto py-8 px-4">
         <ClientSummary data={formData} />
         <div className="flex gap-4 mt-6">
-          <Button variant="outline" onClick={() => setStep("form")}>
+          <Button variant="outline" onClick={() => {
+            setStep("form");
+            setAutoMode(false);
+          }}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             Vissza az űrlaphoz
           </Button>
@@ -179,9 +235,12 @@ export const QuestionnaireForm = () => {
   if (step === "email" && formData) {
     return (
       <div className="container max-w-6xl mx-auto py-8 px-4">
-        <EmailGenerator data={formData} />
+        <EmailGenerator data={formData} autoGenerate={autoMode} />
         <div className="flex gap-4 mt-6">
-          <Button variant="outline" onClick={() => setStep("summary")}>
+          <Button variant="outline" onClick={() => {
+            setStep("summary");
+            setAutoMode(false);
+          }}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             Vissza az összefoglalóhoz
           </Button>
@@ -201,16 +260,28 @@ export const QuestionnaireForm = () => {
                 Kérjük, töltse ki az alábbi kérdőívet, hogy pontos ajánlatot készíthessünk az Ön számára.
               </CardDescription>
             </div>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={loadTestData}
-              className="flex items-center gap-2"
-            >
-              <TestTube className="h-4 w-4" />
-              Teszt adatok
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={loadTestData}
+                className="flex items-center gap-2"
+              >
+                <TestTube className="h-4 w-4" />
+                Teszt adatok
+              </Button>
+              <Button
+                type="button"
+                variant="default"
+                size="sm"
+                onClick={loadAutofillData}
+                className="flex items-center gap-2"
+              >
+                <ArrowRight className="h-4 w-4" />
+                Autofill
+              </Button>
+            </div>
           </div>
         </CardHeader>
         <CardContent className="pt-6">

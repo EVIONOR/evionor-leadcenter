@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { QuestionnaireData, chargerTemplates, ChargerTemplate } from "@/types/questionnaire";
@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 
 interface EmailGeneratorProps {
   data: QuestionnaireData;
+  autoGenerate?: boolean;
 }
 
 const additionalItems = [
@@ -55,12 +56,40 @@ const getLoadManagementPackage = (productName: string): LoadManagementPackage | 
   return null;
 };
 
-export const EmailGenerator = ({ data }: EmailGeneratorProps) => {
+export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorProps) => {
   const [selectedTemplates, setSelectedTemplates] = useState<ChargerTemplate[]>([]);
   const [selectedAdditionals, setSelectedAdditionals] = useState<string[]>([]);
   const [generatedEmail, setGeneratedEmail] = useState("");
   const [emailSubject, setEmailSubject] = useState("");
   const [senderName, setSenderName] = useState<string>("Nagy István");
+
+  // Auto-select templates based on phase when autoGenerate is true
+  useEffect(() => {
+    if (autoGenerate && selectedTemplates.length === 0) {
+      const templates: ChargerTemplate[] = [];
+      if (data.phases === "1") {
+        // 1 phase: amina 1, charge amps halo
+        const amina = chargerTemplates.find(t => t.id === "template2");
+        const halo = chargerTemplates.find(t => t.id === "template1");
+        if (amina) templates.push(amina);
+        if (halo) templates.push(halo);
+      } else {
+        // 3 phase: zaptec go, easee charge up
+        const zaptec = chargerTemplates.find(t => t.id === "template3b");
+        const easee = chargerTemplates.find(t => t.id === "template3a");
+        if (zaptec) templates.push(zaptec);
+        if (easee) templates.push(easee);
+      }
+      setSelectedTemplates(templates);
+      
+      // Auto-generate email after a short delay
+      setTimeout(() => {
+        if (templates.length > 0) {
+          setTimeout(() => generateEmail(), 100);
+        }
+      }, 500);
+    }
+  }, [autoGenerate, data.phases]);
 
   // Termék URL mapping (webshop product pages)
   const productUrls: { [key: string]: string } = {
