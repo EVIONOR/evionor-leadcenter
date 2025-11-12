@@ -73,7 +73,7 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
         const halo = chargerTemplates.find(t => t.id === "template1");
         if (amina) templates.push(amina);
         if (halo) templates.push(halo);
-      } else {
+      } else if (data.phases === "3") {
         // 3 phase: zaptec go, easee charge up
         const zaptec = chargerTemplates.find(t => t.id === "template3b");
         const easee = chargerTemplates.find(t => t.id === "template3a");
@@ -82,10 +82,11 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
       }
       setSelectedTemplates(templates);
       
-      // Auto-generate email after a short delay
+      // Auto-generate email after templates are selected
       setTimeout(() => {
         if (templates.length > 0) {
-          setTimeout(() => generateEmail(), 100);
+          // Wait a bit more to ensure state is updated
+          setTimeout(() => generateEmail(), 200);
         }
       }, 500);
     }

@@ -56,6 +56,7 @@ export const QuestionnaireForm = () => {
   const [step, setStep] = useState<"form" | "summary" | "email">("form");
   const [formData, setFormData] = useState<QuestionnaireData | null>(null);
   const [autoMode, setAutoMode] = useState(false);
+  const [hasPrefillData, setHasPrefillData] = useState(false);
 
   const form = useForm<QuestionnaireData>({
     resolver: zodResolver(formSchema),
@@ -106,6 +107,7 @@ export const QuestionnaireForm = () => {
             form.setValue(key as keyof QuestionnaireData, leadData[key]);
           }
         });
+        setHasPrefillData(true);
         localStorage.removeItem("prefill_lead_data");
       } catch (error) {
         console.error("Error loading prefill data:", error);
@@ -155,29 +157,21 @@ export const QuestionnaireForm = () => {
   };
 
   const loadAutofillData = () => {
-    const autofillData: QuestionnaireData = {
-      contactName: "Teszt Felhasználó",
-      email: "teszt@example.com",
-      phoneNumber: "+36 20 123 4567",
-      carBrand: "Tesla",
-      carModel: "Model 3",
-      customCar: "",
-      zipCode: "1011",
-      city: "Budapest",
-      phases: "3",
+    // Get current form values (from the prefilled lead)
+    const currentValues = form.getValues();
+    
+    // Default values to fill in missing fields
+    const defaultAutofillData = {
       amperage: "32",
       installLocation: "Garázs",
-      buildingType: "családi_ház",
       needsInstallation: true,
       needsElectricalPlanning: false,
       indoorOutdoor: "beltér",
-      mountingSurface: "beton",
       needsBackplate: false,
       needsPole: false,
       distanceFromBox: "10",
       spaceInBox: "nemtudom",
       groundworkWallPenetration: "",
-      otherComments: "",
       solarIntegration: "nem",
       loadManagement: false,
       builtInCable: false,
@@ -190,8 +184,13 @@ export const QuestionnaireForm = () => {
       expansionAmperage: "",
     };
 
-    Object.keys(autofillData).forEach((key) => {
-      form.setValue(key as keyof QuestionnaireData, autofillData[key as keyof QuestionnaireData]);
+    // Only fill in fields that are empty or have default values
+    Object.keys(defaultAutofillData).forEach((key) => {
+      const currentValue = currentValues[key as keyof QuestionnaireData];
+      // Only set if current value is empty, undefined, or is a default empty value
+      if (!currentValue || currentValue === "" || currentValue === "nemtudom") {
+        form.setValue(key as keyof QuestionnaireData, defaultAutofillData[key as keyof typeof defaultAutofillData]);
+      }
     });
 
     setAutoMode(true);
@@ -271,16 +270,18 @@ export const QuestionnaireForm = () => {
                 <TestTube className="h-4 w-4" />
                 Teszt adatok
               </Button>
-              <Button
-                type="button"
-                variant="default"
-                size="sm"
-                onClick={loadAutofillData}
-                className="flex items-center gap-2"
-              >
-                <ArrowRight className="h-4 w-4" />
-                Autofill
-              </Button>
+              {hasPrefillData && (
+                <Button
+                  type="button"
+                  variant="default"
+                  size="sm"
+                  onClick={loadAutofillData}
+                  className="flex items-center gap-2"
+                >
+                  <ArrowRight className="h-4 w-4" />
+                  Autofill
+                </Button>
+              )}
             </div>
           </div>
         </CardHeader>
