@@ -435,10 +435,12 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                         <td style="padding: 12px 0; color: #6b7280; font-size: 14px;">Jármű</td>
                         <td style="padding: 12px 0; color: #111827; font-size: 14px; font-weight: 500;">${data.customCar ? data.customCar : `${data.carBrand} ${data.carModel}`}</td>
                     </tr>
+                    ${data.city && data.zipCode ? `
                     <tr>
                         <td style="padding: 12px 0; color: #6b7280; font-size: 14px;">Helyszín</td>
                         <td style="padding: 12px 0; color: #111827; font-size: 14px; font-weight: 500;">${data.city}, ${data.zipCode}</td>
                     </tr>
+                    ` : ""}
                     <tr>
                         <td style="padding: 12px 0; color: #6b7280; font-size: 14px;">Épület típus</td>
                         <td style="padding: 12px 0; color: #111827; font-size: 14px; font-weight: 500;">${data.buildingType.replace("_", " ")}</td>

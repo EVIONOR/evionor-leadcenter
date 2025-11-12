@@ -24,8 +24,8 @@ const formSchema = z.object({
   carBrand: z.string().min(1, "Kötelező mező"),
   carModel: z.string().min(1, "Kötelező mező"),
   customCar: z.string().optional(),
-  zipCode: z.string().min(4, "Érvényes irányítószám szükséges").max(4),
-  city: z.string().min(1, "A város automatikusan kitöltődik"),
+  zipCode: z.string().optional(),
+  city: z.string().optional(),
   phases: z.enum(["1", "3"]),
   amperage: z.string().min(1, "Kötelező mező"),
   installLocation: z.string().min(1, "Kötelező mező"),
@@ -160,7 +160,7 @@ export const QuestionnaireForm = () => {
     // Get current form values (from the prefilled lead)
     const currentValues = form.getValues();
     
-    // Default values to fill in missing fields
+    // Default values to fill in missing fields (excluding city and zipCode)
     const defaultAutofillData = {
       amperage: "32",
       installLocation: "Garázs",
@@ -182,7 +182,12 @@ export const QuestionnaireForm = () => {
       networkExpansion: false,
       expansionPhase: "",
       expansionAmperage: "",
+      otherComments: "",
     };
+
+    // Keep city and zipCode empty
+    form.setValue("city", "");
+    form.setValue("zipCode", "");
 
     // Only fill in fields that are empty or have default values
     Object.keys(defaultAutofillData).forEach((key) => {
@@ -205,10 +210,11 @@ export const QuestionnaireForm = () => {
   };
 
   if (step === "summary" && formData) {
+    // Auto-skip summary and go directly to email in auto mode
     if (autoMode) {
       setTimeout(() => {
         setStep("email");
-      }, 500);
+      }, 100);
     }
     
     return (

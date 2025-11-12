@@ -6,8 +6,8 @@ export interface QuestionnaireData {
   carBrand: string;
   carModel: string;
   customCar: string;
-  zipCode: string;
-  city: string;
+  zipCode?: string;
+  city?: string;
   phases: "1" | "3";
   amperage: string;
   installLocation: string;

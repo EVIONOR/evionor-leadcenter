@@ -33,8 +33,8 @@ export const ClientSummary = ({ data, originalResponseId }: ClientSummaryProps) 
         car_brand: data.carBrand,
         car_model: data.carModel,
         custom_car: data.customCar || null,
-        zip_code: data.zipCode,
-        city: data.city,
+        zip_code: data.zipCode || null,
+        city: data.city || null,
         phases: data.phases,
         amperage: data.amperage,
         install_location: data.installLocation,
@@ -126,10 +126,12 @@ export const ClientSummary = ({ data, originalResponseId }: ClientSummaryProps) 
                 {data.customCar ? data.customCar : `${data.carBrand} ${data.carModel}`}
               </p>
             </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Helyszín</p>
-              <p className="font-medium">{data.city} ({data.zipCode})</p>
-            </div>
+            {data.city && data.zipCode && (
+              <div>
+                <p className="text-sm text-muted-foreground">Helyszín</p>
+                <p className="font-medium">{data.city} ({data.zipCode})</p>
+              </div>
+            )}
             <div>
               <p className="text-sm text-muted-foreground">Elektromos rendszer</p>
               <p className="font-medium">{data.phases} fázis, {data.amperage} A</p>
