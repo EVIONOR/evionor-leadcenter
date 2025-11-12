@@ -487,17 +487,6 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                     </table>
                 </div>
                 
-                ${loadManagementPackage ? `
-                <div style="padding: 16px; background-color: white; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e5e7eb;">
-                    <table style="width: 100%; border-collapse: collapse;">
-                        <tr>
-                            <td style="padding: 0; width: 65%;"><a href="${loadManagementPackage.url}" target="_blank" rel="noopener noreferrer" style="color: #111827; font-size: 16px; font-weight: 600; text-decoration: none; border-bottom: 2px solid #0071e3; transition: color 0.2s;" onMouseOver="this.style.color='#0071e3'" onMouseOut="this.style.color='#111827'">${loadManagementPackage.name} (opcionális)</a></td>
-                            <td style="padding: 0 0 0 20px; color: #0071e3; font-size: 18px; font-weight: 700; text-align: right;">${formatPrice(loadManagementPackage.price)}</td>
-                        </tr>
-                    </table>
-                </div>
-                ` : ''}
-                
                 <div style="margin-top: 20px; padding: 16px; background-color: white; border-radius: 8px; border: 1px solid #e5e7eb;">
                     <p style="margin: 0 0 12px 0; color: #374151; font-size: 14px; font-weight: 600;">Jellemzők:</p>
                     <ul style="margin: 0; padding: 0 0 0 20px; color: #374151; font-size: 14px; line-height: 1.8;">
@@ -518,6 +507,17 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                                 </p>
                             </td>
                             <td style="padding: 0 0 0 20px; color: #0071e3; font-size: 16px; font-weight: 700; text-align: right; vertical-align: top;">${formatPrice(installationPrice)}</td>
+                        </tr>
+                    </table>
+                </div>
+                ` : ''}
+                
+                ${loadManagementPackage ? `
+                <div style="padding: 16px; background-color: white; border-radius: 8px; margin-top: 20px; border: 1px solid #e5e7eb;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr>
+                            <td style="padding: 0; width: 65%;"><a href="${loadManagementPackage.url}" target="_blank" rel="noopener noreferrer" style="color: #111827; font-size: 16px; font-weight: 600; text-decoration: none; border-bottom: 2px solid #0071e3; transition: color 0.2s;" onMouseOver="this.style.color='#0071e3'" onMouseOut="this.style.color='#111827'">${loadManagementPackage.name} (opcionális)</a></td>
+                            <td style="padding: 0 0 0 20px; color: #0071e3; font-size: 18px; font-weight: 700; text-align: right;">${formatPrice(loadManagementPackage.price)}</td>
                         </tr>
                     </table>
                 </div>
