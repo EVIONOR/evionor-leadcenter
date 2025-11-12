@@ -81,16 +81,17 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
         if (easee) templates.push(easee);
       }
       setSelectedTemplates(templates);
-      
-      // Auto-generate email after templates are selected
-      setTimeout(() => {
-        if (templates.length > 0) {
-          // Wait a bit more to ensure state is updated
-          setTimeout(() => generateEmail(), 200);
-        }
-      }, 500);
     }
   }, [autoGenerate, data.phases]);
+
+  // Auto-generate email when templates are selected in auto mode
+  useEffect(() => {
+    if (autoGenerate && selectedTemplates.length > 0 && !generatedEmail) {
+      setTimeout(() => {
+        generateEmail();
+      }, 500);
+    }
+  }, [autoGenerate, selectedTemplates]);
 
   // Termék URL mapping (webshop product pages)
   const productUrls: { [key: string]: string } = {

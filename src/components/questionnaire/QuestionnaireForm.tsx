@@ -173,7 +173,7 @@ export const QuestionnaireForm = () => {
       spaceInBox: "nemtudom",
       groundworkWallPenetration: "",
       solarIntegration: "nem",
-      loadManagement: false,
+      loadManagement: true,
       builtInCable: false,
       needsApp: true,
       infrastructureDevelopment: false,
