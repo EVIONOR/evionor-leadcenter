@@ -38,21 +38,21 @@ const getLoadManagementPackage = (productName: string): LoadManagementPackage | 
     return {
       name: "Zaptec Sense Terhelésmenedzsment",
       price: 127000,
-      url: "https://evionor.hu/collections/all/products/zaptec-sense-gen-ct-clamp-csomag-ev-mero?_pos=14&_fid=c1e909eaa&_ss=c"
+      url: "https://evionor.hu/collections/all/products/zaptec-sense-gen-ct-clamp-csomag-ev-mero?_pos=14&_fid=c1e909eaa&_ss=c",
     };
   }
   if (productName.includes("Easee")) {
     return {
       name: "Easee Equalizer Terhelésmenedzsment",
       price: 143000,
-      url: "https://evionor.hu/collections/all/products/easee-equalizer-amp-csomag-ev-mero?_pos=9&_fid=c1e909eaa&_ss=c"
+      url: "https://evionor.hu/collections/all/products/easee-equalizer-amp-csomag-ev-mero?_pos=9&_fid=c1e909eaa&_ss=c",
     };
   }
   if (productName.includes("Charge Amps")) {
     return {
       name: "Charge Amps Amp Guard Terhelésmenedzment",
       price: 132000,
-      url: "https://evionor.hu/collections/all/products/charge-amps-amp-guard-63a-ev-mero?_pos=10&_fid=53fe77cfa&_ss=c"
+      url: "https://evionor.hu/collections/all/products/charge-amps-amp-guard-63a-ev-mero?_pos=10&_fid=53fe77cfa&_ss=c",
     };
   }
   return null;
@@ -72,14 +72,14 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
       const templates: ChargerTemplate[] = [];
       if (data.phases === "1") {
         // 1 phase: amina 1, charge amps halo
-        const amina = chargerTemplates.find(t => t.id === "template2");
-        const halo = chargerTemplates.find(t => t.id === "template1");
+        const amina = chargerTemplates.find((t) => t.id === "template2");
+        const halo = chargerTemplates.find((t) => t.id === "template1");
         if (amina) templates.push(amina);
         if (halo) templates.push(halo);
       } else if (data.phases === "3") {
         // 3 phase: zaptec go, easee charge up
-        const zaptec = chargerTemplates.find(t => t.id === "template3b");
-        const easee = chargerTemplates.find(t => t.id === "template3a");
+        const zaptec = chargerTemplates.find((t) => t.id === "template3b");
+        const easee = chargerTemplates.find((t) => t.id === "template3a");
         if (zaptec) templates.push(zaptec);
         if (easee) templates.push(easee);
       }
@@ -100,10 +100,11 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
   const productUrls: { [key: string]: string } = {
     "Charge Amps Halo 11kW": "https://evionor.hu/collections/all/products/charge-amps-halo-7-4kw-ev-tolto",
     "Charge Amps Luna 22kW": "https://evionor.hu/collections/all/products/charge-amps-luna-22kw-ev-tolto",
-    "AMINA 1 - 7.4kW (nincs kilógó kábel)": "https://evionor.hu/collections/all/products/amina-1-evtlt?_pos=1&_fid=bb7a6be86&_ss=c",
+    "AMINA 1 - 7.4kW (nincs kilógó kábel)":
+      "https://evionor.hu/collections/all/products/amina-1-evtlt?_pos=1&_fid=bb7a6be86&_ss=c",
     "Easee Charge Up 22kW": "https://evionor.hu/collections/all/products/easee-charge-up-evtlt",
     "Zaptec Go 22kW": "https://evionor.hu/collections/all/products/zaptec-go-evtlt",
-    "Zaptec Solar MID": "https://evionor.hu/collections/all/products/zaptec-go-2"
+    "Zaptec Solar MID": "https://evionor.hu/collections/all/products/zaptec-go-2",
   };
 
   // Kosárba button URLs (product pages with installation)
@@ -113,7 +114,7 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
     "Charge Amps Luna 22kW": "https://evionor.hu/products/charge-amps-luna-22kw-ev-tolto-telepites-csomag",
     "Zaptec Go 22kW": "https://evionor.hu/products/zaptec-go-22kw-ev-tolto-telepitesi-csomgaban",
     "Zaptec Solar MID": "https://evionor.hu/products/zaptec-go-22kw-ev-tolto-telepitesi-csomgaban",
-    "Easee Charge Up 22kW": "https://evionor.hu/products/easee-charge-up-22kw-ev-tolto-telepitesi-csomgaban"
+    "Easee Charge Up 22kW": "https://evionor.hu/products/easee-charge-up-22kw-ev-tolto-telepitesi-csomgaban",
   };
 
   // Termék URL lekérése
@@ -132,7 +133,10 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
     if (productName.includes("Zaptec Solar MID")) {
       return "https://evionor.hu/cdn/shop/files/ZaptecGo2_Productimage_quater_asphaltblack.webp?v=1762325254&width=600";
     }
-    if (productName.includes("Zaptec Go 22kW") || (productName.includes("Zaptec Go") && !productName.includes("Solar"))) {
+    if (
+      productName.includes("Zaptec Go 22kW") ||
+      (productName.includes("Zaptec Go") && !productName.includes("Solar"))
+    ) {
       return "https://evionor.hu/cdn/shop/files/Zaptec_Go_Home_Charging_2329.webp?v=1762272030&width=600";
     }
     if (productName.includes("Easee Charge Up")) {
@@ -152,35 +156,36 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
 
   // Ár keresés a termék névből
   const findProductPrice = (productName: string): number => {
-    const normalizedSearch = productName.toLowerCase()
-      .replace(/\s+/g, ' ')
-      .replace('+ load balance', '')
-      .replace('+ solar load balancing', '')
+    const normalizedSearch = productName
+      .toLowerCase()
+      .replace(/\s+/g, " ")
+      .replace("+ load balance", "")
+      .replace("+ solar load balancing", "")
       .trim();
-    
+
     // Pontos egyezés keresése először (pl. "Zaptec Go 2" vs "Zaptec Go")
-    let product = priceList.find(p => {
-      const normalizedProductName = p.name.toLowerCase().replace(/\s+/g, ' ');
+    let product = priceList.find((p) => {
+      const normalizedProductName = p.name.toLowerCase().replace(/\s+/g, " ");
       return normalizedProductName === normalizedSearch;
     });
-    
+
     // Ha nincs pontos egyezés, próbáljuk meg a részleges keresést
     if (!product) {
-      product = priceList.find(p => {
-        const normalizedProductName = p.name.toLowerCase().replace(/\s+/g, ' ');
-        const searchWords = normalizedSearch.split(' ');
-        return searchWords.every(word => normalizedProductName.includes(word));
+      product = priceList.find((p) => {
+        const normalizedProductName = p.name.toLowerCase().replace(/\s+/g, " ");
+        const searchWords = normalizedSearch.split(" ");
+        return searchWords.every((word) => normalizedProductName.includes(word));
       });
     }
-    
+
     return product?.price || 0;
   };
 
   // Eldönti, hogy a név cég-e vagy ember
   const isCompanyName = (name: string): boolean => {
-    const companyIndicators = ['kft', 'bt', 'zrt', 'nyrt', 'ltd', 'inc', 'corp', 'gmbh', 'kkt', 'ev'];
+    const companyIndicators = ["kft", "bt", "zrt", "nyrt", "ltd", "inc", "corp", "gmbh", "kkt", "ev"];
     const lowerName = name.toLowerCase();
-    return companyIndicators.some(indicator => lowerName.includes(indicator)) || name.includes('.');
+    return companyIndicators.some((indicator) => lowerName.includes(indicator)) || name.includes(".");
   };
 
   // Megszólítás generálása
@@ -192,7 +197,7 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
   };
 
   // Intelligens sablon ajánlás
-  const recommendedTemplate = chargerTemplates.find(template => {
+  const recommendedTemplate = chargerTemplates.find((template) => {
     if (data.solarIntegration !== "nem") return template.id === "template4";
     if (data.phases === "3") return template.id === "template3a";
     if (data.needsApp) return template.id === "template1";
@@ -201,9 +206,9 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
 
   // Töltő kiválasztása/törlése
   const toggleTemplate = (template: ChargerTemplate) => {
-    const exists = selectedTemplates.find(t => t.id === template.id);
+    const exists = selectedTemplates.find((t) => t.id === template.id);
     if (exists) {
-      setSelectedTemplates(selectedTemplates.filter(t => t.id !== template.id));
+      setSelectedTemplates(selectedTemplates.filter((t) => t.id !== template.id));
     } else {
       setSelectedTemplates([...selectedTemplates, template]);
     }
@@ -263,7 +268,10 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
         <li style="font-size: 8px;">Garancia: 5 év</li>
       `;
     }
-    if (productName.includes("Zaptec Go 22kW") || (productName.includes("Zaptec Go") && !productName.includes("Solar"))) {
+    if (
+      productName.includes("Zaptec Go 22kW") ||
+      (productName.includes("Zaptec Go") && !productName.includes("Solar"))
+    ) {
       return `
         <li style="font-size: 8px;">Töltőcsatlakozó: Type 2 (IEC 62196-1/2)</li>
         <li style="font-size: 8px;">Fázisok száma: 1/3</li>
@@ -365,8 +373,10 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
 
     // Mentés az Evionorba
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
       const responseData = {
         original_response_id: null,
         contact_name: data.contactName,
@@ -425,7 +435,7 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
       } else if (distance <= 20) {
         installationPrice = 299000;
       } else {
-        installationPrice = 299000 + ((distance - 20) * 15000);
+        installationPrice = 299000 + (distance - 20) * 15000;
       }
     }
 
@@ -492,12 +502,16 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                         <td style="padding: 12px 0; color: #6b7280; font-size: 14px;">Jármű</td>
                         <td style="padding: 12px 0; color: #111827; font-size: 14px; font-weight: 500;">${data.customCar ? data.customCar : `${data.carBrand} ${data.carModel}`}</td>
                     </tr>
-                    ${data.city && data.zipCode ? `
+                    ${
+                      data.city && data.zipCode
+                        ? `
                     <tr>
                         <td style="padding: 12px 0; color: #6b7280; font-size: 14px;">Helyszín</td>
                         <td style="padding: 12px 0; color: #111827; font-size: 14px; font-weight: 500;">${data.city}, ${data.zipCode}</td>
                     </tr>
-                    ` : ""}
+                    `
+                        : ""
+                    }
                     <tr>
                         <td style="padding: 12px 0; color: #6b7280; font-size: 14px;">Épület típus</td>
                         <td style="padding: 12px 0; color: #111827; font-size: 14px; font-weight: 500;">${data.buildingType.replace("_", " ")}</td>
@@ -510,15 +524,16 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
             </div>
 
             <!-- Charger Sections - OSZLOP SZERŰEN -->
-            ${selectedTemplates.map((template, templateIndex) => {
-              const product = template.products[0];
-              const chargerPrice = findProductPrice(product);
-              const productUrl = getProductUrl(product);
-              const loadManagementPackage = data.loadManagement ? getLoadManagementPackage(product) : null;
-              const grandTotal = chargerPrice + (data.needsInstallation ? installationPrice : 0);
-              
-              return `
-            ${templateIndex > 0 ? '<div style="margin: 32px 0; height: 2px; background: linear-gradient(90deg, transparent, #d1d5db 20%, #d1d5db 80%, transparent); opacity: 0.5;"></div>' : ''}
+            ${selectedTemplates
+              .map((template, templateIndex) => {
+                const product = template.products[0];
+                const chargerPrice = findProductPrice(product);
+                const productUrl = getProductUrl(product);
+                const loadManagementPackage = data.loadManagement ? getLoadManagementPackage(product) : null;
+                const grandTotal = chargerPrice + (data.needsInstallation ? installationPrice : 0);
+
+                return `
+            ${templateIndex > 0 ? '<div style="margin: 32px 0; height: 2px; background: linear-gradient(90deg, transparent, #d1d5db 20%, #d1d5db 80%, transparent); opacity: 0.5;"></div>' : ""}
             
             <!-- Töltő ${templateIndex + 1}: ${template.name} -->
             <div style="margin-bottom: 32px; background-color: #f3f4f6; padding: 24px; border-radius: 12px; border: 2px solid #e5e7eb;">
@@ -526,13 +541,17 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                 <p style="margin: 0 0 20px 0; color: #0071e3; font-size: 16px; font-weight: 600;">${template.name}</p>
                 
                 <!-- Töltő kép -->
-                ${getChargerImageUrl(product) ? `
+                ${
+                  getChargerImageUrl(product)
+                    ? `
                 <div style="text-align: center; margin-bottom: 24px; padding: 20px; background-color: white; border-radius: 8px; border: 1px solid #e5e7eb;">
                     <a href="${productUrl}" style="display: inline-block; text-decoration: none;">
                         <img src="${getChargerImageUrl(product)}" alt="${product}" style="max-width: 280px; width: 100%; height: auto; display: block; margin: 0 auto;" />
                     </a>
                 </div>
-                ` : ''}
+                `
+                    : ""
+                }
                 
                 <div style="padding: 16px; background-color: white; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e5e7eb;">
                     <table style="width: 100%; border-collapse: collapse;">
@@ -550,7 +569,9 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                     </ul>
                 </div>
 
-                ${data.needsInstallation ? `
+                ${
+                  data.needsInstallation
+                    ? `
                 <!-- Installation Section -->
                 <div style="margin-top: 20px; background-color: white; padding: 20px; border-radius: 8px; border: 1px solid #e5e7eb;">
                     <h3 style="margin: 0 0 16px 0; color: #111827; font-size: 16px; font-weight: 600;">Telepítés</h3>
@@ -559,16 +580,20 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                             <td style="padding: 0; vertical-align: top; width: 70%;">
                                 <p style="margin: 0 0 4px 0; color: #111827; font-size: 14px; font-weight: 500;">Telepítési díj (sztenderd telepítés) - ${data.distanceFromBox}m</p>
                                 <p style="margin: 0; color: #6b7280; font-size: 13px;">
-                                    ${distance <= 10 ? 'Telepítés 10 méterig' : distance <= 20 ? 'Telepítés 20 méterig' : `Telepítés ${distance} méterig`}
+                                    ${distance <= 10 ? "Telepítés 10 méterig" : distance <= 20 ? "Telepítés 20 méterig" : `Telepítés ${distance} méterig`}
                                 </p>
                             </td>
                             <td style="padding: 0 0 0 20px; color: #0071e3; font-size: 16px; font-weight: 700; text-align: right; vertical-align: top;">${formatPrice(installationPrice)}</td>
                         </tr>
                     </table>
                 </div>
-                ` : ''}
+                `
+                    : ""
+                }
                 
-                ${loadManagementPackage ? `
+                ${
+                  loadManagementPackage
+                    ? `
                 <div style="padding: 16px; background-color: white; border-radius: 8px; margin-top: 20px; border: 1px solid #e5e7eb;">
                     <table style="width: 100%; border-collapse: collapse;">
                         <tr>
@@ -577,7 +602,9 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                         </tr>
                     </table>
                 </div>
-                ` : ''}
+                `
+                    : ""
+                }
 
                 <!-- Price Summary for this charger -->
                 <div style="margin-top: 24px; background-color: white; padding: 20px; border-radius: 8px; border: 2px solid #0071e3;">
@@ -586,12 +613,16 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                             <td style="padding: 8px 0; color: #374151; font-size: 14px; width: 65%;">Töltő berendezés</td>
                             <td style="padding: 8px 0 8px 20px; color: #111827; font-size: 14px; font-weight: 500; text-align: right;">${formatPrice(chargerPrice)}</td>
                         </tr>
-                        ${data.needsInstallation ? `
+                        ${
+                          data.needsInstallation
+                            ? `
                         <tr>
                             <td style="padding: 8px 0; color: #374151; font-size: 14px;">Telepítés (${data.distanceFromBox}m)</td>
                             <td style="padding: 8px 0 8px 20px; color: #111827; font-size: 14px; font-weight: 500; text-align: right;">${formatPrice(installationPrice)}</td>
                         </tr>
-                        ` : ""}
+                        `
+                            : ""
+                        }
                         <tr style="border-top: 2px solid #0071e3;">
                             <td style="padding: 12px 0; color: #111827; font-size: 16px; font-weight: 700;">Végösszeg:</td>
                             <td style="padding: 12px 0 12px 20px; color: #0071e3; font-size: 18px; font-weight: 700; text-align: right;">${formatPrice(grandTotal)}</td>
@@ -603,25 +634,43 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                 </div>
             </div>
               `;
-            }).join('')}
+              })
+              .join("")}
 
-            ${selectedAdditionals.length > 0 ? `
+            ${
+              selectedAdditionals.length > 0
+                ? `
             <!-- Accessories Section - CSAK EGYSZER -->
             <div style="margin-bottom: 24px; background-color: #f3f4f6; padding: 24px; border-radius: 12px; border: 2px solid #e5e7eb;">
                 <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 12px;">Kiegészítők (opcionális)</h2>
                 <table style="width: 100%; border-collapse: collapse;">
-                    ${selectedAdditionals.map(item => `
+                    ${selectedAdditionals
+                      .map(
+                        (item) => `
                     <tr>
                         <td style="padding: 12px 0; color: #374151; font-size: 14px; width: 65%;">${item}</td>
                         <td style="padding: 12px 0 12px 20px; color: #111827; font-size: 14px; font-weight: 500; text-align: right;">${formatPrice(additionalItemPrices[item] || 0)}</td>
                     </tr>
-                    `).join("")}
+                    `,
+                      )
+                      .join("")}
                 </table>
             </div>
-            ` : ""}
+            `
+                : ""
+            }
 
-            ${data.needsInstallation ? `
-            ${data.needsBackplate || data.needsPole || data.needsElectricalPlanning || data.overvoltageProtection || data.infrastructureDevelopment || data.networkExpansion ? `
+            ${
+              data.needsInstallation
+                ? `
+            ${
+              data.needsBackplate ||
+              data.needsPole ||
+              data.needsElectricalPlanning ||
+              data.overvoltageProtection ||
+              data.infrastructureDevelopment ||
+              data.networkExpansion
+                ? `
             <!-- Additional Installation Requirements -->
             <div style="margin-bottom: 24px; background-color: #f3f4f6; padding: 24px; border-radius: 12px; border: 2px solid #e5e7eb;">
                 <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 12px;">További telepítési követelmények</h2>
@@ -639,14 +688,20 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                     </p>
                 </div>
             </div>
-            ` : ""}
+            `
+                : ""
+            }
 
-            ${data.groundworkWallPenetration ? `
+            ${
+              data.groundworkWallPenetration
+                ? `
             <div style="margin-bottom: 24px; padding: 16px; background-color: #fef3c7; border-radius: 8px; border-left: 4px solid #f59e0b;">
                 <p style="margin: 0 0 8px 0; color: #92400e; font-size: 14px; font-weight: 600;">Földmunka/Faláttörés:</p>
                 <p style="margin: 0; color: #78350f; font-size: 14px; line-height: 1.6;">${data.groundworkWallPenetration}</p>
             </div>
-            ` : ""}
+            `
+                : ""
+            }
 
             <!-- Standard Installation Description -->
             <div style="margin-bottom: 24px; background-color: #f3f4f6; padding: 24px; border-radius: 12px; border: 2px solid #e5e7eb;">
@@ -665,30 +720,40 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                     </ul>
                 </div>
             </div>
-            ` : ""}
+            `
+                : ""
+            }
 
             <!-- Process Section -->
             <div style="margin-bottom: 40px; background-color: #f9fafb; padding: 24px; border-radius: 12px;">
                 <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 600;">Folyamat</h2>
                 <ol style="margin: 0; padding: 0 0 0 20px; color: #374151; font-size: 14px; line-height: 2;">
-                    ${data.needsInstallation ? `
+                    ${
+                      data.needsInstallation
+                        ? `
                     <li>Webshop megrendelés leadása</li>
                     <li>Telepítés ütemezése</li>
                     <li>Szakszerű kivitelezés 10 munkanapon belül</li>
-                    ` : `
+                    `
+                        : `
                     <li>Webshop megrendelés leadása</li>
                     <li>Szállítás 5 munkanapon belül</li>
-                    `}
+                    `
+                    }
                 </ol>
             </div>
 
-            ${data.otherComments ? `
+            ${
+              data.otherComments
+                ? `
             <!-- Other Comments -->
             <div style="margin-bottom: 40px; padding: 20px; background-color: #eff6ff; border-radius: 8px; border-left: 4px solid #3b82f6;">
                 <h2 style="margin: 0 0 12px 0; color: #1e40af; font-size: 16px; font-weight: 600;">Egyéb megjegyzések</h2>
                 <p style="margin: 0; color: #1e3a8a; font-size: 14px; line-height: 1.6;">${data.otherComments}</p>
             </div>
-            ` : ""}
+            `
+                : ""
+            }
 
             <!-- Closing -->
             <div style="margin-top: 40px; padding-top: 32px; border-top: 1px solid #e5e7eb;">
@@ -722,33 +787,33 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
       if (iframe?.contentWindow) {
         const iframeDocument = iframe.contentWindow.document;
         const bodyContent = iframeDocument.body;
-        
+
         if (bodyContent) {
           const range = iframeDocument.createRange();
           range.selectNodeContents(bodyContent);
-          
+
           const selection = iframe.contentWindow.getSelection();
           if (selection) {
             selection.removeAllRanges();
             selection.addRange(range);
-            
+
             try {
               await navigator.clipboard.write([
                 new ClipboardItem({
-                  'text/html': new Blob([bodyContent.innerHTML], { type: 'text/html' }),
-                  'text/plain': new Blob([bodyContent.innerText], { type: 'text/plain' })
-                })
+                  "text/html": new Blob([bodyContent.innerHTML], { type: "text/html" }),
+                  "text/plain": new Blob([bodyContent.innerText], { type: "text/plain" }),
+                }),
               ]);
               toast.success("Email kijelölve és vágólapra másolva!");
             } catch (clipboardError) {
-              iframe.contentWindow.document.execCommand('copy');
+              iframe.contentWindow.document.execCommand("copy");
               toast.success("Email kijelölve és vágólapra másolva!");
             }
           }
         }
       }
     } catch (error) {
-      console.error('Másolási hiba:', error);
+      console.error("Másolási hiba:", error);
       toast.error("Hiba történt a másolás során. Próbálja újra!");
     }
   };
@@ -760,14 +825,14 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
     }
 
     setIsSending(true);
-    
+
     try {
-      const { data: emailData, error } = await supabase.functions.invoke('send-email', {
+      const { data: emailData, error } = await supabase.functions.invoke("send-email", {
         body: {
           to: data.email,
           subject: emailSubject || `EVIONOR - Töltő ajánlat ${data.contactName} részére`,
           html: generatedEmail,
-          from: `${senderName} - EVIONOR <onboarding@resend.dev>`,
+          from: `${senderName} - EVIONOR <hello@evionor.hu>`,
         },
       });
 
@@ -797,9 +862,9 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
             </div>
             {generatedEmail && (
               <div className="flex gap-2">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
+                <Button
+                  variant="outline"
+                  size="sm"
                   onClick={async () => {
                     await navigator.clipboard.writeText(emailSubject);
                     toast.success("Email tárgy vágólapra másolva!");
@@ -812,11 +877,7 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                   <Copy className="mr-2 h-4 w-4" />
                   Email másolása
                 </Button>
-                <Button 
-                  size="sm" 
-                  onClick={sendEmail}
-                  disabled={isSending || !generatedEmail}
-                >
+                <Button size="sm" onClick={sendEmail} disabled={isSending || !generatedEmail}>
                   <Mail className="mr-2 h-4 w-4" />
                   {isSending ? "Küldés..." : "Email küldése"}
                 </Button>
@@ -846,12 +907,10 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
             <h3 className="text-lg font-semibold mb-3">Válasszon töltőket (több is kiválasztható)</h3>
             {recommendedTemplate && (
               <div className="mb-3 p-3 bg-secondary/20 rounded-lg border border-secondary">
-                <p className="text-sm font-medium text-foreground">
-                  ⭐ Ajánlott: {recommendedTemplate.name}
-                </p>
+                <p className="text-sm font-medium text-foreground">⭐ Ajánlott: {recommendedTemplate.name}</p>
               </div>
             )}
-            
+
             {/* Kiválasztott töltők */}
             {selectedTemplates.length > 0 && (
               <div className="mb-3 p-3 bg-primary/10 rounded-lg border border-primary">
@@ -879,23 +938,19 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
 
             <div className="space-y-2">
               {chargerTemplates.map((template) => {
-                const isSelected = selectedTemplates.find(t => t.id === template.id);
+                const isSelected = selectedTemplates.find((t) => t.id === template.id);
                 return (
                   <div
                     key={template.id}
                     className={`p-4 border rounded-lg cursor-pointer transition-all ${
-                      isSelected
-                        ? "border-primary bg-primary/5 shadow-sm"
-                        : "border-border hover:border-primary/50"
+                      isSelected ? "border-primary bg-primary/5 shadow-sm" : "border-border hover:border-primary/50"
                     }`}
                     onClick={() => toggleTemplate(template)}
                   >
                     <div className="flex items-start justify-between">
                       <div>
                         <h4 className="font-semibold">{template.name}</h4>
-                        <p className="text-sm text-muted-foreground mt-1">
-                          {template.products.join(", ")}
-                        </p>
+                        <p className="text-sm text-muted-foreground mt-1">{template.products.join(", ")}</p>
                       </div>
                       {isSelected && (
                         <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center">
@@ -939,12 +994,7 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
           <Separator />
 
           {/* Generate gomb */}
-          <Button
-            onClick={generateEmail}
-            disabled={selectedTemplates.length === 0}
-            size="lg"
-            className="w-full"
-          >
+          <Button onClick={generateEmail} disabled={selectedTemplates.length === 0} size="lg" className="w-full">
             <Mail className="mr-2 h-4 w-4" />
             Email generálása
           </Button>
@@ -961,9 +1011,9 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
             <div className="flex items-center gap-3 p-4 bg-muted rounded-lg">
               <Mail className="h-5 w-5 text-muted-foreground flex-shrink-0" />
               <p className="text-sm font-medium flex-1">{emailSubject}</p>
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={async () => {
                   await navigator.clipboard.writeText(emailSubject);
                   toast.success("Email tárgy vágólapra másolva!");
@@ -988,7 +1038,8 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
               </Button>
             </div>
             <CardDescription className="mt-2">
-              Az alábbi előnézet mutatja, hogy néz majd ki az email. Az "Email másolása" gombbal kijelölöd és vágólapra másolod a teljes emailt, amit be tudsz illeszteni Gmail-be vagy bármilyen email kliensbe.
+              Az alábbi előnézet mutatja, hogy néz majd ki az email. Az "Email másolása" gombbal kijelölöd és vágólapra
+              másolod a teljes emailt, amit be tudsz illeszteni Gmail-be vagy bármilyen email kliensbe.
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
