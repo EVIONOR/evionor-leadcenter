@@ -64,6 +64,7 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
   const [generatedEmail, setGeneratedEmail] = useState("");
   const [emailSubject, setEmailSubject] = useState("");
   const [senderName, setSenderName] = useState<string>(autoGenerate ? "Horváth Gáspár" : "Nagy István");
+  const [isSending, setIsSending] = useState(false);
 
   // Auto-select templates based on phase when autoGenerate is true
   useEffect(() => {
@@ -752,6 +753,39 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
     }
   };
 
+  const sendEmail = async () => {
+    if (!generatedEmail || !data.email) {
+      toast.error("Hiba: Az email generálása vagy a címzett email címe hiányzik.");
+      return;
+    }
+
+    setIsSending(true);
+    
+    try {
+      const { data: emailData, error } = await supabase.functions.invoke('send-email', {
+        body: {
+          to: data.email,
+          subject: emailSubject || `EVIONOR - Töltő ajánlat ${data.contactName} részére`,
+          html: generatedEmail,
+          from: `${senderName} - EVIONOR <onboarding@resend.dev>`,
+        },
+      });
+
+      if (error) throw error;
+
+      if (emailData?.success) {
+        toast.success(`Email sikeresen elküldve ${data.email} címre!`);
+      } else {
+        throw new Error(emailData?.error || "Ismeretlen hiba");
+      }
+    } catch (error) {
+      console.error("Error sending email:", error);
+      toast.error("Email küldési hiba. Ellenőrizd a RESEND_API_KEY beállítását.");
+    } finally {
+      setIsSending(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <Card className="shadow-lg">
@@ -777,6 +811,14 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                 <Button variant="outline" size="sm" onClick={copyToClipboard}>
                   <Copy className="mr-2 h-4 w-4" />
                   Email másolása
+                </Button>
+                <Button 
+                  size="sm" 
+                  onClick={sendEmail}
+                  disabled={isSending || !generatedEmail}
+                >
+                  <Mail className="mr-2 h-4 w-4" />
+                  {isSending ? "Küldés..." : "Email küldése"}
                 </Button>
               </div>
             )}
