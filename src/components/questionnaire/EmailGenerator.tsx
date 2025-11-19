@@ -216,6 +216,8 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
 
   // Jellemzők generálása
   const getCharacteristics = (productName: string): string => {
+    console.log("getCharacteristics called with:", productName);
+    
     if (productName.includes("Easee Charge Up")) {
       return `
         <li style="font-size: 8px;">Fázisok száma: 1/3</li>
