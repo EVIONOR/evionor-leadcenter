@@ -216,156 +216,18 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
 
   // Jellemzők generálása
   const getCharacteristics = (productName: string): string => {
-    if (productName.includes("Easee Charge Up")) {
-      return `
-        <li style="font-size: 8px;">Töltőcsatlakozó: Type 2 kontakt, aljzat (IEC 62196-1/2)</li>
-        <li style="font-size: 8px;">Fázisok: 1/3</li>
-        <li style="font-size: 8px;">Tápellátás: 6-32A</li>
-        <li style="font-size: 8px;">Maximális teljesítmény: 22 kW</li>
-        <li style="font-size: 8px;">Hálózat: IT (230V) és TN (400V) (automatikus érzékelés)</li>
-        <li style="font-size: 8px;">Töltési teljesítmény: Fokozatmentes (1A) beállítás 6A-32A között (1,4 - 22 kW)</li>
-        <li style="font-size: 8px;">Üzemi feszültség: 230V - 400 VAC</li>
-        <li style="font-size: 8px;">Frekvencia: 50 Hz</li>
-        <li style="font-size: 8px;">Energiafogyasztás: <1 W készenléti üzemmódban</li>
-        <li style="font-size: 8px;">Biztosíték méret: Max 40A</li>
-        <li style="font-size: 8px;">Áramvédő kapcsoló (RCD): Beépített elektronikus RCD Type A (30mA) + 6mA DC-RCM / RDC-PD</li>
-        <li style="font-size: 8px;">Üzemi hőmérséklet: -30°C és +50°C között</li>
-        <li style="font-size: 8px;">Hitelesítés: RFID/NFC, 13,56 MHz / Alkalmazás</li>
-        <li style="font-size: 8px;">WiFi: 802.11 b/g/n (2,4 GHz)</li>
-        <li style="font-size: 8px;">Bluetooth: 4.3</li>
-        <li style="font-size: 8px;">Telekommunikáció: eSIM - 4G/LTE Cat M1</li>
-        <li style="font-size: 8px;">Kommunikációs protokollok: Bluetooth Low Energy (BLE 4.3), WiFi, RFID/NFC és OCPP 1.6J</li>
-        <li style="font-size: 8px;">Harmadik fél integráció: OCPP 1.6J 4G/WiFi-n és API-n keresztül</li>
-        <li style="font-size: 8px;">Funkciók: Terhelésmenedzsment max. 3 töltőállomáshoz, Vezeték nélküli terhelésmenedzsment a főbiztosítékhoz, Energiamérő, Lágy indítás</li>
-        <li style="font-size: 8px;">Energia szabályozás és okos otthonokra felkészítve</li>
-        <li style="font-size: 8px;">Energiamérő: Integrált mérő +/- 3% pontossággal</li>
-        <li style="font-size: 8px;">Lopásvédelem: Elektronika deaktiválható és nyomon követhető, rejtett lakattal rögzíthető, kábel lezárható</li>
-        <li style="font-size: 8px;">Szoftverfrissítések: Automatikus frissítések (ár tartalmazza)</li>
-        <li style="font-size: 8px;">Védelmi osztály: IP54</li>
-        <li style="font-size: 8px;">UV védelem: UV álló</li>
-        <li style="font-size: 8px;">Szigetelési osztály: II (4kV AC és 6kV impulzus)</li>
-        <li style="font-size: 8px;">Túláram osztály: >III (4kV)</li>
-        <li style="font-size: 8px;">Garancia: 5 év</li>
-      `;
-    }
-    if (productName.includes("Zaptec Solar MID")) {
-      return `
-        <li style="font-size: 8px;">Töltőcsatlakozó: Type 2 (IEC 62196-1/2)</li>
-        <li style="font-size: 8px;">Fázisok száma: 1/3</li>
-        <li style="font-size: 8px;">Tápellátás: 6-32A</li>
-        <li style="font-size: 8px;">Hálózat: IT (230V) és TN (400V)</li>
-        <li style="font-size: 8px;">Töltőáram: vezeték nélküli beállítás 6A-32A között (1,3-22kW)</li>
-        <li style="font-size: 8px;">Üzemi feszültség: 230V-400V</li>
-        <li style="font-size: 8px;">Földzárlat védelem: Beépített elektronikus DC-szűrő 6mA</li>
-        <li style="font-size: 8px;">Üzemi hőmérséklet: -30°C és +40°C között</li>
-        <li style="font-size: 8px;">Hitelesítés: RFID/NFC, 13,56 MHz / Alkalmazás</li>
-        <li style="font-size: 8px;">WiFi: 802.11n</li>
-        <li style="font-size: 8px;">Kommunikációs protokollok: Bluetooth Low Energy (BLE 4.1), RFID/NFC Mifare Classic, WiFi 2,4 GHz, 4G LTE-M</li>
-        <li style="font-size: 8px;">Funkciók: Terhelésmenedzsment, Napelemes integrációval (Solar load balancing), Felhőalapú szolgáltatások, Energiamérés, Lágy indítás, Energia szabályozás, Okos otthonokra felkészítve</li>
-        <li style="font-size: 8px;">Teljesítménymérés: Integrált energiamérő (~1% pontosság)</li>
-        <li style="font-size: 8px;">Szoftverfrissítések: Automatikus letöltés</li>
-        <li style="font-size: 8px;">Védelmi osztály: IP54</li>
-        <li style="font-size: 8px;">Garancia: 5 év</li>
-      `;
-    }
-    if (
-      productName.includes("Zaptec Go 22kW") ||
-      (productName.includes("Zaptec Go") && !productName.includes("Solar"))
-    ) {
-      return `
-        <li style="font-size: 8px;">Töltőcsatlakozó: Type 2 (IEC 62196-1/2)</li>
-        <li style="font-size: 8px;">Fázisok száma: 1/3</li>
-        <li style="font-size: 8px;">Tápellátás: 6-32A</li>
-        <li style="font-size: 8px;">Hálózat: IT (230V) és TN (400V)</li>
-        <li style="font-size: 8px;">Töltőáram: vezeték nélküli beállítás 6A-32A között (1,3-22kW)</li>
-        <li style="font-size: 8px;">Üzemi feszültség: 230V-400V</li>
-        <li style="font-size: 8px;">Földzárlat védelem: Beépített elektronikus DC-szűrő 6mA</li>
-        <li style="font-size: 8px;">Üzemi hőmérséklet: -30°C és +40°C között</li>
-        <li style="font-size: 8px;">Hitelesítés: RFID/NFC, 13,56 MHz / Alkalmazás</li>
-        <li style="font-size: 8px;">WiFi: 802.11n</li>
-        <li style="font-size: 8px;">Kommunikációs protokollok: Bluetooth Low Energy (BLE 4.1), RFID/NFC Mifare Classic, WiFi 2,4 GHz, 4G LTE-M</li>
-        <li style="font-size: 8px;">Funkciók: Terhelésmenedzsment, Felhőalapú szolgáltatások, Energiamérés, Lágy indítás, Energia szabályozás, Okos otthonokra felkészítve</li>
-        <li style="font-size: 8px;">Teljesítménymérés: Integrált energiamérő (~1% pontosság)</li>
-        <li style="font-size: 8px;">Szoftverfrissítések: Automatikus letöltés</li>
-        <li style="font-size: 8px;">Védelmi osztály: IP54</li>
-        <li style="font-size: 8px;">Garancia: 5 év</li>
-      `;
-    }
-    if (productName.includes("Amina 1") || productName.includes("AMINA 1")) {
-      return `
-        <li style="font-size: 8px;">Töltőcsatlakozó: Type 2 kontakt (1-fázis, max. 7.4 kW)</li>
-        <li style="font-size: 8px;">Fázisok száma: 1-fázis (IT, TT, TN)</li>
-        <li style="font-size: 8px;">Tápellátás: 230 V AC, 1-fázis, 6–32 A</li>
-        <li style="font-size: 8px;">Maximális töltési teljesítmény: 7.4 kW</li>
-        <li style="font-size: 8px;">Töltőáram: Fokozatmentes beállítás 6–32 A-ig (max. 7.4 kW-ig)</li>
-        <li style="font-size: 8px;">Üzemi feszültség: 230 V AC (±20%) – 1-fázis</li>
-        <li style="font-size: 8px;">Energiafogyasztás: <1 W (készenléti üzemmódban)</li>
-        <li style="font-size: 8px;">Biztosíték: Max 40A</li>
-        <li style="font-size: 8px;">Földzárlat védelem: Beépített RDC-DD (6 mA) IEC 62955 szerint</li>
-        <li style="font-size: 8px;">Üzemi hőmérséklet: -30°C és +40°C között</li>
-        <li style="font-size: 8px;">WiFi: Nem támogatott</li>
-        <li style="font-size: 8px;">Bluetooth: Nem támogatott</li>
-        <li style="font-size: 8px;">Telekommunikáció: Nem támogatott</li>
-        <li style="font-size: 8px;">Funkciók: Plug & Charge – egyszerű és helyi töltés alkalmazás vagy felhő nélkül</li>
-        <li style="font-size: 8px;">Energia szabályozás: Nincs terhelésmenedzsment</li>
-        <li style="font-size: 8px;">Energiamérő: Beépített – ±3% pontosság</li>
-        <li style="font-size: 8px;">Védelmi osztály: IP54</li>
-        <li style="font-size: 8px;">UV védelem: UV álló</li>
-        <li style="font-size: 8px;">Túlfeszültség osztály: >III (4kV)</li>
-        <li style="font-size: 8px;">Garancia: 5 év</li>
-      `;
-    }
-    if (productName.includes("Charge Amps Halo")) {
-      return `
-        <li style="font-size: 8px;">Töltőcsatlakozó: Type 2 kontakt</li>
-        <li style="font-size: 8px;">Fázisok száma: 1-fázis (3,7 kW verzió) vagy 3-fázis (11 kW verzió)</li>
-        <li style="font-size: 8px;">Tápellátás: 230 V, 50 Hz, 16 A (1-fázis) / 400V (3-fázis)</li>
-        <li style="font-size: 8px;">Maximális teljesítmény: 3,7 kW (1-fázis) / 11 kW (3-fázis)</li>
-        <li style="font-size: 8px;">Töltőáram: 1-fázis, 16 A / 3-fázis, 16 A</li>
-        <li style="font-size: 8px;">Üzemi feszültség: 230 V (1-fázis) / 400V (3-fázis)</li>
-        <li style="font-size: 8px;">Üzemi hőmérséklet: -30°C és +45°C között</li>
-        <li style="font-size: 8px;">Kábel: 7,5 m hosszú, megerősített, hajlékony -25°C-ig</li>
-        <li style="font-size: 8px;">Áramvédő kapcsoló: Beépített DC-védelem, Type A földzárlat-védő szükséges</li>
-        <li style="font-size: 8px;">WiFi: Igen (külső WiFi antenna)</li>
-        <li style="font-size: 8px;">RFID azonosítás: Igen, 13,56 MHz</li>
-        <li style="font-size: 8px;">Funkciók: RFID hozzáférés-szabályozás, Extra konnektor (e-bike, motorvärmer), Felhőalapú szolgáltatások, LED jelzőfények</li>
-        <li style="font-size: 8px;">Energiamérő: 1-3 fázis feszültség, áram és teljesítmény mérés</li>
-        <li style="font-size: 8px;">Szoftverfrissítések: Automatikus frissítések felhőn keresztül</li>
-        <li style="font-size: 8px;">Védelmi osztály: Töltőtest IP66, töltőcsatlakozó és konnektor IP44</li>
-        <li style="font-size: 8px;">Anyag: Újrahasznosított alumínium</li>
-        <li style="font-size: 8px;">Tervezés és gyártás: Svédország</li>
-        <li style="font-size: 8px;">Garancia: 5 év</li>
-      `;
-    }
-    if (productName.includes("Charge Amps Luna")) {
-      return `
-        <li style="font-size: 8px;">Töltőcsatlakozó: Type 2, 22 kW</li>
-        <li style="font-size: 8px;">Fázisok száma: 1/3</li>
-        <li style="font-size: 8px;">Tápellátás: 6-32A</li>
-        <li style="font-size: 8px;">Maximális töltési teljesítmény: 22 kW</li>
-        <li style="font-size: 8px;">Töltőáram: Fokozatmentes (1A) beállítás 6A-32A között (1,4 - 22 kW)</li>
-        <li style="font-size: 8px;">Üzemi feszültség: 230V - 400VAC</li>
-        <li style="font-size: 8px;">Frekvencia: 50 Hz</li>
-        <li style="font-size: 8px;">Energiafogyasztás: <1W készenléti üzemmódban</li>
-        <li style="font-size: 8px;">Biztosíték: Max 40A</li>
-        <li style="font-size: 8px;">Földzárlat védelem: Beépített Type B áramvédő (IEC 60947-2, AC: 30 mA, DC: 6 mA)</li>
-        <li style="font-size: 8px;">Üzemi hőmérséklet: -35°C és +45°C között</li>
-        <li style="font-size: 8px;">Hitelesítés: RFID</li>
-        <li style="font-size: 8px;">WiFi: 802.11 b/g/n/ax</li>
-        <li style="font-size: 8px;">Bluetooth: Version 5.0 and LE 5.3</li>
-        <li style="font-size: 8px;">Telekommunikáció: eSIM - 4G</li>
-        <li style="font-size: 8px;">Kommunikációs protokollok: WiFi, 4G LTE (eSIM), Bluetooth Low Energy 5.0/5.3, RFID/NFC, OCPP 1.6J</li>
-        <li style="font-size: 8px;">Funkciók: Terhelésmenedzsment (vezeték nélküli), WiFi/4G applikációval (Charge Amps app), ISO 15118 ready</li>
-        <li style="font-size: 8px;">Energiamérő: Integrált energiamérő +/- 3% pontosság</li>
-        <li style="font-size: 8px;">Szoftverfrissítések: Automatikus frissítések</li>
-        <li style="font-size: 8px;">Védelmi osztály: IP54</li>
-        <li style="font-size: 8px;">Földzárlat védelem és lágy indítás</li>
-        <li style="font-size: 8px;">Ütésállóság: IK10</li>
-        <li style="font-size: 8px;">UV védelem: UV álló</li>
-        <li style="font-size: 8px;">Garancia: 5 év</li>
-      `;
-    }
-    return "";
+    return `
+      <li style="font-size: 8px;">Fázisok száma: 1/3</li>
+      <li style="font-size: 8px;">Tápellátás: 6-32A</li>
+      <li style="font-size: 8px;">Földzárlat védelem: Beépített DC-szűrő 6mA</li>
+      <li style="font-size: 8px;">Üzemi hőmérséklet: -30°C és +40°C között</li>
+      <li style="font-size: 8px;">Hitelesítés: RFID/NFC</li>
+      <li style="font-size: 8px;">Kommunikációs protokollok: Bluetooth, RFID/NFC, WiFi, 4G LTE-M</li>
+      <li style="font-size: 8px;">Funkciók: Terhelésmenedzsment, Felhőalapú szolgáltatások</li>
+      <li style="font-size: 8px;">Szoftverfrissítések: Automatikus letöltés</li>
+      <li style="font-size: 8px;">Védelmi osztály: IP54</li>
+      <li style="font-size: 8px;">Garancia: 5 év</li>
+    `;
   };
 
   const generateEmail = async () => {
