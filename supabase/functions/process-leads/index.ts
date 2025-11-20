@@ -47,11 +47,15 @@ Deno.serve(async (req) => {
 
     console.log('[process-leads] Automatic processing is enabled');
 
-    // Step 2: Fetch all unprocessed leads (status != qualified)
+    // Step 2: Fetch unprocessed leads from the last 6 hours
+    // This prevents old leads from being processed when auto-processing is first enabled
+    const sixHoursAgo = new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString();
+    
     const { data: leads, error: leadsError } = await client
       .from('questionnaire_responses')
       .select('*')
       .neq('status', 'qualified')
+      .gte('created_at', sixHoursAgo)
       .order('created_at', { ascending: true });
 
     if (leadsError) {

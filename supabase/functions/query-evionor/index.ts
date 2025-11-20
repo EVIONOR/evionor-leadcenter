@@ -22,7 +22,7 @@ Deno.serve(async (req) => {
 
     console.log("Connecting to EVIONOR Supabase:", evionorUrl);
 
-    const { action, table, query, update, data: insertData } = await req.json();
+    const { action, table, query, update, data: insertData, setting_key, setting_value } = await req.json();
 
     // Use service key for all queries to bypass RLS
     const useServiceKey = true;
@@ -230,17 +230,16 @@ Deno.serve(async (req) => {
         break;
 
       case "get_setting":
-        const { setting_key: getKey } = await req.json();
-        if (!getKey) {
+        if (!setting_key) {
           throw new Error("Setting key is required for get_setting action");
         }
 
-        console.log("Getting setting:", getKey);
+        console.log("Getting setting:", setting_key);
 
         const { data: settingData, error: getSettingError } = await client
           .from("lead_manager_settings")
           .select("setting_value")
-          .eq("setting_key", getKey)
+          .eq("setting_key", setting_key)
           .single();
 
         if (getSettingError) {
@@ -253,17 +252,16 @@ Deno.serve(async (req) => {
         break;
 
       case "update_setting":
-        const { setting_key: updateKey, setting_value } = await req.json();
-        if (!updateKey || setting_value === undefined) {
+        if (!setting_key || setting_value === undefined) {
           throw new Error("Setting key and value are required for update_setting action");
         }
 
-        console.log("Updating setting:", updateKey, "to:", setting_value);
+        console.log("Updating setting:", setting_key, "to:", setting_value);
 
         const { data: upsertedSetting, error: upsertError } = await client
           .from("lead_manager_settings")
           .upsert({
-            setting_key: updateKey,
+            setting_key: setting_key,
             setting_value: setting_value,
             updated_at: new Date().toISOString(),
           })

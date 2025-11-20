@@ -160,7 +160,7 @@ export default function LeadManager() {
       carBrand: response.car_brand || "",
       carModel: response.car_model || "",
       location: response.location || "",
-      phases: response.phases || "1", // Bug fix: include phases field
+      phases: String(response.phases || "1"), // Bug fix: include phases field and ensure it's a string
     };
 
     localStorage.setItem("prefill_lead_data", JSON.stringify(leadData));

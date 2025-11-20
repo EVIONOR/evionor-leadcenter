@@ -104,7 +104,13 @@ export const QuestionnaireForm = () => {
         const leadData = JSON.parse(prefillData);
         Object.keys(leadData).forEach((key) => {
           if (leadData[key]) {
-            form.setValue(key as keyof QuestionnaireData, leadData[key]);
+            // Special handling for phases to ensure proper type
+            if (key === 'phases') {
+              const phaseValue = leadData[key] as "1" | "3";
+              form.setValue('phases', phaseValue);
+            } else {
+              form.setValue(key as keyof QuestionnaireData, leadData[key]);
+            }
           }
         });
         setHasPrefillData(true);

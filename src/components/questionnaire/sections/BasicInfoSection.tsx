@@ -223,7 +223,7 @@ export const BasicInfoSection = ({ form }: BasicInfoSectionProps) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Hány fázis áll rendelkezésre? *</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue />
