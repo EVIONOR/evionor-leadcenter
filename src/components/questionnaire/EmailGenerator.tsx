@@ -220,30 +220,30 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
     
     if (productName.includes("Easee Charge Up")) {
       return `
-        <li style="font-size: 8px;">Fázisok száma: 1/3</li>
-        <li style="font-size: 8px;">Tápellátás: 6–32 A</li>
-        <li style="font-size: 8px;">Földzárlat védelem: Beépített Type A áramvédő kapcsoló (30 mA) + 6 mA DC-védelem (RDC-PD)</li>
-        <li style="font-size: 8px;">Üzemi hőmérséklet: -30°C és +50°C között</li>
-        <li style="font-size: 8px;">Hitelesítés: RFID/NFC, mobilalkalmazás</li>
-        <li style="font-size: 8px;">Kommunikációs protokollok: Bluetooth Low Energy, WiFi 2,4 GHz, RFID/NFC, 4G/LTE (eSIM), OCPP 1.6J</li>
-        <li style="font-size: 8px;">Funkciók: Terhelésmenedzsment (max. 3 töltő), vezeték nélküli terhelésmenedzsment a főbiztosítékhoz, energiamérés, lágy indítás, okos otthon integráció</li>
-        <li style="font-size: 8px;">Szoftverfrissítések: Automatikus frissítések</li>
-        <li style="font-size: 8px;">Védelmi osztály: IP54</li>
-        <li style="font-size: 8px;">Garancia: 5 év</li>
+        <li style="font-size: 14px;">Fázisok száma: 1/3</li>
+        <li style="font-size: 14px;">Tápellátás: 6–32 A</li>
+        <li style="font-size: 14px;">Földzárlat védelem: Beépített Type A áramvédő kapcsoló (30 mA) + 6 mA DC-védelem (RDC-PD)</li>
+        <li style="font-size: 14px;">Üzemi hőmérséklet: -30°C és +50°C között</li>
+        <li style="font-size: 14px;">Hitelesítés: RFID/NFC, mobilalkalmazás</li>
+        <li style="font-size: 14px;">Kommunikációs protokollok: Bluetooth Low Energy, WiFi 2,4 GHz, RFID/NFC, 4G/LTE (eSIM), OCPP 1.6J</li>
+        <li style="font-size: 14px;">Funkciók: Terhelésmenedzsment (max. 3 töltő), vezeték nélküli terhelésmenedzsment a főbiztosítékhoz, energiamérés, lágy indítás, okos otthon integráció</li>
+        <li style="font-size: 14px;">Szoftverfrissítések: Automatikus frissítések</li>
+        <li style="font-size: 14px;">Védelmi osztály: IP54</li>
+        <li style="font-size: 14px;">Garancia: 5 év</li>
       `;
     }
     if (productName.includes("Zaptec Solar MID")) {
       return `
-        <li style="font-size: 8px;">Fázisok száma: 1/3</li>
-        <li style="font-size: 8px;">Tápellátás: 6–32 A</li>
-        <li style="font-size: 8px;">Földzárlat védelem: Beépített elektronikus DC-szűrő 6 mA</li>
-        <li style="font-size: 8px;">Üzemi hőmérséklet: -30°C és +40°C között</li>
-        <li style="font-size: 8px;">Hitelesítés: RFID/NFC, mobilalkalmazás</li>
-        <li style="font-size: 8px;">Kommunikációs protokollok: Bluetooth Low Energy, RFID/NFC, WiFi 2,4 GHz, 4G LTE-M</li>
-        <li style="font-size: 8px;">Funkciók: Terhelésmenedzsment, napelemes integráció (Solar load balancing), felhőalapú szolgáltatások, energiamérés, lágy indítás, energia szabályozás, okos otthon integráció</li>
-        <li style="font-size: 8px;">Szoftverfrissítések: Automatikus letöltés</li>
-        <li style="font-size: 8px;">Védelmi osztály: IP54</li>
-        <li style="font-size: 8px;">Garancia: 5 év</li>
+        <li style="font-size: 14px;">Fázisok száma: 1/3</li>
+        <li style="font-size: 14px;">Tápellátás: 6–32 A</li>
+        <li style="font-size: 14px;">Földzárlat védelem: Beépített elektronikus DC-szűrő 6 mA</li>
+        <li style="font-size: 14px;">Üzemi hőmérséklet: -30°C és +40°C között</li>
+        <li style="font-size: 14px;">Hitelesítés: RFID/NFC, mobilalkalmazás</li>
+        <li style="font-size: 14px;">Kommunikációs protokollok: Bluetooth Low Energy, RFID/NFC, WiFi 2,4 GHz, 4G LTE-M</li>
+        <li style="font-size: 14px;">Funkciók: Terhelésmenedzsment, napelemes integráció (Solar load balancing), felhőalapú szolgáltatások, energiamérés, lágy indítás, energia szabályozás, okos otthon integráció</li>
+        <li style="font-size: 14px;">Szoftverfrissítések: Automatikus letöltés</li>
+        <li style="font-size: 14px;">Védelmi osztály: IP54</li>
+        <li style="font-size: 14px;">Garancia: 5 év</li>
       `;
     }
     if (
@@ -251,58 +251,58 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
       (productName.includes("Zaptec Go") && !productName.includes("Solar"))
     ) {
       return `
-        <li style="font-size: 8px;">Fázisok száma: 1/3</li>
-        <li style="font-size: 8px;">Tápellátás: 6–32 A</li>
-        <li style="font-size: 8px;">Földzárlat védelem: Beépített elektronikus DC-szűrő 6 mA</li>
-        <li style="font-size: 8px;">Üzemi hőmérséklet: -30°C és +40°C között</li>
-        <li style="font-size: 8px;">Hitelesítés: RFID/NFC, mobilalkalmazás</li>
-        <li style="font-size: 8px;">Kommunikációs protokollok: Bluetooth Low Energy, RFID/NFC, WiFi 2,4 GHz, 4G LTE-M</li>
-        <li style="font-size: 8px;">Funkciók: Terhelésmenedzsment, felhőalapú szolgáltatások, energiamérés, lágy indítás, energia szabályozás, okos otthon integráció</li>
-        <li style="font-size: 8px;">Szoftverfrissítések: Automatikus letöltés</li>
-        <li style="font-size: 8px;">Védelmi osztály: IP54</li>
-        <li style="font-size: 8px;">Garancia: 5 év</li>
+        <li style="font-size: 14px;">Fázisok száma: 1/3</li>
+        <li style="font-size: 14px;">Tápellátás: 6–32 A</li>
+        <li style="font-size: 14px;">Földzárlat védelem: Beépített elektronikus DC-szűrő 6 mA</li>
+        <li style="font-size: 14px;">Üzemi hőmérséklet: -30°C és +40°C között</li>
+        <li style="font-size: 14px;">Hitelesítés: RFID/NFC, mobilalkalmazás</li>
+        <li style="font-size: 14px;">Kommunikációs protokollok: Bluetooth Low Energy, RFID/NFC, WiFi 2,4 GHz, 4G LTE-M</li>
+        <li style="font-size: 14px;">Funkciók: Terhelésmenedzsment, felhőalapú szolgáltatások, energiamérés, lágy indítás, energia szabályozás, okos otthon integráció</li>
+        <li style="font-size: 14px;">Szoftverfrissítések: Automatikus letöltés</li>
+        <li style="font-size: 14px;">Védelmi osztály: IP54</li>
+        <li style="font-size: 14px;">Garancia: 5 év</li>
       `;
     }
     if (productName.includes("Amina 1") || productName.includes("AMINA 1")) {
       return `
-        <li style="font-size: 8px;">Fázisok száma: 1</li>
-        <li style="font-size: 8px;">Tápellátás: 230 V AC, 6–32 A</li>
-        <li style="font-size: 8px;">Földzárlat védelem: Beépített RDC-DD 6 mA (IEC 62955)</li>
-        <li style="font-size: 8px;">Üzemi hőmérséklet: -30°C és +40°C között</li>
-        <li style="font-size: 8px;">Hitelesítés: Nem támogatott</li>
-        <li style="font-size: 8px;">Kommunikációs protokollok: Nem támogatott</li>
-        <li style="font-size: 8px;">Funkciók: Plug & Charge helyi töltés, terhelésmenedzsment nélkül</li>
-        <li style="font-size: 8px;">Szoftverfrissítések: Nem támogatott</li>
-        <li style="font-size: 8px;">Védelmi osztály: IP54</li>
-        <li style="font-size: 8px;">Garancia: 5 év</li>
+        <li style="font-size: 14px;">Fázisok száma: 1</li>
+        <li style="font-size: 14px;">Tápellátás: 230 V AC, 6–32 A</li>
+        <li style="font-size: 14px;">Földzárlat védelem: Beépített RDC-DD 6 mA (IEC 62955)</li>
+        <li style="font-size: 14px;">Üzemi hőmérséklet: -30°C és +40°C között</li>
+        <li style="font-size: 14px;">Hitelesítés: Nem támogatott</li>
+        <li style="font-size: 14px;">Kommunikációs protokollok: Nem támogatott</li>
+        <li style="font-size: 14px;">Funkciók: Plug & Charge helyi töltés, terhelésmenedzsment nélkül</li>
+        <li style="font-size: 14px;">Szoftverfrissítések: Nem támogatott</li>
+        <li style="font-size: 14px;">Védelmi osztály: IP54</li>
+        <li style="font-size: 14px;">Garancia: 5 év</li>
       `;
     }
     if (productName.includes("Charge Amps Halo")) {
       return `
-        <li style="font-size: 8px;">Fázisok száma: 1/3</li>
-        <li style="font-size: 8px;">Tápellátás: 230 V, 16 A (1-fázis) / 400 V, 16 A (3-fázis)</li>
-        <li style="font-size: 8px;">Földzárlat védelem: Beépített DC-védelem, Type A földzárlat-védő szükséges</li>
-        <li style="font-size: 8px;">Üzemi hőmérséklet: -30°C és +45°C között</li>
-        <li style="font-size: 8px;">Hitelesítés: RFID</li>
-        <li style="font-size: 8px;">Kommunikációs protokollok: WiFi, RFID</li>
-        <li style="font-size: 8px;">Funkciók: RFID hozzáférés-szabályozás, extra konnektor (pl. e-bike), felhőalapú szolgáltatások, LED jelzőfények</li>
-        <li style="font-size: 8px;">Szoftverfrissítések: Automatikus frissítések felhőn keresztül</li>
-        <li style="font-size: 8px;">Védelmi osztály: Töltőtest IP66, csatlakozó és konnektor IP44</li>
-        <li style="font-size: 8px;">Garancia: 5 év</li>
+        <li style="font-size: 14px;">Fázisok száma: 1/3</li>
+        <li style="font-size: 14px;">Tápellátás: 230 V, 16 A (1-fázis) / 400 V, 16 A (3-fázis)</li>
+        <li style="font-size: 14px;">Földzárlat védelem: Beépített DC-védelem, Type A földzárlat-védő szükséges</li>
+        <li style="font-size: 14px;">Üzemi hőmérséklet: -30°C és +45°C között</li>
+        <li style="font-size: 14px;">Hitelesítés: RFID</li>
+        <li style="font-size: 14px;">Kommunikációs protokollok: WiFi, RFID</li>
+        <li style="font-size: 14px;">Funkciók: RFID hozzáférés-szabályozás, extra konnektor (pl. e-bike), felhőalapú szolgáltatások, LED jelzőfények</li>
+        <li style="font-size: 14px;">Szoftverfrissítések: Automatikus frissítések felhőn keresztül</li>
+        <li style="font-size: 14px;">Védelmi osztály: Töltőtest IP66, csatlakozó és konnektor IP44</li>
+        <li style="font-size: 14px;">Garancia: 5 év</li>
       `;
     }
     if (productName.includes("Charge Amps Luna")) {
       return `
-        <li style="font-size: 8px;">Fázisok száma: 1/3</li>
-        <li style="font-size: 8px;">Tápellátás: 6–32 A</li>
-        <li style="font-size: 8px;">Földzárlat védelem: Beépített Type B áramvédő (AC 30 mA, DC 6 mA)</li>
-        <li style="font-size: 8px;">Üzemi hőmérséklet: -35°C és +45°C között</li>
-        <li style="font-size: 8px;">Hitelesítés: RFID</li>
-        <li style="font-size: 8px;">Kommunikációs protokollok: WiFi, 4G LTE (eSIM), Bluetooth Low Energy 5.0/5.3, RFID/NFC, OCPP 1.6J</li>
-        <li style="font-size: 8px;">Funkciók: Vezeték nélküli terhelésmenedzsment, felhőalapú szolgáltatások (Charge Amps app), ISO 15118 ready</li>
-        <li style="font-size: 8px;">Szoftverfrissítések: Automatikus frissítések</li>
-        <li style="font-size: 8px;">Védelmi osztály: IP54, ütésállóság IK10</li>
-        <li style="font-size: 8px;">Garancia: 5 év</li>
+        <li style="font-size: 14px;">Fázisok száma: 1/3</li>
+        <li style="font-size: 14px;">Tápellátás: 6–32 A</li>
+        <li style="font-size: 14px;">Földzárlat védelem: Beépített Type B áramvédő (AC 30 mA, DC 6 mA)</li>
+        <li style="font-size: 14px;">Üzemi hőmérséklet: -35°C és +45°C között</li>
+        <li style="font-size: 14px;">Hitelesítés: RFID</li>
+        <li style="font-size: 14px;">Kommunikációs protokollok: WiFi, 4G LTE (eSIM), Bluetooth Low Energy 5.0/5.3, RFID/NFC, OCPP 1.6J</li>
+        <li style="font-size: 14px;">Funkciók: Vezeték nélküli terhelésmenedzsment, felhőalapú szolgáltatások (Charge Amps app), ISO 15118 ready</li>
+        <li style="font-size: 14px;">Szoftverfrissítések: Automatikus frissítések</li>
+        <li style="font-size: 14px;">Védelmi osztály: IP54, ütésállóság IK10</li>
+        <li style="font-size: 14px;">Garancia: 5 év</li>
       `;
     }
     return "";
