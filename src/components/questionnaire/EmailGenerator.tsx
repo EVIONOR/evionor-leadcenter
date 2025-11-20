@@ -50,7 +50,7 @@ const getLoadManagementPackage = (productName: string): LoadManagementPackage | 
   }
   if (productName.includes("Charge Amps")) {
     return {
-      name: "Charge Amps Amp Guard Terhelésmenedzment",
+      name: "Charge Amps Amp Guard Terhelésmenedzsment",
       price: 132000,
       url: "https://evionor.hu/collections/all/products/charge-amps-amp-guard-63a-ev-mero?_pos=10&_fid=53fe77cfa&_ss=c",
     };
