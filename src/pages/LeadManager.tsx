@@ -1,12 +1,19 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQueryState, parseAsInteger, parseAsStringLiteral } from "nuqs";
-import { getQuestionnaireResponses, updateQuestionnaireStatus } from "@/integrations/evionor/client";
+import { 
+  getQuestionnaireResponses, 
+  updateQuestionnaireStatus,
+  getAutomaticProcessingSetting,
+  setAutomaticProcessingSetting 
+} from "@/integrations/evionor/client";
 import type { QuestionnaireResponse, LeadStatus } from "@/integrations/evionor/types";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -22,6 +29,8 @@ export default function LeadManager() {
   const [responses, setResponses] = useState<QuestionnaireResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalCount, setTotalCount] = useState(0);
+  const [autoProcessingEnabled, setAutoProcessingEnabled] = useState(false);
+  const [loadingAutoSetting, setLoadingAutoSetting] = useState(true);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -34,6 +43,22 @@ export default function LeadManager() {
   const [itemsPerPage, setItemsPerPage] = useQueryState("perPage", parseAsInteger.withDefault(15));
 
   const totalPages = Math.ceil(totalCount / itemsPerPage);
+
+  // Load automatic processing setting on mount
+  useEffect(() => {
+    const loadAutoProcessingSetting = async () => {
+      try {
+        const enabled = await getAutomaticProcessingSetting();
+        setAutoProcessingEnabled(enabled);
+      } catch (error) {
+        console.error("Error loading automatic processing setting:", error);
+      } finally {
+        setLoadingAutoSetting(false);
+      }
+    };
+
+    loadAutoProcessingSetting();
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -127,7 +152,7 @@ export default function LeadManager() {
     await setCurrentPage(1); // Reset to first page when filter changes
   };
 
-  const handleQualifyLead = (response: QuestionnaireResponse) => {
+  const handleQualifyLead = async (response: QuestionnaireResponse) => {
     const leadData = {
       contactName: response.name || "",
       email: response.email || "",
@@ -135,10 +160,57 @@ export default function LeadManager() {
       carBrand: response.car_brand || "",
       carModel: response.car_model || "",
       location: response.location || "",
+      phases: response.phases || "1", // Bug fix: include phases field
     };
 
     localStorage.setItem("prefill_lead_data", JSON.stringify(leadData));
+    
+    // Update status to "Qualified" immediately
+    try {
+      await updateQuestionnaireStatus(response.id, "qualified");
+      
+      // Optimistically update UI
+      if (statusFilter !== "all" && statusFilter !== "qualified") {
+        setResponses((prev) => prev.filter((r) => r.id !== response.id));
+        setTotalCount((prev) => Math.max(0, prev - 1));
+      } else {
+        setResponses((prev) => prev.map((r) => (r.id === response.id ? { ...r, status: "qualified" } : r)));
+      }
+      
+      toast({
+        title: "Lead Qualified",
+        description: "Lead status updated to Qualified",
+      });
+    } catch (error) {
+      console.error("Error updating status:", error);
+      toast({
+        title: "Warning",
+        description: "Form will be filled, but status update failed",
+        variant: "destructive",
+      });
+    }
+    
     navigate("/");
+  };
+
+  const handleAutoProcessingToggle = async (checked: boolean) => {
+    try {
+      await setAutomaticProcessingSetting(checked);
+      setAutoProcessingEnabled(checked);
+      toast({
+        title: checked ? "Automatic Processing Enabled" : "Automatic Processing Disabled",
+        description: checked 
+          ? "New leads will be automatically processed every 2 hours" 
+          : "Automatic lead processing has been disabled",
+      });
+    } catch (error) {
+      console.error("Error updating automatic processing setting:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update automatic processing setting",
+        variant: "destructive",
+      });
+    }
   };
 
   if (loading) {
@@ -181,6 +253,17 @@ export default function LeadManager() {
                 ))}
               </SelectContent>
             </Select>
+            <div className="flex items-center gap-2 px-3 py-2 border rounded-md bg-background">
+              <Switch
+                id="auto-processing"
+                checked={autoProcessingEnabled}
+                onCheckedChange={handleAutoProcessingToggle}
+                disabled={loadingAutoSetting}
+              />
+              <Label htmlFor="auto-processing" className="text-sm font-medium cursor-pointer">
+                Auto Process New Leads
+              </Label>
+            </div>
           </div>
         </div>
 

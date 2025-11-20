@@ -130,3 +130,56 @@ export async function saveSavedQuestionnaireResponse(
 
   return data;
 }
+
+/**
+ * Get automatic processing setting
+ */
+export async function getAutomaticProcessingSetting(): Promise<boolean> {
+  const { data, error } = await supabase.functions.invoke<{ data: { enabled: boolean } }>("query-evionor", {
+    body: {
+      action: "get_setting",
+      setting_key: "automatic_processing_enabled",
+    },
+  });
+
+  if (error) {
+    console.error("Error getting automatic processing setting:", error);
+    return false;
+  }
+
+  return data?.data?.enabled ?? false;
+}
+
+/**
+ * Set automatic processing setting
+ */
+export async function setAutomaticProcessingSetting(enabled: boolean): Promise<void> {
+  const { error } = await supabase.functions.invoke("query-evionor", {
+    body: {
+      action: "update_setting",
+      setting_key: "automatic_processing_enabled",
+      setting_value: { enabled },
+    },
+  });
+
+  if (error) {
+    console.error("Error setting automatic processing setting:", error);
+    throw error;
+  }
+}
+
+/**
+ * Manually trigger lead processing
+ */
+export async function triggerLeadProcessing(): Promise<void> {
+  const { error } = await supabase.functions.invoke("process-leads", {
+    body: {
+      manual_trigger: true,
+    },
+  });
+
+  if (error) {
+    console.error("Error triggering lead processing:", error);
+    throw error;
+  }
+}

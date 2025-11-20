@@ -232,6 +232,22 @@ export interface SavedQuestionnaireResponseInsert {
   updated_at?: string;
 }
 
+export interface LeadManagerSetting {
+  id: string;
+  setting_key: string;
+  setting_value: any;
+  updated_at: string;
+  updated_by: string | null;
+}
+
+export interface LeadManagerSettingInsert {
+  id?: string;
+  setting_key: string;
+  setting_value: any;
+  updated_at?: string;
+  updated_by?: string | null;
+}
+
 // Database type
 export interface EvionorDatabase {
   public: {
@@ -255,6 +271,11 @@ export interface EvionorDatabase {
         Row: SavedQuestionnaireResponse;
         Insert: SavedQuestionnaireResponseInsert;
         Update: Partial<SavedQuestionnaireResponseInsert>;
+      };
+      lead_manager_settings: {
+        Row: LeadManagerSetting;
+        Insert: LeadManagerSettingInsert;
+        Update: Partial<LeadManagerSettingInsert>;
       };
     };
   };
