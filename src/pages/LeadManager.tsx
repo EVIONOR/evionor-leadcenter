@@ -7,11 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 
 const statusOptions: { value: LeadStatus; label: string }[] = [
   { value: "new", label: "New" },
@@ -25,8 +22,6 @@ export default function LeadManager() {
   const [responses, setResponses] = useState<QuestionnaireResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalCount, setTotalCount] = useState(0);
-  const [autoProcessEnabled, setAutoProcessEnabled] = useState(false);
-  const [autoProcessLoading, setAutoProcessLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -39,28 +34,6 @@ export default function LeadManager() {
   const [itemsPerPage, setItemsPerPage] = useQueryState("perPage", parseAsInteger.withDefault(15));
 
   const totalPages = Math.ceil(totalCount / itemsPerPage);
-
-  // Fetch auto-process setting
-  useEffect(() => {
-    const fetchAutoProcessSetting = async () => {
-      try {
-        const { data, error } = await supabase
-          .from("settings")
-          .select("value")
-          .eq("key", "auto_process_leads")
-          .single();
-
-        if (error) throw error;
-        
-        const value = data?.value as { enabled?: boolean } | null;
-        setAutoProcessEnabled(value?.enabled || false);
-      } catch (error) {
-        console.error("Error fetching auto-process setting:", error);
-      }
-    };
-
-    fetchAutoProcessSetting();
-  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -154,7 +127,7 @@ export default function LeadManager() {
     await setCurrentPage(1); // Reset to first page when filter changes
   };
 
-  const handleQualifyLead = async (response: QuestionnaireResponse) => {
+  const handleQualifyLead = (response: QuestionnaireResponse) => {
     const leadData = {
       contactName: response.name || "",
       email: response.email || "",
@@ -162,65 +135,10 @@ export default function LeadManager() {
       carBrand: response.car_brand || "",
       carModel: response.car_model || "",
       location: response.location || "",
-      phases: response.phases || "1", // FIX: Include phases field
     };
 
     localStorage.setItem("prefill_lead_data", JSON.stringify(leadData));
-    
-    // Update status to "qualified" immediately
-    try {
-      await updateQuestionnaireStatus(response.id, "qualified");
-      
-      // Update local state
-      setResponses((prev) => 
-        statusFilter === "all" || statusFilter === "qualified"
-          ? prev.map((r) => (r.id === response.id ? { ...r, status: "qualified" } : r))
-          : prev.filter((r) => r.id !== response.id)
-      );
-      
-      toast({
-        title: "Lead Qualified",
-        description: "Lead status updated to Qualified",
-      });
-    } catch (error) {
-      console.error("Error updating lead status:", error);
-      toast({
-        title: "Warning",
-        description: "Lead data loaded but status update failed",
-        variant: "destructive",
-      });
-    }
-    
     navigate("/");
-  };
-
-  const handleAutoProcessToggle = async (enabled: boolean) => {
-    setAutoProcessLoading(true);
-    try {
-      const { error } = await supabase
-        .from("settings")
-        .update({ value: { enabled }, updated_at: new Date().toISOString() })
-        .eq("key", "auto_process_leads");
-
-      if (error) throw error;
-
-      setAutoProcessEnabled(enabled);
-      toast({
-        title: enabled ? "Auto-Processing Enabled" : "Auto-Processing Disabled",
-        description: enabled
-          ? "New leads will be automatically processed every 2 hours"
-          : "Automatic lead processing has been disabled",
-      });
-    } catch (error) {
-      console.error("Error updating auto-process setting:", error);
-      toast({
-        title: "Error",
-        description: "Failed to update auto-process setting",
-        variant: "destructive",
-      });
-    } finally {
-      setAutoProcessLoading(false);
-    }
   };
 
   if (loading) {
@@ -243,43 +161,26 @@ export default function LeadManager() {
             <h1 className="text-3xl font-bold">Questionnaire Responses</h1>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-            <div className="flex items-center space-x-2 bg-card p-3 rounded-lg border">
-              <Switch
-                id="auto-process"
-                checked={autoProcessEnabled}
-                onCheckedChange={handleAutoProcessToggle}
-                disabled={autoProcessLoading}
-              />
-              <Label htmlFor="auto-process" className="cursor-pointer">
-                {autoProcessLoading ? (
-                  <Loader2 className="h-4 w-4 animate-spin inline mr-2" />
-                ) : null}
-                Automatically Process New Leads
-              </Label>
+          <div className="flex items-center gap-4">
+            <div className="text-sm text-muted-foreground">
+              {totalCount} total {totalCount === 1 ? "response" : "responses"}
             </div>
-            
-            <div className="flex items-center gap-4">
-              <div className="text-sm text-muted-foreground">
-                {totalCount} total {totalCount === 1 ? "response" : "responses"}
-              </div>
-              <Select
-                value={statusFilter}
-                onValueChange={(value) => handleStatusFilterChange(value as LeadStatus | "all")}
-              >
-                <SelectTrigger className="w-[180px] bg-background">
-                  <SelectValue placeholder="Filter by status" />
-                </SelectTrigger>
-                <SelectContent className="bg-background z-50">
-                  <SelectItem value="all">All Statuses</SelectItem>
-                  {statusOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            <Select
+              value={statusFilter}
+              onValueChange={(value) => handleStatusFilterChange(value as LeadStatus | "all")}
+            >
+              <SelectTrigger className="w-[180px] bg-background">
+                <SelectValue placeholder="Filter by status" />
+              </SelectTrigger>
+              <SelectContent className="bg-background z-50">
+                <SelectItem value="all">All Statuses</SelectItem>
+                {statusOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
