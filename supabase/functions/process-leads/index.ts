@@ -166,9 +166,7 @@ Deno.serve(async (req) => {
 
     // Step 5: Send batch emails
     console.log("[process-leads] Sending batch emails...");
-    const { data: batchData, error: batchError } = await resend.batch.send(emailPayloads, {
-      batchValidation: "permissive",
-    });
+    const { data: batchData, error: batchError } = await resend.batch.send(emailPayloads);
 
     let processedCount = 0;
     let errorCount = 0;
