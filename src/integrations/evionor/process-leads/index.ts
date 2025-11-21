@@ -177,85 +177,116 @@ Deno.serve(async (req) => {
         }
       );
     }
-    // Step 5: Send batch emails
-    console.log("[process-leads] Sending batch emails...");
-    const { data: batchData, error: batchError } = await resend.batch.send(
-      emailPayloads
-    );
-    // Debug logging
-    console.log(
-      "[process-leads] Batch response - data:",
-      JSON.stringify(batchData, null, 2)
-    );
-    console.log(
-      "[process-leads] Batch response - error:",
-      JSON.stringify(batchError, null, 2)
-    );
+    // Step 5: Send batch emails (max 100 per batch as per Resend's limit)
+    const BATCH_SIZE = 50;
     let processedCount = 0;
     let errorCount = 0;
     const errors = [];
-    // Step 6: Update lead status for successfully sent emails
-    // Note: Resend SDK returns { data: [{ id: string }, ...] }
-    if (batchError) {
-      console.error("[process-leads] Batch send error:", batchError);
-      errors.push(`Batch send error: ${batchError}`);
-      errorCount = emailPayloads.length;
-    } else if (batchData?.data && Array.isArray(batchData.data)) {
-      const emailResults = batchData.data;
+    const totalBatches = Math.ceil(emailPayloads.length / BATCH_SIZE);
+    console.log(
+      `[process-leads] Sending ${emailPayloads.length} emails in ${totalBatches} batch(es)...`
+    );
+    for (let batchIndex = 0; batchIndex < totalBatches; batchIndex++) {
+      const startIdx = batchIndex * BATCH_SIZE;
+      const endIdx = Math.min(startIdx + BATCH_SIZE, emailPayloads.length);
+      const batchPayloads = emailPayloads.slice(startIdx, endIdx);
+      const batchLeads = leadsByIndex.slice(startIdx, endIdx);
       console.log(
-        `[process-leads] Batch send successful. Received ${emailResults.length} responses`
+        `[process-leads] Sending batch ${batchIndex + 1}/${totalBatches} (${batchPayloads.length} emails)...`
       );
-      // Update leads where emails were successfully sent (have an id in response)
-      for (let i = 0; i < emailResults.length; i++) {
-        const emailResult = emailResults[i];
-        const lead = leadsByIndex[i];
-        if (emailResult?.id && lead) {
-          try {
-            const { error: updateError } = await client
-              .from("questionnaire_responses")
-              .update({
-                status: "qualified",
-              })
-              .eq("id", lead.id);
-            if (updateError) {
-              console.error(
-                `[process-leads] Error updating lead ${lead.id}:`,
-                updateError
-              );
-              errors.push(
-                `Lead ${lead.id} (${lead.email}): Database update failed`
+      try {
+        const { data: batchData, error: batchError } = await resend.batch.send(
+          batchPayloads
+        );
+        // Debug logging
+        console.log(
+          `[process-leads] Batch ${batchIndex + 1} response - data:`,
+          JSON.stringify(batchData, null, 2)
+        );
+        console.log(
+          `[process-leads] Batch ${batchIndex + 1} response - error:`,
+          JSON.stringify(batchError, null, 2)
+        );
+        // Step 6: Update lead status for successfully sent emails
+        // Note: Resend SDK returns { data: [{ id: string }, ...] }
+        if (batchError) {
+          console.error(
+            `[process-leads] Batch ${batchIndex + 1} send error:`,
+            batchError
+          );
+          errors.push(`Batch ${batchIndex + 1} send error: ${batchError}`);
+          errorCount += batchPayloads.length;
+        } else if (batchData?.data && Array.isArray(batchData.data)) {
+          const emailResults = batchData.data;
+          console.log(
+            `[process-leads] Batch ${batchIndex + 1} send successful. Received ${emailResults.length} responses`
+          );
+          // Update leads where emails were successfully sent (have an id in response)
+          for (let i = 0; i < emailResults.length; i++) {
+            const emailResult = emailResults[i];
+            const lead = batchLeads[i];
+            if (emailResult?.id && lead) {
+              try {
+                const { error: updateError } = await client
+                  .from("questionnaire_responses")
+                  .update({
+                    status: "qualified",
+                  })
+                  .eq("id", lead.id);
+                if (updateError) {
+                  console.error(
+                    `[process-leads] Error updating lead ${lead.id}:`,
+                    updateError
+                  );
+                  errors.push(
+                    `Lead ${lead.id} (${lead.email}): Database update failed`
+                  );
+                  errorCount++;
+                } else {
+                  console.log(
+                    `[process-leads] Lead ${lead.id} (${lead.email}) marked as qualified, email ID: ${emailResult.id}`
+                  );
+                  processedCount++;
+                }
+              } catch (error) {
+                const errorMsg =
+                  error instanceof Error ? error.message : String(error);
+                console.error(
+                  `[process-leads] Error updating lead ${lead.id}:`,
+                  errorMsg
+                );
+                errors.push(`Lead ${lead.id} (${lead.email}): ${errorMsg}`);
+                errorCount++;
+              }
+            } else {
+              console.warn(
+                `[process-leads] Batch ${batchIndex + 1}, Email ${i} failed or missing lead data`
               );
               errorCount++;
-            } else {
-              console.log(
-                `[process-leads] Lead ${lead.id} (${lead.email}) marked as qualified, email ID: ${emailResult.id}`
-              );
-              processedCount++;
+              if (lead) {
+                errors.push(
+                  `Lead ${lead.id} (${lead.email}): Email send failed`
+                );
+              }
             }
-          } catch (error) {
-            const errorMsg =
-              error instanceof Error ? error.message : String(error);
-            console.error(
-              `[process-leads] Error updating lead ${lead.id}:`,
-              errorMsg
-            );
-            errors.push(`Lead ${lead.id} (${lead.email}): ${errorMsg}`);
-            errorCount++;
           }
         } else {
-          console.warn(
-            `[process-leads] Email ${i} failed or missing lead data`
+          console.error(
+            `[process-leads] Unexpected batch ${batchIndex + 1} response:`,
+            batchData
           );
-          errorCount++;
-          if (lead) {
-            errors.push(`Lead ${lead.id} (${lead.email}): Email send failed`);
-          }
+          errors.push(`Batch ${batchIndex + 1}: Unexpected response structure`);
+          errorCount += batchPayloads.length;
         }
+      } catch (error) {
+        const errorMsg = error instanceof Error ? error.message : String(error);
+        console.error(
+          `[process-leads] Error sending batch ${batchIndex + 1}:`,
+          errorMsg
+        );
+        errors.push(`Batch ${batchIndex + 1} error: ${errorMsg}`);
+        errorCount += batchPayloads.length;
       }
-    } else {
-      console.error("[process-leads] Unexpected batch response:", batchData);
-      errors.push("Unexpected batch response structure");
-      errorCount = emailPayloads.length;
     }
     console.log(
       `[process-leads] Processing complete. Processed: ${processedCount}, Errors: ${errorCount}`
