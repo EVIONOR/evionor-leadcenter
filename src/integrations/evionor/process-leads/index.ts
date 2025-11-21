@@ -15,8 +15,8 @@ Deno.serve(async (req) => {
   try {
     console.log("[process-leads] Starting automatic lead processing...");
 
-    const evionorUrl = Deno.env.get("EVIONOR_SUPABASE_URL");
-    const evionorServiceKey = Deno.env.get("EVIONOR_SUPABASE_SERVICE_KEY");
+    const evionorUrl = Deno.env.get("SUPABASE_URL");
+    const evionorServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
     if (!evionorUrl || !evionorServiceKey) {
       throw new Error("EVIONOR Supabase credentials not configured");
