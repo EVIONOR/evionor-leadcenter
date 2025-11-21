@@ -1,64 +1,64 @@
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.80.0';
-import { Resend } from 'https://esm.sh/resend@4.0.0';
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.80.0";
+import { Resend } from "https://esm.sh/resend@4.0.0";
 
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
 Deno.serve(async (req) => {
   // Handle CORS preflight requests
-  if (req.method === 'OPTIONS') {
+  if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    console.log('[process-leads] Starting automatic lead processing...');
+    console.log("[process-leads] Starting automatic lead processing...");
 
-    const evionorUrl = Deno.env.get('EVIONOR_SUPABASE_URL');
-    const evionorServiceKey = Deno.env.get('EVIONOR_SUPABASE_SERVICE_KEY');
+    const evionorUrl = Deno.env.get("EVIONOR_SUPABASE_URL");
+    const evionorServiceKey = Deno.env.get("EVIONOR_SUPABASE_SERVICE_KEY");
 
     if (!evionorUrl || !evionorServiceKey) {
-      throw new Error('EVIONOR Supabase credentials not configured');
+      throw new Error("EVIONOR Supabase credentials not configured");
     }
 
     const client = createClient(evionorUrl, evionorServiceKey, {
-      auth: { persistSession: false }
+      auth: { persistSession: false },
     });
 
     // Step 1: Check if automatic processing is enabled
-    console.log('[process-leads] Checking automatic processing setting...');
+    console.log("[process-leads] Checking automatic processing setting...");
     const { data: settingData, error: settingError } = await client
-      .from('lead_manager_settings')
-      .select('setting_value')
-      .eq('setting_key', 'automatic_processing_enabled')
+      .from("lead_manager_settings")
+      .select("setting_value")
+      .eq("setting_key", "automatic_processing_enabled")
       .single();
 
     if (settingError || !settingData?.setting_value?.enabled) {
-      console.log('[process-leads] Automatic processing is disabled, skipping...');
+      console.log("[process-leads] Automatic processing is disabled, skipping...");
       return new Response(
-        JSON.stringify({ 
-          success: true, 
-          message: 'Automatic processing is disabled',
-          processed: 0 
+        JSON.stringify({
+          success: true,
+          message: "Automatic processing is disabled",
+          processed: 0,
         }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
+        { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 },
       );
     }
 
-    console.log('[process-leads] Automatic processing is enabled');
+    console.log("[process-leads] Automatic processing is enabled");
 
     // Step 2: Fetch all unprocessed leads (no time constraint)
     // TEMPORARY: Filter for testing with specific emails only
     const { data: leads, error: leadsError } = await client
-      .from('questionnaire_responses')
-      .select('*')
-      .neq('status', 'qualified')
-      .in('email', ['istvansandornagy@gmail.com', 'misho.shubitidze@travlrd.com'])
-      .order('created_at', { ascending: true });
+      .from("questionnaire_responses")
+      .select("*")
+      .neq("status", "qualified")
+      .in("email", ["istvansandornagy@gmail.com", "misho.shubitidze@travlrd.com"])
+      .order("created_at", { ascending: true });
 
     if (leadsError) {
-      console.error('[process-leads] Error fetching leads:', leadsError);
+      console.error("[process-leads] Error fetching leads:", leadsError);
       throw leadsError;
     }
 
@@ -66,24 +66,24 @@ Deno.serve(async (req) => {
 
     if (!leads || leads.length === 0) {
       return new Response(
-        JSON.stringify({ 
-          success: true, 
-          message: 'No leads to process',
-          processed: 0 
+        JSON.stringify({
+          success: true,
+          message: "No leads to process",
+          processed: 0,
         }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
+        { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 },
       );
     }
 
     // Step 3: Initialize Resend client
-    const resendApiKey = Deno.env.get('RESEND_API_KEY');
+    const resendApiKey = Deno.env.get("RESEND_API_KEY");
     if (!resendApiKey) {
-      throw new Error('RESEND_API_KEY not configured');
+      throw new Error("RESEND_API_KEY not configured");
     }
     const resend = new Resend(resendApiKey);
 
     // Step 4: Prepare email payloads for batch sending
-    console.log('[process-leads] Preparing email payloads for batch sending...');
+    console.log("[process-leads] Preparing email payloads for batch sending...");
     const emailPayloads = [];
     const leadsByIndex: typeof leads = [];
 
@@ -138,14 +138,13 @@ Deno.serve(async (req) => {
 
         // Add to batch
         emailPayloads.push({
-          from: 'EVIONOR <hello@evionor.hu>',
+          from: "EVIONOR <hello@evionor.hu>",
           to: [lead.email],
           subject: emailSubject,
           html: emailHtml,
-          reply_to: 'hello@evionor.hu',
+          reply_to: "hello@evionor.hu",
         });
         leadsByIndex.push(lead);
-
       } catch (error) {
         const errorMsg = error instanceof Error ? error.message : String(error);
         console.error(`[process-leads] Error preparing email for lead ${lead.id}:`, errorMsg);
@@ -156,21 +155,20 @@ Deno.serve(async (req) => {
 
     if (emailPayloads.length === 0) {
       return new Response(
-        JSON.stringify({ 
-          success: true, 
-          message: 'No valid emails to send',
-          processed: 0 
+        JSON.stringify({
+          success: true,
+          message: "No valid emails to send",
+          processed: 0,
         }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
+        { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 },
       );
     }
 
     // Step 5: Send batch emails
-    console.log('[process-leads] Sending batch emails...');
-    const { data: batchData, error: batchError } = await resend.batch.send(
-      emailPayloads,
-      { batchValidation: 'permissive' } as any
-    );
+    console.log("[process-leads] Sending batch emails...");
+    const { data: batchData, error: batchError } = await resend.batch.send(emailPayloads, {
+      batchValidation: "permissive",
+    });
 
     let processedCount = 0;
     let errorCount = 0;
@@ -179,16 +177,16 @@ Deno.serve(async (req) => {
     // Step 6: Update lead status for successfully sent emails
     if (batchData && Array.isArray(batchData)) {
       console.log(`[process-leads] Batch send successful. Sent ${batchData.length} emails`);
-      
+
       for (let i = 0; i < batchData.length; i++) {
         if (batchData[i]?.id) {
           const lead = leadsByIndex[i];
           if (lead) {
             try {
               const { error: updateError } = await client
-                .from('questionnaire_responses')
-                .update({ status: 'qualified' })
-                .eq('id', lead.id);
+                .from("questionnaire_responses")
+                .update({ status: "qualified" })
+                .eq("id", lead.id);
 
               if (updateError) {
                 console.error(`[process-leads] Error updating lead ${lead.id}:`, updateError);
@@ -211,7 +209,7 @@ Deno.serve(async (req) => {
 
     // Handle batch errors
     if (batchError) {
-      console.error('[process-leads] Batch send error:', batchError);
+      console.error("[process-leads] Batch send error:", batchError);
       errors.push(`Batch send error: ${batchError}`);
       errorCount = emailPayloads.length;
     }
@@ -225,19 +223,18 @@ Deno.serve(async (req) => {
         processed: processedCount,
         errors: errorCount > 0 ? errors : undefined,
       }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
+      { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 },
     );
-
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : String(error);
-    console.error('[process-leads] Fatal error:', errorMsg);
-    
+    console.error("[process-leads] Fatal error:", errorMsg);
+
     return new Response(
-      JSON.stringify({ 
-        success: false, 
-        error: errorMsg 
+      JSON.stringify({
+        success: false,
+        error: errorMsg,
       }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
+      { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 500 },
     );
   }
 });
@@ -253,9 +250,9 @@ const priceList: { name: string; price: number }[] = [
 ];
 
 const formatPrice = (price: number): string => {
-  return new Intl.NumberFormat('hu-HU', {
-    style: 'currency',
-    currency: 'HUF',
+  return new Intl.NumberFormat("hu-HU", {
+    style: "currency",
+    currency: "HUF",
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(price);
@@ -472,13 +469,14 @@ function generateEmailHtml(data: any): string {
     }
   }
 
-  const productSections = selectedProducts.map((product, index) => {
-    const chargerPrice = findProductPrice(product);
-    const productUrl = getProductUrl(product);
-    const loadManagementPackage = data.loadManagement ? getLoadManagementPackage(product) : null;
-    const grandTotal = chargerPrice + (data.needsInstallation ? installationPrice : 0);
+  const productSections = selectedProducts
+    .map((product, index) => {
+      const chargerPrice = findProductPrice(product);
+      const productUrl = getProductUrl(product);
+      const loadManagementPackage = data.loadManagement ? getLoadManagementPackage(product) : null;
+      const grandTotal = chargerPrice + (data.needsInstallation ? installationPrice : 0);
 
-    return `
+      return `
       ${index > 0 ? '<div style="margin: 32px 0; height: 2px; background: linear-gradient(90deg, transparent, #d1d5db 20%, #d1d5db 80%, transparent); opacity: 0.5;"></div>' : ""}
       
       <!-- Töltő ${index + 1}: ${product} -->
@@ -487,13 +485,17 @@ function generateEmailHtml(data: any): string {
         <p style="margin: 0 0 20px 0; color: #0071e3; font-size: 16px; font-weight: 600;">${product}</p>
         
         <!-- Töltő kép -->
-        ${getChargerImageUrl(product) ? `
+        ${
+          getChargerImageUrl(product)
+            ? `
         <div style="text-align: center; margin-bottom: 24px; padding: 20px; background-color: white; border-radius: 8px; border: 1px solid #e5e7eb;">
           <a href="${productUrl}" style="display: inline-block; text-decoration: none;">
             <img src="${getChargerImageUrl(product)}" alt="${product}" style="max-width: 280px; width: 100%; height: auto; display: block; margin: 0 auto;" />
           </a>
         </div>
-        ` : ""}
+        `
+            : ""
+        }
         
         <div style="padding: 16px; background-color: white; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e5e7eb;">
           <table style="width: 100%; border-collapse: collapse;">
@@ -511,7 +513,9 @@ function generateEmailHtml(data: any): string {
           </ul>
         </div>
 
-        ${data.needsInstallation ? `
+        ${
+          data.needsInstallation
+            ? `
         <!-- Installation Section -->
         <div style="margin-top: 20px; background-color: white; padding: 20px; border-radius: 8px; border: 1px solid #e5e7eb;">
           <h3 style="margin: 0 0 16px 0; color: #111827; font-size: 16px; font-weight: 600;">Telepítés</h3>
@@ -527,9 +531,13 @@ function generateEmailHtml(data: any): string {
             </tr>
           </table>
         </div>
-        ` : ""}
+        `
+            : ""
+        }
         
-        ${loadManagementPackage ? `
+        ${
+          loadManagementPackage
+            ? `
         <div style="padding: 16px; background-color: white; border-radius: 8px; margin-top: 20px; border: 1px solid #e5e7eb;">
           <table style="width: 100%; border-collapse: collapse;">
             <tr>
@@ -538,7 +546,9 @@ function generateEmailHtml(data: any): string {
             </tr>
           </table>
         </div>
-        ` : ""}
+        `
+            : ""
+        }
 
         <!-- Price Summary for this charger -->
         <div style="margin-top: 24px; background-color: white; padding: 20px; border-radius: 8px; border: 2px solid #0071e3;">
@@ -547,12 +557,16 @@ function generateEmailHtml(data: any): string {
               <td style="padding: 8px 0; color: #374151; font-size: 14px; width: 65%;">Töltő berendezés</td>
               <td style="padding: 8px 0 8px 20px; color: #111827; font-size: 14px; font-weight: 500; text-align: right;">${formatPrice(chargerPrice)}</td>
             </tr>
-            ${data.needsInstallation ? `
+            ${
+              data.needsInstallation
+                ? `
             <tr>
               <td style="padding: 8px 0; color: #374151; font-size: 14px;">Telepítés (${data.distanceFromBox}m)</td>
               <td style="padding: 8px 0 8px 20px; color: #111827; font-size: 14px; font-weight: 500; text-align: right;">${formatPrice(installationPrice)}</td>
             </tr>
-            ` : ""}
+            `
+                : ""
+            }
             <tr style="border-top: 2px solid #0071e3;">
               <td style="padding: 12px 0; color: #111827; font-size: 16px; font-weight: 700;">Végösszeg:</td>
               <td style="padding: 12px 0 12px 20px; color: #0071e3; font-size: 18px; font-weight: 700; text-align: right;">${formatPrice(grandTotal)}</td>
@@ -564,7 +578,8 @@ function generateEmailHtml(data: any): string {
         </div>
       </div>
     `;
-  }).join("");
+    })
+    .join("");
 
   return `<!DOCTYPE html>
 <html lang="hu">
@@ -624,12 +639,16 @@ function generateEmailHtml(data: any): string {
             <td style="padding: 12px 0; color: #6b7280; font-size: 14px;">Jármű</td>
             <td style="padding: 12px 0; color: #111827; font-size: 14px; font-weight: 500;">${data.carBrand} ${data.carModel}</td>
           </tr>
-          ${data.city && data.zipCode ? `
+          ${
+            data.city && data.zipCode
+              ? `
           <tr>
             <td style="padding: 12px 0; color: #6b7280; font-size: 14px;">Helyszín</td>
             <td style="padding: 12px 0; color: #111827; font-size: 14px; font-weight: 500;">${data.city}, ${data.zipCode}</td>
           </tr>
-          ` : ""}
+          `
+              : ""
+          }
           <tr>
             <td style="padding: 12px 0; color: #6b7280; font-size: 14px;">Épület típus</td>
             <td style="padding: 12px 0; color: #111827; font-size: 14px; font-weight: 500;">${data.buildingType.replace("_", " ")}</td>
@@ -644,7 +663,15 @@ function generateEmailHtml(data: any): string {
       <!-- Charger Sections -->
       ${productSections}
 
-      ${data.needsInstallation && (data.needsBackplate || data.needsPole || data.needsElectricalPlanning || data.overvoltageProtection || data.infrastructureDevelopment || data.networkExpansion) ? `
+      ${
+        data.needsInstallation &&
+        (data.needsBackplate ||
+          data.needsPole ||
+          data.needsElectricalPlanning ||
+          data.overvoltageProtection ||
+          data.infrastructureDevelopment ||
+          data.networkExpansion)
+          ? `
       <!-- Additional Installation Requirements -->
       <div style="margin-bottom: 24px; background-color: #f3f4f6; padding: 24px; border-radius: 12px; border: 2px solid #e5e7eb;">
         <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 12px;">További telepítési követelmények</h2>
@@ -662,16 +689,24 @@ function generateEmailHtml(data: any): string {
           </p>
         </div>
       </div>
-      ` : ""}
+      `
+          : ""
+      }
 
-      ${data.groundworkWallPenetration ? `
+      ${
+        data.groundworkWallPenetration
+          ? `
       <div style="margin-bottom: 24px; padding: 16px; background-color: #fef3c7; border-radius: 8px; border-left: 4px solid #f59e0b;">
         <p style="margin: 0 0 8px 0; color: #92400e; font-size: 14px; font-weight: 600;">Földmunka/Faláttörés:</p>
         <p style="margin: 0; color: #78350f; font-size: 14px; line-height: 1.6;">${data.groundworkWallPenetration}</p>
       </div>
-      ` : ""}
+      `
+          : ""
+      }
 
-      ${data.needsInstallation ? `
+      ${
+        data.needsInstallation
+          ? `
       <!-- Standard Installation Description -->
       <div style="margin-bottom: 24px; background-color: #f3f4f6; padding: 24px; border-radius: 12px; border: 2px solid #e5e7eb;">
         <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 12px;">Sztenderd telepítés</h2>
@@ -689,30 +724,40 @@ function generateEmailHtml(data: any): string {
           </ul>
         </div>
       </div>
-      ` : ""}
+      `
+          : ""
+      }
 
       <!-- Process Section -->
       <div style="margin-bottom: 40px; background-color: #f9fafb; padding: 24px; border-radius: 12px;">
         <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 18px; font-weight: 600;">Folyamat</h2>
         <ol style="margin: 0; padding: 0 0 0 20px; color: #374151; font-size: 14px; line-height: 2;">
-          ${data.needsInstallation ? `
+          ${
+            data.needsInstallation
+              ? `
           <li>Webshop megrendelés leadása</li>
           <li>Telepítés ütemezése</li>
           <li>Szakszerű kivitelezés 10 munkanapon belül</li>
-          ` : `
+          `
+              : `
           <li>Webshop megrendelés leadása</li>
           <li>Szállítás 5 munkanapon belül</li>
-          `}
+          `
+          }
         </ol>
       </div>
 
-      ${data.otherComments ? `
+      ${
+        data.otherComments
+          ? `
       <!-- Other Comments -->
       <div style="margin-bottom: 40px; padding: 20px; background-color: #eff6ff; border-radius: 8px; border-left: 4px solid #3b82f6;">
         <h2 style="margin: 0 0 12px 0; color: #1e40af; font-size: 16px; font-weight: 600;">Egyéb megjegyzések</h2>
         <p style="margin: 0; color: #1e3a8a; font-size: 14px; line-height: 1.6;">${data.otherComments}</p>
       </div>
-      ` : ""}
+      `
+          : ""
+      }
 
       <!-- Closing -->
       <div style="margin-top: 40px; padding-top: 32px; border-top: 1px solid #e5e7eb;">
