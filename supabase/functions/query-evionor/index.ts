@@ -237,9 +237,9 @@ Deno.serve(async (req) => {
         console.log("Getting setting:", setting_key);
 
         const { data: settingData, error: getSettingError } = await client
-          .from("settings")
-          .select("value")
-          .eq("key", setting_key)
+          .from("lead_manager_settings")
+          .select("setting_value")
+          .eq("setting_key", setting_key)
           .single();
 
         if (getSettingError) {
@@ -247,7 +247,7 @@ Deno.serve(async (req) => {
           // Return default value if not found
           result = { data: { enabled: false } };
         } else {
-          result = { data: settingData?.value || { enabled: false } };
+          result = { data: settingData?.setting_value || { enabled: false } };
         }
         break;
 
@@ -259,10 +259,10 @@ Deno.serve(async (req) => {
         console.log("Updating setting:", setting_key, "to:", setting_value);
 
         const { data: upsertedSetting, error: upsertError } = await client
-          .from("settings")
+          .from("lead_manager_settings")
           .upsert({
-            key: setting_key,
-            value: setting_value,
+            setting_key: setting_key,
+            setting_value: setting_value,
             updated_at: new Date().toISOString(),
           })
           .select()
