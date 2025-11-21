@@ -260,11 +260,14 @@ Deno.serve(async (req) => {
 
         const { data: upsertedSetting, error: upsertError } = await client
           .from("lead_manager_settings")
-          .upsert({
-            setting_key: setting_key,
-            setting_value: setting_value,
-            updated_at: new Date().toISOString(),
-          })
+          .upsert(
+            {
+              setting_key: setting_key,
+              setting_value: setting_value,
+              updated_at: new Date().toISOString(),
+            },
+            { onConflict: "setting_key" },
+          )
           .select()
           .single();
 
