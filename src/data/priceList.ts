@@ -59,7 +59,7 @@ export const priceList: ProductPrice[] = [
   // Charge Amps
   { name: "Charge Amps Luna 22kW", price: 365000, category: "töltő" },
   { name: "Charge Amps Dawn 22kW", price: 503000, category: "töltő" },
-  { name: "Charge Amps Halo 11kW", price: 299000, category: "töltő" },
+  { name: "Charge Amps Halo 11kW", price: 333000, category: "töltő" },
   { name: "Charge Amps Aura 2x22kW", price: 1306000, category: "töltő" },
   { name: "Charge Amps Aura 2x22kW 4G", price: 1502000, category: "töltő" },
   { name: "Charge Amps Amp Guard - 63A", price: 132000, category: "mérő" },
