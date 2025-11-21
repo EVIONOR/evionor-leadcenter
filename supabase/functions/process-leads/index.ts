@@ -49,10 +49,12 @@ Deno.serve(async (req) => {
     console.log('[process-leads] Automatic processing is enabled');
 
     // Step 2: Fetch all unprocessed leads (no time constraint)
+    // TEMPORARY: Filter for testing with specific emails only
     const { data: leads, error: leadsError } = await client
       .from('questionnaire_responses')
       .select('*')
       .neq('status', 'qualified')
+      .in('email', ['istvansandornagy@gmail.com', 'misho.shubitidze@travlrd.com'])
       .order('created_at', { ascending: true });
 
     if (leadsError) {
