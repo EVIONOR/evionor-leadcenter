@@ -570,7 +570,7 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                 <!-- Price Summary for this charger -->
                 <div style="margin-top: 24px; background-color: white; padding: 20px; border-radius: 8px; border: 2px solid #0071e3;">
                     <table style="width: 100%; border-collapse: collapse;">
-                        <tr>
+                        <tr style="border-bottom: 2px solid #0071e3;">
                             <td style="padding: 12px 0; color: #111827; font-size: 16px; font-weight: 700;">Töltő ára:</td>
                             <td style="padding: 12px 0 12px 20px; color: #0071e3; font-size: 18px; font-weight: 700; text-align: right;">${formatPrice(chargerPrice)}</td>
                         </tr>
