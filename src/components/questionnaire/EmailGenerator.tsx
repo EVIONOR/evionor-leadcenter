@@ -569,7 +569,7 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                         </tr>
                     </table>
                     <div style="text-align: center; margin-top: 20px;">
-                        <a href="${getCartUrl(product)}" style="display: inline-block; background: linear-gradient(135deg, #0071e3 0%, #005bb5 100%); color: #ffffff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-size: 15px; font-weight: 600; box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3);">Kosárba</a>
+                        <a href="${data.needsInstallation ? getCartUrl(product) : getProductUrl(product)}" style="display: inline-block; background: linear-gradient(135deg, #0071e3 0%, #005bb5 100%); color: #ffffff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-size: 15px; font-weight: 600; box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3);">Kosárba</a>
                     </div>
                 </div>
             </div>
