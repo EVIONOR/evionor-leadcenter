@@ -510,37 +510,47 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                 </div>
 
                 ${
-                  data.needsInstallation
+                  loadManagementPackage || data.needsInstallation
                     ? `
-                <!-- Installation Section -->
+                <!-- Opciós tételek Section -->
                 <div style="margin-top: 20px; background-color: white; padding: 20px; border-radius: 8px; border: 1px solid #e5e7eb;">
-                    <h3 style="margin: 0 0 16px 0; color: #111827; font-size: 16px; font-weight: 600;">Telepítés</h3>
+                    <h3 style="margin: 0 0 16px 0; color: #111827; font-size: 16px; font-weight: 600;">Opciós tételek</h3>
                     <table style="width: 100%; border-collapse: collapse;">
+                        ${
+                          loadManagementPackage
+                            ? `
                         <tr>
-                            <td style="padding: 0; vertical-align: top; width: 70%;">
+                            <td style="padding: 8px 0; width: 65%;"><a href="${loadManagementPackage.url}" target="_blank" rel="noopener noreferrer" style="color: #111827; font-size: 14px; font-weight: 500; text-decoration: none; border-bottom: 2px solid #0071e3; transition: color 0.2s;" onMouseOver="this.style.color='#0071e3'" onMouseOut="this.style.color='#111827'">${loadManagementPackage.name}</a></td>
+                            <td style="padding: 8px 0 8px 20px; color: #0071e3; font-size: 16px; font-weight: 700; text-align: right;">${formatPrice(loadManagementPackage.price)}</td>
+                        </tr>
+                        `
+                            : ""
+                        }
+                        ${
+                          data.needsInstallation
+                            ? `
+                        <tr>
+                            <td style="padding: 8px 0; vertical-align: top; width: 65%;">
                                 <p style="margin: 0 0 4px 0; color: #111827; font-size: 14px; font-weight: 500;">Telepítési díj (sztenderd telepítés) - ${data.distanceFromBox}m</p>
                                 <p style="margin: 0; color: #6b7280; font-size: 13px;">
                                     ${distance <= 10 ? "Telepítés 10 méterig" : distance <= 20 ? "Telepítés 20 méterig" : `Telepítés ${distance} méterig`}
                                 </p>
                             </td>
-                            <td style="padding: 0 0 0 20px; color: #0071e3; font-size: 16px; font-weight: 700; text-align: right; vertical-align: top;">${formatPrice(installationPrice)}</td>
+                            <td style="padding: 8px 0 8px 20px; color: #0071e3; font-size: 16px; font-weight: 700; text-align: right; vertical-align: top;">${formatPrice(installationPrice)}</td>
                         </tr>
+                        `
+                            : ""
+                        }
                     </table>
-                </div>
-                `
-                    : ""
-                }
-                
-                ${
-                  loadManagementPackage
-                    ? `
-                <div style="padding: 16px; background-color: white; border-radius: 8px; margin-top: 20px; border: 1px solid #e5e7eb;">
-                    <table style="width: 100%; border-collapse: collapse;">
-                        <tr>
-                            <td style="padding: 0; width: 65%;"><a href="${loadManagementPackage.url}" target="_blank" rel="noopener noreferrer" style="color: #111827; font-size: 16px; font-weight: 600; text-decoration: none; border-bottom: 2px solid #0071e3; transition: color 0.2s;" onMouseOver="this.style.color='#0071e3'" onMouseOut="this.style.color='#111827'">${loadManagementPackage.name} (opcionális)</a></td>
-                            <td style="padding: 0 0 0 20px; color: #0071e3; font-size: 18px; font-weight: 700; text-align: right;">${formatPrice(loadManagementPackage.price)}</td>
-                        </tr>
-                    </table>
+                    ${
+                      data.needsInstallation
+                        ? `
+                    <div style="text-align: center; margin-top: 16px;">
+                        <a href="${getCartUrl(product)}" style="display: inline-block; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; padding: 10px 24px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 600; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);">Telepítéssel kérem!</a>
+                    </div>
+                    `
+                        : ""
+                    }
                 </div>
                 `
                     : ""
@@ -549,27 +559,13 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                 <!-- Price Summary for this charger -->
                 <div style="margin-top: 24px; background-color: white; padding: 20px; border-radius: 8px; border: 2px solid #0071e3;">
                     <table style="width: 100%; border-collapse: collapse;">
-                        <tr>
-                            <td style="padding: 8px 0; color: #374151; font-size: 14px; width: 65%;">Töltő berendezés</td>
-                            <td style="padding: 8px 0 8px 20px; color: #111827; font-size: 14px; font-weight: 500; text-align: right;">${formatPrice(chargerPrice)}</td>
-                        </tr>
-                        ${
-                          data.needsInstallation
-                            ? `
-                        <tr>
-                            <td style="padding: 8px 0; color: #374151; font-size: 14px;">Telepítés (${data.distanceFromBox}m)</td>
-                            <td style="padding: 8px 0 8px 20px; color: #111827; font-size: 14px; font-weight: 500; text-align: right;">${formatPrice(installationPrice)}</td>
-                        </tr>
-                        `
-                            : ""
-                        }
                         <tr style="border-top: 2px solid #0071e3;">
-                            <td style="padding: 12px 0; color: #111827; font-size: 16px; font-weight: 700;">Végösszeg:</td>
-                            <td style="padding: 12px 0 12px 20px; color: #0071e3; font-size: 18px; font-weight: 700; text-align: right;">${formatPrice(grandTotal)}</td>
+                            <td style="padding: 12px 0; color: #111827; font-size: 16px; font-weight: 700;">Töltő ára:</td>
+                            <td style="padding: 12px 0 12px 20px; color: #0071e3; font-size: 18px; font-weight: 700; text-align: right;">${formatPrice(chargerPrice)}</td>
                         </tr>
                     </table>
                     <div style="text-align: center; margin-top: 20px;">
-                        <a href="${data.needsInstallation ? getCartUrl(product) : getProductUrl(product)}" style="display: inline-block; background: linear-gradient(135deg, #0071e3 0%, #005bb5 100%); color: #ffffff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-size: 15px; font-weight: 600; box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3);">Kosárba</a>
+                        <a href="${getProductUrl(product)}" style="display: inline-block; background: linear-gradient(135deg, #0071e3 0%, #005bb5 100%); color: #ffffff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-size: 15px; font-weight: 600; box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3);">Megnézem</a>
                     </div>
                 </div>
             </div>
