@@ -64,15 +64,17 @@ interface InstallationPackage {
   url: string;
 }
 
-// Telepítési csomagok fázis alapján
-const getInstallationPackage = (phases: string): InstallationPackage => {
-  if (phases === "1") {
+// Telepítési csomagok töltő típus alapján
+const getInstallationPackage = (productName: string): InstallationPackage => {
+  // 1 fázisú töltők: Amina 1, Charge Amps Halo
+  if (productName.includes("AMINA 1") || productName.includes("Amina 1") || productName.includes("Charge Amps Halo")) {
     return {
       name: "Egyfázisú töltőtelepítés",
       price: 199000,
       url: "https://evionor.hu/collections/all?filter.p.product_type=Telep%C3%ADt%C3%A9s",
     };
   }
+  // 3 fázisú töltők: összes többi (Zaptec Go, Zaptec Solar MID, Easee Charge Up, Charge Amps Luna)
   return {
     name: "Háromfázisú töltőtelepítés",
     price: 219000,
@@ -388,9 +390,6 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
       });
     }
 
-    // Telepítési csomag a fázis alapján
-    const installationPackage = getInstallationPackage(data.phases);
-    const installationPrice = data.needsInstallation ? installationPackage.price : 0;
 
     const additionalTotal = selectedAdditionals.reduce((sum, item) => {
       return sum + (additionalItemPrices[item] || 0);
@@ -483,7 +482,9 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                 const chargerPrice = findProductPrice(product);
                 const productUrl = getProductUrl(product);
                 const loadManagementPackage = data.loadManagement ? getLoadManagementPackage(product) : null;
-                const grandTotal = chargerPrice + (data.needsInstallation ? installationPrice : 0);
+                const installationPackage = getInstallationPackage(product);
+                const installationPrice = data.needsInstallation ? installationPackage.price : 0;
+                const grandTotal = chargerPrice + installationPrice;
 
                 return `
             ${templateIndex > 0 ? '<div style="margin: 32px 0; height: 2px; background: linear-gradient(90deg, transparent, #d1d5db 20%, #d1d5db 80%, transparent); opacity: 0.5;"></div>' : ""}
