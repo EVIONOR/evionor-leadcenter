@@ -58,6 +58,28 @@ const getLoadManagementPackage = (productName: string): LoadManagementPackage | 
   return null;
 };
 
+interface InstallationPackage {
+  name: string;
+  price: number;
+  url: string;
+}
+
+// Telepítési csomagok fázis alapján
+const getInstallationPackage = (phases: string): InstallationPackage => {
+  if (phases === "1") {
+    return {
+      name: "Egyfázisú töltőtelepítés",
+      price: 199000,
+      url: "https://evionor.hu/collections/all?filter.p.product_type=Telep%C3%ADt%C3%A9s",
+    };
+  }
+  return {
+    name: "Háromfázisú töltőtelepítés",
+    price: 219000,
+    url: "https://evionor.hu/collections/all/products/haromfazisu-toltotelepites-csomag?_pos=2&_fid=45b4bccd7&_ss=c",
+  };
+};
+
 export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorProps) => {
   const [selectedTemplates, setSelectedTemplates] = useState<ChargerTemplate[]>([]);
   const [selectedAdditionals, setSelectedAdditionals] = useState<string[]>([]);
@@ -366,18 +388,9 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
       });
     }
 
-    // Telepítési ár a távolság alapján
-    const distance = parseFloat(data.distanceFromBox) || 0;
-    let installationPrice = 0;
-    if (data.needsInstallation) {
-      if (distance <= 10) {
-        installationPrice = 249000;
-      } else if (distance <= 20) {
-        installationPrice = 299000;
-      } else {
-        installationPrice = 299000 + (distance - 20) * 15000;
-      }
-    }
+    // Telepítési csomag a fázis alapján
+    const installationPackage = getInstallationPackage(data.phases);
+    const installationPrice = data.needsInstallation ? installationPackage.price : 0;
 
     const additionalTotal = selectedAdditionals.reduce((sum, item) => {
       return sum + (additionalItemPrices[item] || 0);
@@ -531,10 +544,7 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                             ? `
                         <tr>
                             <td style="padding: 8px 0; vertical-align: top; width: 65%;">
-                                <p style="margin: 0 0 4px 0; color: #111827; font-size: 14px; font-weight: 500;">Telepítési díj (sztenderd telepítés) - ${data.distanceFromBox}m</p>
-                                <p style="margin: 0; color: #6b7280; font-size: 13px;">
-                                    ${distance <= 10 ? "Telepítés 10 méterig" : distance <= 20 ? "Telepítés 20 méterig" : `Telepítés ${distance} méterig`}
-                                </p>
+                                <a href="${installationPackage.url}" target="_blank" rel="noopener noreferrer" style="color: #111827; font-size: 14px; font-weight: 500; text-decoration: none; border-bottom: 2px solid #0071e3; transition: color 0.2s;" onMouseOver="this.style.color='#0071e3'" onMouseOut="this.style.color='#111827'">${installationPackage.name}</a>
                             </td>
                             <td style="padding: 8px 0 8px 20px; color: #0071e3; font-size: 16px; font-weight: 700; text-align: right; vertical-align: top;">${formatPrice(installationPrice)}</td>
                         </tr>
