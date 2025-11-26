@@ -124,7 +124,7 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
   const productUrls: { [key: string]: string } = {
     "Charge Amps Halo 11kW": "https://evionor.hu/collections/all/products/charge-amps-halo-7-4kw-ev-tolto",
     "Charge Amps Luna 22kW": "https://evionor.hu/collections/all/products/charge-amps-luna-22kw-ev-tolto",
-    "AMINA 1 - 7.4kW (nincs kilógó kábel)":
+    "AMINA 1 - 7.4kW":
       "https://evionor.hu/collections/all/products/amina-1-evtlt?_pos=1&_fid=bb7a6be86&_ss=c",
     "Easee Charge Up 22kW": "https://evionor.hu/collections/all/products/easee-charge-up-evtlt",
     "Zaptec Go 22kW": "https://evionor.hu/collections/all/products/zaptec-go-evtlt",
@@ -133,7 +133,7 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
 
   // Kosárba button URLs (product pages with installation)
   const cartUrls: { [key: string]: string } = {
-    "AMINA 1 - 7.4kW (nincs kilógó kábel)": "https://evionor.hu/products/amina-1-1-fazisu-tolto-telepitessel",
+    "AMINA 1 - 7.4kW": "https://evionor.hu/products/amina-1-1-fazisu-tolto-telepitessel",
     "Charge Amps Halo 11kW": "https://evionor.hu/products/charge-amps-halo-7-4kw-11kw-ev-tolto-telepites-csomag",
     "Charge Amps Luna 22kW": "https://evionor.hu/products/charge-amps-luna-22kw-ev-tolto-telepites-csomag",
     "Zaptec Go 22kW": "https://evionor.hu/products/zaptec-go-22kw-ev-tolto-telepitesi-csomgaban",

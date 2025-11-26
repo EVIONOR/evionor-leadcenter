@@ -85,7 +85,7 @@ export const chargerTemplates: ChargerTemplate[] = [
     hasApp: false,
     location: "outdoor",
     hasSolar: false,
-    products: ["AMINA 1 - 7.4kW (nincs kilógó kábel)"],
+    products: ["AMINA 1 - 7.4kW"],
     basePrice: 195000
   },
   {
