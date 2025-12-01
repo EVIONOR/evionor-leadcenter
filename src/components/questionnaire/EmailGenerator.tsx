@@ -250,9 +250,9 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
         <li style="font-size: 14px;">Üzemi hőmérséklet: -30°C és +50°C között</li>
         <li style="font-size: 14px;">Hitelesítés: RFID/NFC, mobilalkalmazás</li>
         <li style="font-size: 14px;">Kommunikációs protokollok: Bluetooth Low Energy, WiFi 2,4 GHz, RFID/NFC, 4G/LTE (eSIM), OCPP 1.6J</li>
-        <li style="font-size: 14px;">Funkciók: Terhelésmenedzsment (max. 3 töltő), vezeték nélküli terhelésmenedzsment a főbiztosítékhoz, energiamérés, lágy indítás, okos otthon integráció</li>
+        <li style="font-size: 14px;">Funkciók: Terhelésmenedzsment kompatibilis (max. 3 töltőig), céges számlázási riportok, lágy indítás, okos otthon integráció</li>
         <li style="font-size: 14px;">Szoftverfrissítések: Automatikus frissítések</li>
-        <li style="font-size: 14px;">Védelmi osztály: IP54</li>
+        <li style="font-size: 14px;">Védelmi osztály: IP54 (időjárás álló)</li>
         <li style="font-size: 14px;">Garancia: 5 év</li>
       `;
     }
@@ -281,9 +281,9 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
         <li style="font-size: 14px;">Üzemi hőmérséklet: -30°C és +40°C között</li>
         <li style="font-size: 14px;">Hitelesítés: RFID/NFC, mobilalkalmazás</li>
         <li style="font-size: 14px;">Kommunikációs protokollok: Bluetooth Low Energy, RFID/NFC, WiFi 2,4 GHz, 4G LTE-M</li>
-        <li style="font-size: 14px;">Funkciók: Terhelésmenedzsment, felhőalapú szolgáltatások, energiamérés, lágy indítás, energia szabályozás, okos otthon integráció</li>
+        <li style="font-size: 14px;">Funkciók: Terhelésmenedzsment kompatibilis, céges számlázási riportok, lágy indítás, okos otthon integráció</li>
         <li style="font-size: 14px;">Szoftverfrissítések: Automatikus letöltés</li>
-        <li style="font-size: 14px;">Védelmi osztály: IP54</li>
+        <li style="font-size: 14px;">Védelmi osztály: IP54 (időjárás álló)</li>
         <li style="font-size: 14px;">Garancia: 5 év</li>
       `;
     }
@@ -309,8 +309,8 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
         <li style="font-size: 14px;">Üzemi hőmérséklet: -30°C és +45°C között</li>
         <li style="font-size: 14px;">Hitelesítés: RFID</li>
         <li style="font-size: 14px;">Kommunikációs protokollok: WiFi, RFID</li>
-        <li style="font-size: 14px;">Funkciók: RFID hozzáférés-szabályozás, extra konnektor (pl. e-bike), felhőalapú szolgáltatások, LED jelzőfények</li>
-        <li style="font-size: 14px;">Szoftverfrissítések: Automatikus frissítések felhőn keresztül</li>
+        <li style="font-size: 14px;">Funkciók: RFID hozzáférés-szabályozás, extra konnektor (pl. e-bike), LED jelzőfények</li>
+        <li style="font-size: 14px;">Szoftverfrissítések: Automatikus frissítések</li>
         <li style="font-size: 14px;">Védelmi osztály: Töltőtest IP66, csatlakozó és konnektor IP44</li>
         <li style="font-size: 14px;">Garancia: 5 év</li>
       `;
@@ -323,7 +323,7 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
         <li style="font-size: 14px;">Üzemi hőmérséklet: -35°C és +45°C között</li>
         <li style="font-size: 14px;">Hitelesítés: RFID</li>
         <li style="font-size: 14px;">Kommunikációs protokollok: WiFi, 4G LTE (eSIM), Bluetooth Low Energy 5.0/5.3, RFID/NFC, OCPP 1.6J</li>
-        <li style="font-size: 14px;">Funkciók: Vezeték nélküli terhelésmenedzsment, felhőalapú szolgáltatások (Charge Amps app), ISO 15118 ready</li>
+        <li style="font-size: 14px;">Funkciók: Terhelésmenedzsment kompatibilis, céges számlázási riportok, okos otthon integráció</li>
         <li style="font-size: 14px;">Szoftverfrissítések: Automatikus frissítések</li>
         <li style="font-size: 14px;">Védelmi osztály: IP54, ütésállóság IK10</li>
         <li style="font-size: 14px;">Garancia: 5 év</li>
