@@ -575,7 +575,7 @@ function generateEmailHtml(data) {
   if (data.phases === "1") {
     selectedProducts.push("AMINA 1 - 7.4kW (nincs kilógó kábel)");
     selectedProducts.push("Charge Amps Halo 11kW");
-  } else if (data.phases === "3") {
+  } else {
     selectedProducts.push("Zaptec Go 22kW");
     selectedProducts.push("Easee Charge Up 22kW");
   }
@@ -601,32 +601,29 @@ function generateEmailHtml(data) {
       const grandTotal =
         chargerPrice + (data.needsInstallation ? installationPrice : 0);
       return `
-      ${
-        index > 0
+      ${index > 0
           ? '<div style="margin: 24px 0; height: 2px; background: linear-gradient(90deg, transparent, #d1d5db 20%, #d1d5db 80%, transparent); opacity: 0.5;"></div>'
           : ""
-      }
+        }
       
       <!-- Töltő ${index + 1}: ${product} -->
       <div class="product-section" style="margin-bottom: 24px; background-color: #f3f4f6; padding: 10px; border-radius: 12px; border: 2px solid #e5e7eb;">
-        <h2 style="margin: 0 0 16px 0; color: #111827; font-size: 17px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 10px;">Ajánlott töltő ${
-          index + 1
+        <h2 style="margin: 0 0 16px 0; color: #111827; font-size: 17px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 10px;">Ajánlott töltő ${index + 1
         }</h2>
         <p style="margin: 0 0 16px 0; color: #0071e3; font-size: 15px; font-weight: 600; word-wrap: break-word;">${product}</p>
         
         <!-- Töltő kép -->
-        ${
-          getChargerImageUrl(product)
-            ? `
+        ${getChargerImageUrl(product)
+          ? `
         <div class="image-container" style="text-align: center; margin-bottom: 16px; padding: 8px; background-color: white; border-radius: 8px; border: 1px solid #e5e7eb;">
           <a href="${productUrl}" style="display: inline-block; text-decoration: none;">
             <img class="product-image" src="${getChargerImageUrl(
-              product
-            )}" alt="${product}" style="max-width: 260px; width: 100%; height: auto; display: block; margin: 0 auto;" />
+            product
+          )}" alt="${product}" style="max-width: 260px; width: 100%; height: auto; display: block; margin: 0 auto;" />
           </a>
         </div>
         `
-            : ""
+          : ""
         }
         
         <div style="padding: 8px; background-color: white; border-radius: 8px; margin-bottom: 16px; border: 1px solid #e5e7eb;">
@@ -636,8 +633,8 @@ function generateEmailHtml(data) {
             </tr>
             <tr>
               <td style="color: #0071e3; font-size: 17px; font-weight: 700;">${formatPrice(
-                chargerPrice
-              )}</td>
+          chargerPrice
+        )}</td>
             </tr>
           </table>
         </div>
@@ -649,63 +646,57 @@ function generateEmailHtml(data) {
           </ul>
         </div>
 
-        ${
-          data.needsInstallation
-            ? `
+        ${data.needsInstallation
+          ? `
         <!-- Installation Section -->
         <div style="margin-top: 16px; background-color: white; padding: 8px; border-radius: 8px; border: 1px solid #e5e7eb;">
           <h3 style="margin: 0 0 12px 0; color: #111827; font-size: 15px; font-weight: 600;">Telepítés</h3>
           <table width="100%" cellpadding="0" cellspacing="0" border="0">
             <tr>
               <td style="padding-bottom: 4px;">
-                <p style="margin: 0 0 4px 0; color: #111827; font-size: 13px; font-weight: 500; word-wrap: break-word; word-break: break-word;">Telepítési díj (sztenderd telepítés) - ${
-                  data.distanceFromBox
-                }m</p>
+                <p style="margin: 0 0 4px 0; color: #111827; font-size: 13px; font-weight: 500; word-wrap: break-word; word-break: break-word;">Telepítési díj (sztenderd telepítés) - ${data.distanceFromBox
+          }m</p>
                 <p style="margin: 0; color: #6b7280; font-size: 12px;">
-                  ${
-                    distance <= 10
-                      ? "Telepítés 10 méterig"
-                      : distance <= 20
-                      ? "Telepítés 20 méterig"
-                      : `Telepítés ${distance} méterig`
-                  }
+                  ${distance <= 10
+            ? "Telepítés 10 méterig"
+            : distance <= 20
+              ? "Telepítés 20 méterig"
+              : `Telepítés ${distance} méterig`
+          }
                 </p>
               </td>
             </tr>
             <tr>
               <td style="color: #0071e3; font-size: 16px; font-weight: 700; padding-top: 6px;">${formatPrice(
-                installationPrice
-              )}</td>
+            installationPrice
+          )}</td>
             </tr>
           </table>
         </div>
         `
-            : ""
+          : ""
         }
         
-        ${
-          loadManagementPackage
-            ? `
+        ${loadManagementPackage
+          ? `
         <div style="padding: 8px; background-color: white; border-radius: 8px; margin-top: 16px; border: 1px solid #e5e7eb;">
           <table width="100%" cellpadding="0" cellspacing="0" border="0">
             <tr>
               <td style="padding-bottom: 6px;">
-                <a href="${
-                  loadManagementPackage.url
-                }" target="_blank" style="color: #111827; font-size: 15px; font-weight: 600; text-decoration: none; border-bottom: 2px solid #0071e3; word-wrap: break-word; word-break: break-word; display: inline-block;">${
-                  loadManagementPackage.name
-                } (opcionális)</a>
+                <a href="${loadManagementPackage.url
+          }" target="_blank" style="color: #111827; font-size: 15px; font-weight: 600; text-decoration: none; border-bottom: 2px solid #0071e3; word-wrap: break-word; word-break: break-word; display: inline-block;">${loadManagementPackage.name
+          } (opcionális)</a>
               </td>
             </tr>
             <tr>
               <td style="color: #0071e3; font-size: 17px; font-weight: 700;">${formatPrice(
-                loadManagementPackage.price
-              )}</td>
+            loadManagementPackage.price
+          )}</td>
             </tr>
           </table>
         </div>
         `
-            : ""
+          : ""
         }
 
         <!-- Price Summary for this charger -->
@@ -716,38 +707,36 @@ function generateEmailHtml(data) {
             </tr>
             <tr>
               <td style="color: #111827; font-size: 14px; font-weight: 500; padding: 0 0 10px 0;">${formatPrice(
-                chargerPrice
-              )}</td>
+          chargerPrice
+        )}</td>
             </tr>
-            ${
-              data.needsInstallation
-                ? `
+            ${data.needsInstallation
+          ? `
             <tr>
-              <td style="color: #374151; font-size: 12px; padding: 6px 0 4px 0;">Telepítés (${
-                data.distanceFromBox
-              }m)</td>
+              <td style="color: #374151; font-size: 12px; padding: 6px 0 4px 0;">Telepítés (${data.distanceFromBox
+          }m)</td>
             </tr>
             <tr>
               <td style="color: #111827; font-size: 14px; font-weight: 500; padding: 0 0 10px 0;">${formatPrice(
-                installationPrice
-              )}</td>
+            installationPrice
+          )}</td>
             </tr>
             `
-                : ""
-            }
+          : ""
+        }
             <tr>
               <td style="border-top: 2px solid #0071e3; padding: 8px 0 4px 0; color: #111827; font-size: 14px; font-weight: 700;">Végösszeg:</td>
             </tr>
             <tr>
               <td style="color: #0071e3; font-size: 18px; font-weight: 700; padding: 0 0 10px 0;">${formatPrice(
-                grandTotal
-              )}</td>
+          grandTotal
+        )}</td>
             </tr>
           </table>
           <div style="text-align: center; margin-top: 16px;">
             <a href="${getCartUrl(
-              product
-            )}" class="button-link" style="display: inline-block; background: linear-gradient(135deg, #0071e3 0%, #005bb5 100%); color: #ffffff; padding: 10px 24px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 600; box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3);">Kosárba</a>
+          product
+        )}" class="button-link" style="display: inline-block; background: linear-gradient(135deg, #0071e3 0%, #005bb5 100%); color: #ffffff; padding: 10px 24px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 600; box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3);">Kosárba</a>
           </div>
         </div>
       </div>
@@ -890,8 +879,8 @@ function generateEmailHtml(data) {
       
       <!-- Intro -->
       <p style="margin: 0 0 24px 0; color: #374151; font-size: 14px; line-height: 1.6;">${getGreeting(
-        data.contactName
-      )}</p>
+    data.contactName
+  )}</p>
       <p style="margin: 0 0 32px 0; color: #374151; font-size: 14px; line-height: 1.6;">Köszönjük érdeklődését! Az Ön által megadott adatok alapján az alábbi ajánlatot készítettük.</p>
 
       <!-- Client Data Section -->
@@ -902,37 +891,32 @@ function generateEmailHtml(data) {
             <td style="color: #6b7280; font-size: 12px; padding: 8px 0 4px 0;">Ügyfél</td>
           </tr>
           <tr>
-            <td style="color: #111827; font-size: 14px; font-weight: 500; padding: 0 0 10px 0; word-wrap: break-word; word-break: break-word;">${
-              data.contactName
-            }</td>
+            <td style="color: #111827; font-size: 14px; font-weight: 500; padding: 0 0 10px 0; word-wrap: break-word; word-break: break-word;">${data.contactName
+    }</td>
           </tr>
           <tr>
             <td style="color: #6b7280; font-size: 12px; padding: 8px 0 4px 0;">E-mail</td>
           </tr>
           <tr>
-            <td style="color: #111827; font-size: 14px; font-weight: 500; padding: 0 0 10px 0; word-wrap: break-word; word-break: break-word;">${
-              data.email
-            }</td>
+            <td style="color: #111827; font-size: 14px; font-weight: 500; padding: 0 0 10px 0; word-wrap: break-word; word-break: break-word;">${data.email
+    }</td>
           </tr>
           <tr>
             <td style="color: #6b7280; font-size: 12px; padding: 8px 0 4px 0;">Telefonszám</td>
           </tr>
           <tr>
-            <td style="color: #111827; font-size: 14px; font-weight: 500; padding: 0 0 10px 0; word-wrap: break-word; word-break: break-word;">${
-              data.phoneNumber
-            }</td>
+            <td style="color: #111827; font-size: 14px; font-weight: 500; padding: 0 0 10px 0; word-wrap: break-word; word-break: break-word;">${data.phoneNumber
+    }</td>
           </tr>
           <tr>
             <td style="color: #6b7280; font-size: 12px; padding: 8px 0 4px 0;">Jármű</td>
           </tr>
           <tr>
-            <td style="color: #111827; font-size: 14px; font-weight: 500; padding: 0 0 10px 0; word-wrap: break-word; word-break: break-word;">${
-              data.carBrand
-            } ${data.carModel}</td>
+            <td style="color: #111827; font-size: 14px; font-weight: 500; padding: 0 0 10px 0; word-wrap: break-word; word-break: break-word;">${data.carBrand
+    } ${data.carModel}</td>
           </tr>
-          ${
-            data.city && data.zipCode
-              ? `
+          ${data.city && data.zipCode
+      ? `
           <tr>
             <td style="color: #6b7280; font-size: 12px; padding: 8px 0 4px 0;">Helyszín</td>
           </tr>
@@ -940,24 +924,23 @@ function generateEmailHtml(data) {
             <td style="color: #111827; font-size: 14px; font-weight: 500; padding: 0 0 10px 0; word-wrap: break-word; word-break: break-word;">${data.city}, ${data.zipCode}</td>
           </tr>
           `
-              : ""
-          }
+      : ""
+    }
           <tr>
             <td style="color: #6b7280; font-size: 12px; padding: 8px 0 4px 0;">Épület típus</td>
           </tr>
           <tr>
             <td style="color: #111827; font-size: 14px; font-weight: 500; padding: 0 0 10px 0; word-wrap: break-word; word-break: break-word;">${data.buildingType.replace(
-              "_",
-              " "
-            )}</td>
+      "_",
+      " "
+    )}</td>
           </tr>
           <tr>
             <td style="color: #6b7280; font-size: 12px; padding: 8px 0 4px 0;">Elektromos rendszer</td>
           </tr>
           <tr>
-            <td style="color: #111827; font-size: 14px; font-weight: 500; padding: 0 0 10px 0; word-wrap: break-word; word-break: break-word;">${
-              data.phases
-            } fázis, ${data.amperage} A</td>
+            <td style="color: #111827; font-size: 14px; font-weight: 500; padding: 0 0 10px 0; word-wrap: break-word; word-break: break-word;">${data.phases
+    } fázis, ${data.amperage} A</td>
           </tr>
         </table>
       </div>
@@ -965,15 +948,14 @@ function generateEmailHtml(data) {
       <!-- Charger Sections -->
       ${productSections}
 
-      ${
-        data.needsInstallation &&
-        (data.needsBackplate ||
-          data.needsPole ||
-          data.needsElectricalPlanning ||
-          data.overvoltageProtection ||
-          data.infrastructureDevelopment ||
-          data.networkExpansion)
-          ? `
+      ${data.needsInstallation &&
+      (data.needsBackplate ||
+        data.needsPole ||
+        data.needsElectricalPlanning ||
+        data.overvoltageProtection ||
+        data.infrastructureDevelopment ||
+        data.networkExpansion)
+      ? `
       <!-- Additional Installation Requirements -->
       <div class="section-container" style="margin-bottom: 20px; background-color: #f3f4f6; padding: 10px; border-radius: 12px; border: 2px solid #e5e7eb;">
         <h2 style="margin: 0 0 16px 0; color: #111827; font-size: 17px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 10px;">További telepítési követelmények</h2>
@@ -981,24 +963,20 @@ function generateEmailHtml(data) {
           <ul style="margin: 0 0 10px 0; padding: 0 0 0 18px; color: #374151; font-size: 13px; line-height: 1.7; word-wrap: break-word;">
             ${data.needsBackplate ? "<li>Hátlap szükséges</li>" : ""}
             ${data.needsPole ? "<li>Oszlop szükséges</li>" : ""}
-            ${
-              data.needsElectricalPlanning
-                ? "<li>Villamos tervezés szükséges</li>"
-                : ""
-            }
-            ${
-              data.overvoltageProtection ? "<li>Túlfeszültség védelem</li>" : ""
-            }
-            ${
-              data.infrastructureDevelopment && data.infrastructureDetails
-                ? `<li>Infrastruktúra fejlesztés: ${data.infrastructureDetails}</li>`
-                : ""
-            }
-            ${
-              data.networkExpansion
-                ? `<li>Hálózatbővítés: ${data.expansionPhase} fázis, ${data.expansionAmperage} A</li>`
-                : ""
-            }
+            ${data.needsElectricalPlanning
+        ? "<li>Villamos tervezés szükséges</li>"
+        : ""
+      }
+            ${data.overvoltageProtection ? "<li>Túlfeszültség védelem</li>" : ""
+      }
+            ${data.infrastructureDevelopment && data.infrastructureDetails
+        ? `<li>Infrastruktúra fejlesztés: ${data.infrastructureDetails}</li>`
+        : ""
+      }
+            ${data.networkExpansion
+        ? `<li>Hálózatbővítés: ${data.expansionPhase} fázis, ${data.expansionAmperage} A</li>`
+        : ""
+      }
           </ul>
           <p style="margin: 0; padding: 10px; background-color: #eff6ff; border-left: 3px solid #3b82f6; color: #1e3a8a; font-size: 12px; line-height: 1.6; word-wrap: break-word;">
             <strong>Megjegyzés:</strong> A sztenderd telepítési tartalmon túli munkavégzésről a helyszínen készül lista. Az árlistája a <a href="https://www.evionor.hu" style="color: #0071e3; text-decoration: underline;">honlapunkon elérhető</a>.
@@ -1006,23 +984,21 @@ function generateEmailHtml(data) {
         </div>
       </div>
       `
-          : ""
-      }
+      : ""
+    }
 
-      ${
-        data.groundworkWallPenetration
-          ? `
+      ${data.groundworkWallPenetration
+      ? `
       <div style="margin-bottom: 20px; padding: 8px; background-color: #fef3c7; border-radius: 8px; border-left: 4px solid #f59e0b;">
         <p style="margin: 0 0 6px 0; color: #92400e; font-size: 13px; font-weight: 600;">Földmunka/Faláttörés:</p>
         <p style="margin: 0; color: #78350f; font-size: 13px; line-height: 1.6; word-wrap: break-word;">${data.groundworkWallPenetration}</p>
       </div>
       `
-          : ""
-      }
+      : ""
+    }
 
-      ${
-        data.needsInstallation
-          ? `
+      ${data.needsInstallation
+      ? `
       <!-- Standard Installation Description -->
       <div class="section-container" style="margin-bottom: 20px; background-color: #f3f4f6; padding: 10px; border-radius: 12px; border: 2px solid #e5e7eb;">
         <h2 style="margin: 0 0 16px 0; color: #111827; font-size: 17px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 10px;">Sztenderd telepítés</h2>
@@ -1041,39 +1017,37 @@ function generateEmailHtml(data) {
         </div>
       </div>
       `
-          : ""
-      }
+      : ""
+    }
 
       <!-- Process Section -->
       <div style="margin-bottom: 32px; background-color: #f9fafb; padding: 10px; border-radius: 12px;">
         <h2 style="margin: 0 0 16px 0; color: #111827; font-size: 17px; font-weight: 600;">Folyamat</h2>
         <ol style="margin: 0; padding: 0 0 0 18px; color: #374151; font-size: 13px; line-height: 1.8;">
-          ${
-            data.needsInstallation
-              ? `
+          ${data.needsInstallation
+      ? `
           <li>Webshop megrendelés leadása</li>
           <li>Telepítés ütemezése</li>
           <li>Szakszerű kivitelezés 10 munkanapon belül</li>
           `
-              : `
+      : `
           <li>Webshop megrendelés leadása</li>
           <li>Szállítás 5 munkanapon belül</li>
           `
-          }
+    }
         </ol>
       </div>
 
-      ${
-        data.otherComments
-          ? `
+      ${data.otherComments
+      ? `
       <!-- Other Comments -->
       <div style="margin-bottom: 32px; padding: 8px; background-color: #eff6ff; border-radius: 8px; border-left: 4px solid #3b82f6;">
         <h2 style="margin: 0 0 10px 0; color: #1e40af; font-size: 15px; font-weight: 600;">Egyéb megjegyzések</h2>
         <p style="margin: 0; color: #1e3a8a; font-size: 13px; line-height: 1.6; word-wrap: break-word;">${data.otherComments}</p>
       </div>
       `
-          : ""
-      }
+      : ""
+    }
 
       <!-- Closing -->
       <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid #e5e7eb;">
