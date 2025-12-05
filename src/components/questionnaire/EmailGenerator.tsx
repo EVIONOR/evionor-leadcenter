@@ -87,7 +87,7 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
   const [selectedAdditionals, setSelectedAdditionals] = useState<string[]>([]);
   const [generatedEmail, setGeneratedEmail] = useState("");
   const [emailSubject, setEmailSubject] = useState("");
-  const [senderName, setSenderName] = useState<string>(autoGenerate ? "Horváth Gáspár" : "Nagy István");
+  const [senderName, setSenderName] = useState<string>("Horváth Gáspár");
   const [isSending, setIsSending] = useState(false);
 
   // Auto-select templates based on phase when autoGenerate is true
