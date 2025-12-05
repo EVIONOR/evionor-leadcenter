@@ -124,8 +124,7 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
   const productUrls: { [key: string]: string } = {
     "Charge Amps Halo 11kW": "https://evionor.hu/collections/all/products/charge-amps-halo-7-4kw-ev-tolto",
     "Charge Amps Luna 22kW": "https://evionor.hu/collections/all/products/charge-amps-luna-22kw-ev-tolto",
-    "AMINA 1 - 7.4kW":
-      "https://evionor.hu/collections/all/products/amina-1-evtlt?_pos=1&_fid=bb7a6be86&_ss=c",
+    "AMINA 1 - 7.4kW": "https://evionor.hu/collections/all/products/amina-1-evtlt?_pos=1&_fid=bb7a6be86&_ss=c",
     "Easee Charge Up 22kW": "https://evionor.hu/collections/all/products/easee-charge-up-evtlt",
     "Zaptec Go 22kW": "https://evionor.hu/collections/all/products/zaptec-go-evtlt",
     "Zaptec Solar MID": "https://evionor.hu/collections/all/products/zaptec-go-2",
@@ -241,7 +240,7 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
   // Jellemzők generálása
   const getCharacteristics = (productName: string): string => {
     console.log("getCharacteristics called with:", productName);
-    
+
     if (productName.includes("Easee Charge Up")) {
       return `
         <li style="font-size: 14px;">Fázisok száma: 1/3</li>
@@ -389,7 +388,6 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
         description: "Nem sikerült menteni az adatokat az EVIONOR-ba, de az email elkészült.",
       });
     }
-
 
     const additionalTotal = selectedAdditionals.reduce((sum, item) => {
       return sum + (additionalItemPrices[item] || 0);
@@ -858,6 +856,7 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
               <SelectContent className="bg-background z-50">
                 <SelectItem value="Nagy István">Nagy István</SelectItem>
                 <SelectItem value="Horváth Gáspár">Horváth Gáspár</SelectItem>
+                <SelectItem value="Misho">Misho</SelectItem>
               </SelectContent>
             </Select>
           </div>
