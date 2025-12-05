@@ -37,7 +37,15 @@ export default function LeadManager() {
 
   const [statusFilter, setStatusFilter] = useQueryState(
     "status",
-    parseAsStringLiteral(["new", "contacted", "qualified", "converted", "rejected", "all"] as const).withDefault("new"),
+    parseAsStringLiteral([
+      "new",
+      "contacted",
+      "qualified",
+      "converted",
+      "rejected",
+      "all",
+      "auto contacted",
+    ] as const).withDefault("new"),
   );
 
   const [currentPage, setCurrentPage] = useQueryState("page", parseAsInteger.withDefault(1));
