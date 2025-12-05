@@ -854,9 +854,12 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                 <SelectValue placeholder="Válasszon ajánlatküldőt" />
               </SelectTrigger>
               <SelectContent className="bg-background z-50">
-                <SelectItem value="Nagy István">Nagy István</SelectItem>
                 <SelectItem value="Horváth Gáspár">Horváth Gáspár</SelectItem>
-                <SelectItem value="Misho">Misho</SelectItem>
+                <SelectItem value="Kovács Attila Tibor - EV-töltés szakértő">
+                  Kovács Attila Tibor - EV-töltés szakértő
+                </SelectItem>
+                <SelectItem value="Kocsis Zsombor - EV-töltés szakértő">Kocsis Zsombor - EV-töltés szakértő</SelectItem>
+                <SelectItem value="Nagy István">Nagy István</SelectItem>
               </SelectContent>
             </Select>
           </div>
