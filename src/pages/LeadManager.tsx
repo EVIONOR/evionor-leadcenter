@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQueryState, parseAsInteger, parseAsStringLiteral } from "nuqs";
-import { 
-  getQuestionnaireResponses, 
+import {
+  getQuestionnaireResponses,
   updateQuestionnaireStatus,
   getAutomaticProcessingSetting,
-  setAutomaticProcessingSetting 
+  setAutomaticProcessingSetting,
 } from "@/integrations/evionor/client";
 import type { QuestionnaireResponse, LeadStatus } from "@/integrations/evionor/types";
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,7 @@ const statusOptions: { value: LeadStatus; label: string }[] = [
   { value: "qualified", label: "Qualified" },
   { value: "converted", label: "Converted" },
   { value: "rejected", label: "Rejected" },
+  { value: "auto contacted", label: "Auto contacted" },
 ];
 
 export default function LeadManager() {
@@ -164,11 +165,11 @@ export default function LeadManager() {
     };
 
     localStorage.setItem("prefill_lead_data", JSON.stringify(leadData));
-    
+
     // Update status to "Qualified" immediately
     try {
       await updateQuestionnaireStatus(response.id, "qualified");
-      
+
       // Optimistically update UI
       if (statusFilter !== "all" && statusFilter !== "qualified") {
         setResponses((prev) => prev.filter((r) => r.id !== response.id));
@@ -176,7 +177,7 @@ export default function LeadManager() {
       } else {
         setResponses((prev) => prev.map((r) => (r.id === response.id ? { ...r, status: "qualified" } : r)));
       }
-      
+
       toast({
         title: "Lead Qualified",
         description: "Lead status updated to Qualified",
@@ -189,7 +190,7 @@ export default function LeadManager() {
         variant: "destructive",
       });
     }
-    
+
     navigate("/");
   };
 
@@ -199,8 +200,8 @@ export default function LeadManager() {
       setAutoProcessingEnabled(checked);
       toast({
         title: checked ? "Automatic Processing Enabled" : "Automatic Processing Disabled",
-        description: checked 
-          ? "New leads will be automatically processed every 2 hours" 
+        description: checked
+          ? "New leads will be automatically processed every 2 hours"
           : "Automatic lead processing has been disabled",
       });
     } catch (error) {
