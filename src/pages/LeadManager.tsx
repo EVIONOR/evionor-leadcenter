@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQueryState, parseAsInteger, parseAsStringLiteral } from "nuqs";
 import {
@@ -34,6 +34,7 @@ export default function LeadManager() {
   const [loadingAutoSetting, setLoadingAutoSetting] = useState(true);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [statusFilter, setStatusFilter] = useQueryState(
     "status",
@@ -364,12 +365,15 @@ export default function LeadManager() {
                 type="number"
                 min="1"
                 max="100"
-                value={itemsPerPage}
+                defaultValue={itemsPerPage}
                 onChange={(e) => {
                   const value = parseInt(e.target.value);
                   if (value > 0 && value <= 100) {
-                    setItemsPerPage(value);
-                    setCurrentPage(1);
+                    if (debounceRef.current) clearTimeout(debounceRef.current);
+                    debounceRef.current = setTimeout(() => {
+                      setItemsPerPage(value);
+                      setCurrentPage(1);
+                    }, 300);
                   }
                 }}
                 className="w-20"
