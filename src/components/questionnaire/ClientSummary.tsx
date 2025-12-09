@@ -44,7 +44,6 @@ export const ClientSummary = ({ data, originalResponseId, autoSave = false }: Cl
         needs_electrical_planning: data.needsElectricalPlanning,
         indoor_outdoor: data.indoorOutdoor,
         mounting_surface: data.mountingSurface || null,
-        needs_backplate: data.needsBackplate,
         needs_pole: data.needsPole,
         distance_from_box: data.distanceFromBox,
         space_in_box: data.spaceInBox,
@@ -166,7 +165,6 @@ export const ClientSummary = ({ data, originalResponseId, autoSave = false }: Cl
               </Badge>
               <Badge variant="outline">{data.mountingSurface}</Badge>
               {data.needsElectricalPlanning && <Badge>Villamos tervezés</Badge>}
-              {data.needsBackplate && <Badge>Hátlap szükséges</Badge>}
               {data.needsPole && <Badge>Oszlop szükséges</Badge>}
             </div>
             {data.distanceFromBox && (

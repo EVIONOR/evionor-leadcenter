@@ -358,7 +358,6 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
         needs_electrical_planning: data.needsElectricalPlanning,
         indoor_outdoor: data.indoorOutdoor,
         mounting_surface: data.mountingSurface || null,
-        needs_backplate: data.needsBackplate,
         needs_pole: data.needsPole,
         distance_from_box: data.distanceFromBox,
         space_in_box: data.spaceInBox,
@@ -624,7 +623,6 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
               data.needsInstallation
                 ? `
             ${
-              data.needsBackplate ||
               data.needsPole ||
               data.needsElectricalPlanning ||
               data.overvoltageProtection ||
@@ -636,7 +634,6 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                 <h2 style="margin: 0 0 16px 0; color: #111827; font-size: 17px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 10px;">További telepítési követelmények</h2>
                 <div style="padding: 8px; background-color: white; border-radius: 8px; border: 1px solid #e5e7eb;">
                     <ul style="margin: 0 0 10px 0; padding: 0 0 0 18px; color: #374151; font-size: 13px; line-height: 1.7; word-wrap: break-word;">
-                        ${data.needsBackplate ? "<li>Hátlap szükséges</li>" : ""}
                         ${data.needsPole ? "<li>Oszlop szükséges</li>" : ""}
                         ${data.needsElectricalPlanning ? "<li>Villamos tervezés szükséges</li>" : ""}
                         ${data.overvoltageProtection ? "<li>Túlfeszültség védelem</li>" : ""}
