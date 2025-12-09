@@ -122,61 +122,32 @@ export const InstallationSection = ({ form }: InstallationSectionProps) => {
         )}
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <FormField
-          control={form.control}
-          name="needsBackplate"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Kell-e hátlap? *</FormLabel>
-              <FormControl>
-                <RadioGroup
-                  onValueChange={(value) => field.onChange(value === "true")}
-                  defaultValue={field.value ? "true" : "false"}
-                  className="flex gap-4"
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="true" id="backplate-yes" />
-                    <label htmlFor="backplate-yes" className="cursor-pointer">Igen</label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="false" id="backplate-no" />
-                    <label htmlFor="backplate-no" className="cursor-pointer">Nem</label>
-                  </div>
-                </RadioGroup>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="needsPole"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Kell-e oszlop? *</FormLabel>
-              <FormControl>
-                <RadioGroup
-                  onValueChange={(value) => field.onChange(value === "true")}
-                  defaultValue={field.value ? "true" : "false"}
-                  className="flex gap-4"
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="true" id="pole-yes" />
-                    <label htmlFor="pole-yes" className="cursor-pointer">Igen</label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="false" id="pole-no" />
-                    <label htmlFor="pole-no" className="cursor-pointer">Nem</label>
-                  </div>
-                </RadioGroup>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </div>
+      <FormField
+        control={form.control}
+        name="needsPole"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Kell-e oszlop? *</FormLabel>
+            <FormControl>
+              <RadioGroup
+                onValueChange={(value) => field.onChange(value === "true")}
+                defaultValue={field.value ? "true" : "false"}
+                className="flex gap-4"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="true" id="pole-yes" />
+                  <label htmlFor="pole-yes" className="cursor-pointer">Igen</label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="false" id="pole-no" />
+                  <label htmlFor="pole-no" className="cursor-pointer">Nem</label>
+                </div>
+              </RadioGroup>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
       <FormField
         control={form.control}

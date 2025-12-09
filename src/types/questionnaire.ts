@@ -16,7 +16,6 @@ export interface QuestionnaireData {
   needsElectricalPlanning: boolean;
   indoorOutdoor: "kültér" | "beltér";
   mountingSurface: "beton" | "fa" | "tégla" | "";
-  needsBackplate: boolean;
   needsPole: boolean;
   distanceFromBox: string;
   spaceInBox: "igen" | "nem" | "nemtudom";
