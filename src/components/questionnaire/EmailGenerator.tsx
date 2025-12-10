@@ -204,6 +204,31 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
     return product?.price || 0;
   };
 
+  // Eredeti ár keresés (akciós termékekhez)
+  const findOriginalPrice = (productName: string): number | null => {
+    const normalizedSearch = productName
+      .toLowerCase()
+      .replace(/\s+/g, " ")
+      .replace("+ load balance", "")
+      .replace("+ solar load balancing", "")
+      .trim();
+
+    let product = priceList.find((p) => {
+      const normalizedProductName = p.name.toLowerCase().replace(/\s+/g, " ");
+      return normalizedProductName === normalizedSearch;
+    });
+
+    if (!product) {
+      product = priceList.find((p) => {
+        const normalizedProductName = p.name.toLowerCase().replace(/\s+/g, " ");
+        const searchWords = normalizedSearch.split(" ");
+        return searchWords.every((word) => normalizedProductName.includes(word));
+      });
+    }
+
+    return product?.originalPrice || null;
+  };
+
   // Eldönti, hogy a név cég-e vagy ember
   const isCompanyName = (name: string): boolean => {
     const companyIndicators = ["kft", "bt", "zrt", "nyrt", "ltd", "inc", "corp", "gmbh", "kkt", "ev"];
@@ -491,6 +516,7 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
               .map((template, templateIndex) => {
                 const product = template.products[0];
                 const chargerPrice = findProductPrice(product);
+                const originalPrice = findOriginalPrice(product);
                 const productUrl = getProductUrl(product);
                 const loadManagementPackage = data.loadManagement ? getLoadManagementPackage(product) : null;
                 const installationPackage = getInstallationPackage(product);
@@ -523,7 +549,7 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                             <td style="padding-bottom: 6px;"><a href="${productUrl}" style="color: #111827; font-size: 15px; font-weight: 600; text-decoration: none; border-bottom: 2px solid #0071e3; word-wrap: break-word; word-break: break-word; display: inline-block;">${product}</a></td>
                         </tr>
                         <tr>
-                            <td style="color: #0071e3; font-size: 17px; font-weight: 700;">${formatPrice(chargerPrice)}</td>
+                            <td style="color: #0071e3; font-size: 17px; font-weight: 700;">${originalPrice ? `<span style="color: #9ca3af; text-decoration: line-through; font-size: 14px; font-weight: 400; margin-right: 8px;">${formatPrice(originalPrice)}</span>` : ''}${formatPrice(chargerPrice)}</td>
                         </tr>
                     </table>
                 </div>
@@ -584,7 +610,7 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                     <table width="100%" cellpadding="0" cellspacing="0" border="0">
                         <tr style="border-bottom: 2px solid #0071e3;">
                             <td style="padding: 10px 0; color: #111827; font-size: 14px; font-weight: 700;">Töltő ára:</td>
-                            <td style="padding: 10px 0 10px 10px; color: #0071e3; font-size: 17px; font-weight: 700; text-align: right;">${formatPrice(chargerPrice)}</td>
+                            <td style="padding: 10px 0 10px 10px; color: #0071e3; font-size: 17px; font-weight: 700; text-align: right;">${originalPrice ? `<span style="color: #9ca3af; text-decoration: line-through; font-size: 14px; font-weight: 400; margin-right: 8px;">${formatPrice(originalPrice)}</span>` : ''}${formatPrice(chargerPrice)}</td>
                         </tr>
                     </table>
                     <div style="text-align: center; margin-top: 16px;">
