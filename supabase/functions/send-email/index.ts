@@ -43,7 +43,7 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Sending email to:", to);
 
     const emailResponse = await resend.emails.send({
-      from: from || "EVIONOR <hello@evionor.hu>",
+      from: from || "EVIONOR <hello@notifications.evionor.hu>",
       to: [to],
       subject: subject,
       html: html,
