@@ -47,6 +47,7 @@ const handler = async (req: Request): Promise<Response> => {
       to: [to],
       subject: subject,
       html: html,
+      cc: ["info@evionor.hu"],
     });
 
     console.log("Email sent successfully:", emailResponse);
