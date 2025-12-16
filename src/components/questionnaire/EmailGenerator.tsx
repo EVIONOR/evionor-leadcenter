@@ -484,9 +484,8 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                     <tr>
                         <td style="color: #111827; font-size: 14px; font-weight: 500; padding: 0 0 10px 0; word-wrap: break-word; word-break: break-word;">${data.customCar ? data.customCar : `${data.carBrand} ${data.carModel}`}</td>
                     </tr>
-                    ${
-                      data.city && data.zipCode
-                        ? `
+                    ${data.city && data.zipCode
+        ? `
                     <tr>
                         <td style="color: #6b7280; font-size: 12px; padding: 8px 0 4px 0;">Helyszín</td>
                     </tr>
@@ -494,8 +493,8 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                         <td style="color: #111827; font-size: 14px; font-weight: 500; padding: 0 0 10px 0; word-wrap: break-word; word-break: break-word;">${data.city}, ${data.zipCode}</td>
                     </tr>
                     `
-                        : ""
-                    }
+        : ""
+      }
                     <tr>
                         <td style="color: #6b7280; font-size: 12px; padding: 8px 0 4px 0;">Épület típus</td>
                     </tr>
@@ -513,16 +512,16 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
 
             <!-- Charger Sections - OSZLOP SZERŰEN -->
             ${selectedTemplates
-              .map((template, templateIndex) => {
-                const product = template.products[0];
-                const chargerPrice = findProductPrice(product);
-                const originalPrice = findOriginalPrice(product);
-                const productUrl = getProductUrl(product);
-                const loadManagementPackage = data.loadManagement ? getLoadManagementPackage(product) : null;
-                const installationPackage = getInstallationPackage(product);
-                const installationPrice = data.needsInstallation ? installationPackage.price : 0;
+        .map((template, templateIndex) => {
+          const product = template.products[0];
+          const chargerPrice = findProductPrice(product);
+          const originalPrice = findOriginalPrice(product);
+          const productUrl = getProductUrl(product);
+          const loadManagementPackage = data.loadManagement ? getLoadManagementPackage(product) : null;
+          const installationPackage = getInstallationPackage(product);
+          const installationPrice = data.needsInstallation ? installationPackage.price : 0;
 
-                return `
+          return `
             ${templateIndex > 0 ? '<div style="margin: 24px 0; height: 2px; background: linear-gradient(90deg, transparent, #d1d5db 20%, #d1d5db 80%, transparent); opacity: 0.5;"></div>' : ""}
             
             <!-- Töltő ${templateIndex + 1}: ${template.name} -->
@@ -531,17 +530,16 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                 <p style="margin: 0 0 16px 0; color: #0071e3; font-size: 15px; font-weight: 600; word-wrap: break-word;">${template.name}</p>
                 
                 <!-- Töltő kép -->
-                ${
-                  getChargerImageUrl(product)
-                    ? `
+                ${getChargerImageUrl(product)
+              ? `
                 <div style="text-align: center; margin-bottom: 16px; padding: 8px; background-color: white; border-radius: 8px; border: 1px solid #e5e7eb;">
                     <a href="${productUrl}" style="display: inline-block; text-decoration: none;">
                         <img src="${getChargerImageUrl(product)}" alt="${product}" style="max-width: 260px; width: 100%; height: auto; display: block; margin: 0 auto;" />
                     </a>
                 </div>
                 `
-                    : ""
-                }
+              : ""
+            }
                 
                 <div style="padding: 8px; background-color: white; border-radius: 8px; margin-bottom: 16px; border: 1px solid #e5e7eb;">
                     <table width="100%" cellpadding="0" cellspacing="0" border="0">
@@ -561,26 +559,23 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                     </ul>
                 </div>
 
-                ${
-                  loadManagementPackage || data.needsInstallation
-                    ? `
+                ${loadManagementPackage || data.needsInstallation
+              ? `
                 <!-- Opciós tételek Section -->
                 <div style="margin-top: 16px; background-color: white; padding: 8px; border-radius: 8px; border: 1px solid #e5e7eb;">
                     <h3 style="margin: 0 0 12px 0; color: #111827; font-size: 15px; font-weight: 600;">Opciós tételek</h3>
                     <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                        ${
-                          loadManagementPackage
-                            ? `
+                        ${loadManagementPackage
+                ? `
                         <tr>
                             <td style="padding: 6px 0; width: 65%;"><a href="${loadManagementPackage.url}" target="_blank" style="color: #111827; font-size: 13px; font-weight: 500; text-decoration: none; border-bottom: 2px solid #0071e3; word-wrap: break-word; word-break: break-word; display: inline-block;">${loadManagementPackage.name}</a></td>
                             <td style="padding: 6px 0 6px 10px; color: #0071e3; font-size: 15px; font-weight: 700; text-align: right;">${formatPrice(loadManagementPackage.price)}</td>
                         </tr>
                         `
-                            : ""
-                        }
-                        ${
-                          data.needsInstallation
-                            ? `
+                : ""
+              }
+                        ${data.needsInstallation
+                ? `
                         <tr>
                             <td style="padding: 6px 0; vertical-align: top; width: 65%;">
                                 <a href="${installationPackage.url}" target="_blank" style="color: #111827; font-size: 13px; font-weight: 500; text-decoration: none; border-bottom: 2px solid #0071e3; word-wrap: break-word; word-break: break-word; display: inline-block;">${installationPackage.name}</a>
@@ -588,22 +583,21 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                             <td style="padding: 6px 0 6px 10px; color: #0071e3; font-size: 15px; font-weight: 700; text-align: right; vertical-align: top;">${formatPrice(installationPrice)}</td>
                         </tr>
                         `
-                            : ""
-                        }
+                : ""
+              }
                     </table>
-                    ${
-                      data.needsInstallation
-                        ? `
+                    ${data.needsInstallation
+                ? `
                     <div style="text-align: center; margin-top: 12px;">
                         <a href="${getCartUrl(product)}" style="display: inline-block; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; padding: 8px 20px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: 600; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);">Telepítéssel kérem!</a>
                     </div>
                     `
-                        : ""
-                    }
+                : ""
+              }
                 </div>
                 `
-                    : ""
-                }
+              : ""
+            }
 
                 <!-- Price Summary for this charger -->
                 <div style="margin-top: 20px; background-color: white; padding: 8px; border-radius: 8px; border: 2px solid #0071e3;">
@@ -619,42 +613,39 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                 </div>
             </div>
               `;
-              })
-              .join("")}
+        })
+        .join("")}
 
-            ${
-              selectedAdditionals.length > 0
-                ? `
+            ${selectedAdditionals.length > 0
+        ? `
             <!-- Accessories Section - CSAK EGYSZER -->
             <div style="margin-bottom: 20px; background-color: #f3f4f6; padding: 10px; border-radius: 12px; border: 2px solid #e5e7eb;">
                 <h2 style="margin: 0 0 16px 0; color: #111827; font-size: 17px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 10px;">Kiegészítők (opcionális)</h2>
                 <table width="100%" cellpadding="0" cellspacing="0" border="0">
                     ${selectedAdditionals
-                      .map(
-                        (item) => `
+          .map(
+            (item) => `
                     <tr>
                         <td style="padding: 6px 0; color: #374151; font-size: 13px; width: 65%;">${item}</td>
                         <td style="padding: 6px 0 6px 10px; color: #111827; font-size: 13px; font-weight: 500; text-align: right;">${formatPrice(additionalItemPrices[item] || 0)}</td>
                     </tr>
                     `,
-                      )
-                      .join("")}
+          )
+          .join("")}
                 </table>
             </div>
             `
-                : ""
-            }
+        : ""
+      }
 
-            ${
-              data.needsInstallation
-                ? `
-            ${
-              data.needsPole ||
-              data.needsElectricalPlanning ||
-              data.overvoltageProtection ||
-              data.infrastructureDevelopment ||
-              data.networkExpansion
-                ? `
+            ${data.needsInstallation
+        ? `
+            ${data.needsPole ||
+          data.needsElectricalPlanning ||
+          data.overvoltageProtection ||
+          data.infrastructureDevelopment ||
+          data.networkExpansion
+          ? `
             <!-- Additional Installation Requirements -->
             <div style="margin-bottom: 20px; background-color: #f3f4f6; padding: 10px; border-radius: 12px; border: 2px solid #e5e7eb;">
                 <h2 style="margin: 0 0 16px 0; color: #111827; font-size: 17px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 10px;">További telepítési követelmények</h2>
@@ -672,19 +663,18 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                 </div>
             </div>
             `
-                : ""
-            }
+          : ""
+        }
 
-            ${
-              data.groundworkWallPenetration
-                ? `
+            ${data.groundworkWallPenetration
+          ? `
             <div style="margin-bottom: 20px; padding: 8px; background-color: #fef3c7; border-radius: 8px; border-left: 4px solid #f59e0b;">
                 <p style="margin: 0 0 6px 0; color: #92400e; font-size: 13px; font-weight: 600;">Földmunka/Faláttörés:</p>
                 <p style="margin: 0; color: #78350f; font-size: 13px; line-height: 1.6; word-wrap: break-word;">${data.groundworkWallPenetration}</p>
             </div>
             `
-                : ""
-            }
+          : ""
+        }
 
             <!-- Standard Installation Description -->
             <div style="margin-bottom: 20px; background-color: #f3f4f6; padding: 10px; border-radius: 12px; border: 2px solid #e5e7eb;">
@@ -704,39 +694,37 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                 </div>
             </div>
             `
-                : ""
-            }
+        : ""
+      }
 
             <!-- Process Section -->
             <div style="margin-bottom: 32px; background-color: #f9fafb; padding: 10px; border-radius: 12px;">
                 <h2 style="margin: 0 0 16px 0; color: #111827; font-size: 17px; font-weight: 600;">Folyamat</h2>
                 <ol style="margin: 0; padding: 0 0 0 18px; color: #374151; font-size: 13px; line-height: 1.8;">
-                    ${
-                      data.needsInstallation
-                        ? `
+                    ${data.needsInstallation
+        ? `
                     <li>Webshop megrendelés leadása</li>
                     <li>Telepítés ütemezése</li>
                     <li>Szakszerű kivitelezés 10 munkanapon belül</li>
                     `
-                        : `
+        : `
                     <li>Webshop megrendelés leadása</li>
                     <li>Szállítás 5 munkanapon belül</li>
                     `
-                    }
+      }
                 </ol>
             </div>
 
-            ${
-              data.otherComments
-                ? `
+            ${data.otherComments
+        ? `
             <!-- Other Comments -->
             <div style="margin-bottom: 32px; padding: 8px; background-color: #eff6ff; border-radius: 8px; border-left: 4px solid #3b82f6;">
                 <h2 style="margin: 0 0 10px 0; color: #1e40af; font-size: 15px; font-weight: 600;">Egyéb megjegyzések</h2>
                 <p style="margin: 0; color: #1e3a8a; font-size: 13px; line-height: 1.6; word-wrap: break-word;">${data.otherComments}</p>
             </div>
             `
-                : ""
-            }
+        : ""
+      }
 
             <!-- Closing -->
             <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid #e5e7eb;">
@@ -815,7 +803,7 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
           to: data.email,
           subject: emailSubject || `EVIONOR - Töltő ajánlat ${data.contactName} részére`,
           html: generatedEmail,
-          from: `${senderName} - EVIONOR <hello@evionor.hu>`,
+          from: `${senderName} - EVIONOR <hello@notifications.evionor.hu>`,
         },
       });
 
@@ -929,9 +917,8 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                 return (
                   <div
                     key={template.id}
-                    className={`p-4 border rounded-lg cursor-pointer transition-all ${
-                      isSelected ? "border-primary bg-primary/5 shadow-sm" : "border-border hover:border-primary/50"
-                    }`}
+                    className={`p-4 border rounded-lg cursor-pointer transition-all ${isSelected ? "border-primary bg-primary/5 shadow-sm" : "border-border hover:border-primary/50"
+                      }`}
                     onClick={() => toggleTemplate(template)}
                   >
                     <div className="flex items-start justify-between">
