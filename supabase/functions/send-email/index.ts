@@ -25,6 +25,7 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Received email send request");
 
     const { to, subject, html, from }: SendEmailRequest = await req.json();
+    const cc = ["info@evionor.hu"];
 
     if (!to || !subject || !html) {
       console.error("Missing required fields:", { to, subject, htmlLength: html?.length });
@@ -40,14 +41,14 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    console.log("Sending email to:", to);
+    console.log("Sending email to:", to, from, cc);
 
     const emailResponse = await resend.emails.send({
       from: from || "EVIONOR <hello@notifications.evionor.hu>",
       to: [to],
       subject: subject,
       html: html,
-      cc: ["info@evionor.hu"],
+      cc,
     });
 
     console.log("Email sent successfully:", emailResponse);
