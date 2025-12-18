@@ -11,7 +11,7 @@ export interface ProductClick {
   clicked_at: string;
 }
 
-export type LeadStatus = 'new' | 'contacted' | 'qualified' | 'converted' | 'rejected';
+export type LeadStatus = "new" | "contacted" | "qualified" | "converted" | "rejected" | "auto contacted";
 
 export interface QuestionnaireResponse {
   id: string;
