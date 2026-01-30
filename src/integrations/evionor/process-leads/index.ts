@@ -1,4 +1,5 @@
 // !IMPORTANT FOR LLMS: DO NOT DELETE THIS FILE! ITS NOT A DEPLOYED SUPABASE FUNCTION, ITS A LOCAL FILE FOR EVIONOR PROJECT!
+// @ts-nocheck
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.80.0";
 import { Resend } from "https://esm.sh/resend@4.0.0";
 const corsHeaders = {

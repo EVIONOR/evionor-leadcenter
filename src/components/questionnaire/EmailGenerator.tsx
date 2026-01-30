@@ -271,7 +271,6 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
         <li style="font-size: 14px;">Fázisok száma: 1/3</li>
         <li style="font-size: 14px;">Tápellátás: 6–32 A</li>
         <li style="font-size: 14px;">Földzárlat védelem: Beépített Type A áramvédő kapcsoló (30 mA) + 6 mA DC-védelem (RDC-PD)</li>
-        <li style="font-size: 14px;">Üzemi hőmérséklet: -30°C és +50°C között</li>
         <li style="font-size: 14px;">Hitelesítés: RFID/NFC, mobilalkalmazás</li>
         <li style="font-size: 14px;">Kommunikációs protokollok: Bluetooth Low Energy, WiFi 2,4 GHz, RFID/NFC, 4G/LTE (eSIM), OCPP 1.6J</li>
         <li style="font-size: 14px;">Funkciók: Terhelésmenedzsment kompatibilis (max. 3 töltőig), céges számlázási riportok, lágy indítás, okos otthon integráció</li>
@@ -285,7 +284,6 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
         <li style="font-size: 14px;">Fázisok száma: 1/3</li>
         <li style="font-size: 14px;">Tápellátás: 6–32 A</li>
         <li style="font-size: 14px;">Földzárlat védelem: Beépített elektronikus DC-szűrő 6 mA</li>
-        <li style="font-size: 14px;">Üzemi hőmérséklet: -30°C és +40°C között</li>
         <li style="font-size: 14px;">Hitelesítés: RFID/NFC, mobilalkalmazás</li>
         <li style="font-size: 14px;">Kommunikációs protokollok: Bluetooth Low Energy, RFID/NFC, WiFi 2,4 GHz, 4G LTE-M</li>
         <li style="font-size: 14px;">Funkciók: Terhelésmenedzsment, napelemes integráció (Solar load balancing), felhőalapú szolgáltatások, energiamérés, lágy indítás, energia szabályozás, okos otthon integráció</li>
@@ -302,7 +300,6 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
         <li style="font-size: 14px;">Fázisok száma: 1/3</li>
         <li style="font-size: 14px;">Tápellátás: 6–32 A</li>
         <li style="font-size: 14px;">Földzárlat védelem: Beépített elektronikus DC-szűrő 6 mA</li>
-        <li style="font-size: 14px;">Üzemi hőmérséklet: -30°C és +40°C között</li>
         <li style="font-size: 14px;">Hitelesítés: RFID/NFC, mobilalkalmazás</li>
         <li style="font-size: 14px;">Kommunikációs protokollok: Bluetooth Low Energy, RFID/NFC, WiFi 2,4 GHz, 4G LTE-M</li>
         <li style="font-size: 14px;">Funkciók: Terhelésmenedzsment kompatibilis, céges számlázási riportok, lágy indítás, okos otthon integráció</li>
@@ -316,7 +313,6 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
         <li style="font-size: 14px;">Fázisok száma: 1</li>
         <li style="font-size: 14px;">Tápellátás: 230 V AC, 6–32 A</li>
         <li style="font-size: 14px;">Földzárlat védelem: Beépített RDC-DD 6 mA (IEC 62955)</li>
-        <li style="font-size: 14px;">Üzemi hőmérséklet: -30°C és +40°C között</li>
         <li style="font-size: 14px;">Hitelesítés: Nem támogatott</li>
         <li style="font-size: 14px;">Kommunikációs protokollok: Nem támogatott</li>
         <li style="font-size: 14px;">Funkciók: Plug & Charge helyi töltés, terhelésmenedzsment nélkül</li>
@@ -330,7 +326,6 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
         <li style="font-size: 14px;">Fázisok száma: 1/3</li>
         <li style="font-size: 14px;">Tápellátás: 230 V, 16 A (1-fázis) / 400 V, 16 A (3-fázis)</li>
         <li style="font-size: 14px;">Földzárlat védelem: Beépített DC-védelem, Type A földzárlat-védő szükséges</li>
-        <li style="font-size: 14px;">Üzemi hőmérséklet: -30°C és +45°C között</li>
         <li style="font-size: 14px;">Hitelesítés: RFID</li>
         <li style="font-size: 14px;">Kommunikációs protokollok: WiFi, RFID</li>
         <li style="font-size: 14px;">Funkciók: RFID hozzáférés-szabályozás, extra konnektor (pl. e-bike), LED jelzőfények</li>
@@ -344,7 +339,6 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
         <li style="font-size: 14px;">Fázisok száma: 1/3</li>
         <li style="font-size: 14px;">Tápellátás: 6–32 A</li>
         <li style="font-size: 14px;">Földzárlat védelem: Beépített Type B áramvédő (AC 30 mA, DC 6 mA)</li>
-        <li style="font-size: 14px;">Üzemi hőmérséklet: -35°C és +45°C között</li>
         <li style="font-size: 14px;">Hitelesítés: RFID</li>
         <li style="font-size: 14px;">Kommunikációs protokollok: WiFi, 4G LTE (eSIM), Bluetooth Low Energy 5.0/5.3, RFID/NFC, OCPP 1.6J</li>
         <li style="font-size: 14px;">Funkciók: Terhelésmenedzsment kompatibilis, céges számlázási riportok, okos otthon integráció</li>
