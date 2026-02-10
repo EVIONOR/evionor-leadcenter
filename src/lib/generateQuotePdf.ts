@@ -54,29 +54,37 @@ export const generateQuotePdf = async (data: QuoteData): Promise<Blob> => {
   const totalNet = Math.round(totalGross / 1.27);
   const totalVat = totalGross - totalNet;
 
-  // ===== HEADER =====
-  doc.setFillColor(10, 37, 64); // #0a2540
-  doc.rect(0, 0, pageWidth, 40, "F");
+  // ===== WHITE HEADER WITH LOGO =====
+  doc.setFillColor(255, 255, 255);
+  doc.rect(0, 0, pageWidth, 28, "F");
 
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(22);
-  doc.setFont("helvetica", "bold");
-  doc.text("Árajánlat", margin, 18);
-
-  doc.setFontSize(11);
-  doc.setFont("helvetica", "normal");
-  doc.text(quoteNumber, margin, 28);
-
-  // Logo in top-right corner
+  // Logo in top-right corner (preserve aspect ratio)
   try {
     const logoImg = await loadImage("/images/evionor-logo-pdf.png");
-    doc.addImage(logoImg, "PNG", pageWidth - margin - 40, 8, 40, 24, undefined, "FAST");
+    const logoNaturalW = logoImg.naturalWidth;
+    const logoNaturalH = logoImg.naturalHeight;
+    const logoTargetH = 12; // mm height
+    const logoTargetW = (logoNaturalW / logoNaturalH) * logoTargetH;
+    doc.addImage(logoImg, "PNG", pageWidth - margin - logoTargetW, 8, logoTargetW, logoTargetH, undefined, "FAST");
   } catch (e) {
-    // Fallback text if logo fails
+    doc.setTextColor(10, 37, 64);
     doc.setFontSize(16);
     doc.setFont("helvetica", "bold");
     doc.text("EVIONOR", pageWidth - margin, 18, { align: "right" });
   }
+
+  // Dark blue stripe below header
+  doc.setFillColor(10, 37, 64); // #0a2540
+  doc.rect(0, 28, pageWidth, 18, "F");
+
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(18);
+  doc.setFont("helvetica", "bold");
+  doc.text("Árajánlat", margin, 39);
+
+  doc.setFontSize(9);
+  doc.setFont("helvetica", "normal");
+  doc.text(quoteNumber, margin, 44);
 
   // ===== COMPANY & CUSTOMER INFO =====
   let y = 52;
