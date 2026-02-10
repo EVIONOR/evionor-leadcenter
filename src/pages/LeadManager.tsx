@@ -9,22 +9,40 @@ import {
 } from "@/integrations/evionor/client";
 import type { QuestionnaireResponse, LeadStatus } from "@/integrations/evionor/types";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  Loader2,
+  ArrowLeft,
+  ChevronLeft,
+  ChevronRight,
+  Mail,
+  Phone,
+  MapPin,
+  Clock,
+  Users,
+  Zap,
+  FileText,
+} from "lucide-react";
 
-const statusOptions: { value: LeadStatus; label: string }[] = [
-  { value: "new", label: "New" },
-  { value: "contacted", label: "Contacted" },
-  { value: "qualified", label: "Qualified" },
-  { value: "converted", label: "Converted" },
-  { value: "rejected", label: "Rejected" },
-  { value: "auto contacted", label: "Auto contacted" },
+const statusOptions: { value: LeadStatus; label: string; color: string }[] = [
+  { value: "new", label: "Új", color: "bg-blue-500/15 text-blue-700 border-blue-200" },
+  { value: "contacted", label: "Kontaktált", color: "bg-amber-500/15 text-amber-700 border-amber-200" },
+  { value: "qualified", label: "Minősített", color: "bg-emerald-500/15 text-emerald-700 border-emerald-200" },
+  { value: "converted", label: "Konvertált", color: "bg-green-500/15 text-green-700 border-green-200" },
+  { value: "rejected", label: "Elutasított", color: "bg-red-500/15 text-red-700 border-red-200" },
+  { value: "auto contacted", label: "Auto kontaktált", color: "bg-violet-500/15 text-violet-700 border-violet-200" },
 ];
+
+const getStatusBadge = (status: string) => {
+  const found = statusOptions.find((s) => s.value === status);
+  return found || { label: status, color: "bg-muted text-muted-foreground border-border" };
+};
 
 export default function LeadManager() {
   const [responses, setResponses] = useState<QuestionnaireResponse[]>([]);
@@ -39,13 +57,7 @@ export default function LeadManager() {
   const [statusFilter, setStatusFilter] = useQueryState(
     "status",
     parseAsStringLiteral([
-      "new",
-      "contacted",
-      "qualified",
-      "converted",
-      "rejected",
-      "all",
-      "auto contacted",
+      "new", "contacted", "qualified", "converted", "rejected", "all", "auto contacted",
     ] as const).withDefault("new"),
   );
 
@@ -96,8 +108,8 @@ export default function LeadManager() {
         if (!cancelled) {
           console.error("Error fetching responses:", error);
           toast({
-            title: "Error",
-            description: "Failed to fetch questionnaire responses from EVIONOR database",
+            title: "Hiba",
+            description: "Nem sikerült lekérni az adatokat",
             variant: "destructive",
           });
         }
@@ -130,8 +142,8 @@ export default function LeadManager() {
       await updateQuestionnaireStatus(id, newStatus);
 
       toast({
-        title: "Status Updated",
-        description: `Lead status changed to ${newStatus}`,
+        title: "Státusz frissítve",
+        description: `Státusz: ${getStatusBadge(newStatus).label}`,
       });
     } catch (error) {
       console.error("Error updating status:", error);
@@ -150,8 +162,8 @@ export default function LeadManager() {
       }
 
       toast({
-        title: "Error",
-        description: "Failed to update lead status",
+        title: "Hiba",
+        description: "Nem sikerült frissíteni a státuszt",
         variant: "destructive",
       });
     }
@@ -170,7 +182,7 @@ export default function LeadManager() {
       carBrand: response.car_brand || "",
       carModel: response.car_model || "",
       location: response.location || "",
-      phases: String(response.phases || "1"), // Bug fix: include phases field and ensure it's a string
+      phases: String(response.phases || "1"),
     };
 
     localStorage.setItem("prefill_lead_data", JSON.stringify(leadData));
@@ -188,14 +200,14 @@ export default function LeadManager() {
       }
 
       toast({
-        title: "Lead Qualified",
-        description: "Lead status updated to Qualified",
+        title: "Lead minősítve",
+        description: "Státusz: Minősített",
       });
     } catch (error) {
       console.error("Error updating status:", error);
       toast({
-        title: "Warning",
-        description: "Form will be filled, but status update failed",
+        title: "Figyelmeztetés",
+        description: "Űrlap kitöltve, de a státusz frissítés sikertelen",
         variant: "destructive",
       });
     }
@@ -208,16 +220,16 @@ export default function LeadManager() {
       await setAutomaticProcessingSetting(checked);
       setAutoProcessingEnabled(checked);
       toast({
-        title: checked ? "Automatic Processing Enabled" : "Automatic Processing Disabled",
+        title: checked ? "Auto feldolgozás bekapcsolva" : "Auto feldolgozás kikapcsolva",
         description: checked
-          ? "New leads will be automatically processed every 2 hours"
-          : "Automatic lead processing has been disabled",
+          ? "Új leadek 2 óránként automatikusan feldolgozásra kerülnek"
+          : "Automatikus feldolgozás kikapcsolva",
       });
     } catch (error) {
       console.error("Error updating automatic processing setting:", error);
       toast({
-        title: "Error",
-        description: "Failed to update automatic processing setting",
+        title: "Hiba",
+        description: "Nem sikerült frissíteni a beállítást",
         variant: "destructive",
       });
     }
@@ -225,140 +237,184 @@ export default function LeadManager() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="min-h-screen bg-[#f8fafc] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 className="h-8 w-8 animate-spin text-[#0a2540]" />
+          <p className="text-sm text-muted-foreground">Leadek betöltése...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
-          <div className="flex items-center gap-4">
-            <Button variant="outline" size="sm" onClick={() => navigate("/")}>
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Questionnaire
+    <div className="min-h-screen bg-[#f8fafc]">
+      {/* Top bar */}
+      <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-md border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate("/")}
+              className="rounded-full h-9 w-9"
+            >
+              <ArrowLeft className="h-4 w-4" />
             </Button>
-            <h1 className="text-3xl font-bold">Questionnaire Responses</h1>
+            <div>
+              <h1 className="text-lg font-semibold text-[#0a2540] tracking-tight">Lead Manager</h1>
+              <p className="text-xs text-muted-foreground">
+                {totalCount} lead{totalCount !== 1 ? "" : ""}
+              </p>
+            </div>
           </div>
 
-          <div className="flex items-center gap-4">
-            <div className="text-sm text-muted-foreground">
-              {totalCount} total {totalCount === 1 ? "response" : "responses"}
-            </div>
-            <Select
-              value={statusFilter}
-              onValueChange={(value) => handleStatusFilterChange(value as LeadStatus | "all")}
-            >
-              <SelectTrigger className="w-[180px] bg-background">
-                <SelectValue placeholder="Filter by status" />
-              </SelectTrigger>
-              <SelectContent className="bg-background z-50">
-                <SelectItem value="all">All Statuses</SelectItem>
-                {statusOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <div className="flex items-center gap-2 px-3 py-2 border rounded-md bg-background">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 bg-slate-50 rounded-lg px-3 py-1.5 border border-slate-200">
               <Switch
                 id="auto-processing"
                 checked={autoProcessingEnabled}
                 onCheckedChange={handleAutoProcessingToggle}
                 disabled={loadingAutoSetting}
+                className="scale-90"
               />
-              <Label htmlFor="auto-processing" className="text-sm font-medium cursor-pointer">
-                Auto Process New Leads
+              <Label htmlFor="auto-processing" className="text-xs font-medium cursor-pointer text-slate-600 whitespace-nowrap">
+                <Zap className="h-3 w-3 inline mr-1" />
+                Auto
               </Label>
             </div>
           </div>
         </div>
+      </div>
 
-        <div className="grid gap-4 mb-6">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 py-6">
+        {/* Filter tabs */}
+        <div className="flex items-center gap-2 mb-6 overflow-x-auto pb-1">
+          <button
+            onClick={() => handleStatusFilterChange("all")}
+            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap ${
+              statusFilter === "all"
+                ? "bg-[#0a2540] text-white shadow-sm"
+                : "bg-white text-slate-500 hover:bg-slate-100 border border-slate-200"
+            }`}
+          >
+            Mind
+          </button>
+          {statusOptions.map((option) => (
+            <button
+              key={option.value}
+              onClick={() => handleStatusFilterChange(option.value)}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap ${
+                statusFilter === option.value
+                  ? "bg-[#0a2540] text-white shadow-sm"
+                  : "bg-white text-slate-500 hover:bg-slate-100 border border-slate-200"
+              }`}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Lead cards */}
+        <div className="space-y-3">
           {responses.length === 0 ? (
-            <Card>
-              <CardContent className="pt-6">
-                <p className="text-center text-muted-foreground">
-                  {statusFilter === "all"
-                    ? "No questionnaire responses found in EVIONOR database."
-                    : `No responses with status "${statusFilter}".`}
-                </p>
-              </CardContent>
-            </Card>
+            <div className="flex flex-col items-center justify-center py-20 text-center">
+              <div className="h-14 w-14 rounded-full bg-slate-100 flex items-center justify-center mb-4">
+                <FileText className="h-6 w-6 text-slate-400" />
+              </div>
+              <p className="text-sm font-medium text-slate-600">Nincs találat</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                {statusFilter === "all"
+                  ? "Még nincsenek leadek."
+                  : `Nincs "${getStatusBadge(statusFilter).label}" státuszú lead.`}
+              </p>
+            </div>
           ) : (
-            responses.map((response) => (
-              <Card key={response.id}>
-                <CardContent className="flex items-center gap-8 justify-between p-6">
-                  <div>
-                    <CardTitle className="text-lg">{response.name || "No Name"}</CardTitle>
-                    <p className="text-sm text-muted-foreground">{new Date(response.created_at).toLocaleString()}</p>
-                  </div>
-                  <div className="grid grid-cols-4 gap-3 mb-3 flex-1">
-                    <div>
-                      <p className="text-sm font-semibold">Email</p>
-                      <p className="text-sm text-muted-foreground truncate">{response.email || "N/A"}</p>
+            responses.map((response) => {
+              const statusInfo = getStatusBadge(response.status);
+              return (
+                <Card
+                  key={response.id}
+                  className="group bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden"
+                >
+                  <CardContent className="p-0">
+                    <div className="flex flex-col md:flex-row md:items-center">
+                      {/* Left: Name + date + badge */}
+                      <div className="flex items-center gap-3 p-4 md:w-[220px] md:min-w-[220px] border-b md:border-b-0 md:border-r border-slate-100">
+                        <div className="h-10 w-10 rounded-full bg-[#0a2540] text-white flex items-center justify-center text-sm font-bold shrink-0">
+                          {(response.name || "?")[0].toUpperCase()}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-sm font-semibold text-[#0a2540] truncate">{response.name || "Névtelen"}</p>
+                          <p className="text-[11px] text-muted-foreground">
+                            {new Date(response.created_at).toLocaleDateString("hu-HU", {
+                              year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit",
+                            })}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Center: Info fields */}
+                      <div className="flex-1 p-4 grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <div className="flex items-start gap-2">
+                          <Mail className="h-3.5 w-3.5 text-slate-400 mt-0.5 shrink-0" />
+                          <span className="text-xs text-slate-600 truncate">{response.email || "N/A"}</span>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <Phone className="h-3.5 w-3.5 text-slate-400 mt-0.5 shrink-0" />
+                          <span className="text-xs text-slate-600">{response.phone || "N/A"}</span>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <MapPin className="h-3.5 w-3.5 text-slate-400 mt-0.5 shrink-0" />
+                          <span className="text-xs text-slate-600">{response.location || "N/A"}</span>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <Clock className="h-3.5 w-3.5 text-slate-400 mt-0.5 shrink-0" />
+                          <span className="text-xs text-slate-600">{response.timeline || "N/A"}</span>
+                        </div>
+                      </div>
+
+                      {/* Right: Actions */}
+                      <div className="flex items-center gap-2 p-4 md:pr-5 border-t md:border-t-0 md:border-l border-slate-100">
+                        <Badge variant="outline" className={`text-[10px] font-medium px-2 py-0.5 ${statusInfo.color}`}>
+                          {statusInfo.label}
+                        </Badge>
+                        <Select
+                          value={response.status}
+                          onValueChange={(value) => handleStatusChange(response.id, value as LeadStatus)}
+                        >
+                          <SelectTrigger className="w-[110px] h-8 text-xs bg-white border-slate-200">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white z-50">
+                            {statusOptions.map((option) => (
+                              <SelectItem key={option.value} value={option.value} className="text-xs">
+                                {option.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <Button
+                          size="sm"
+                          onClick={() => handleQualifyLead(response)}
+                          className="h-8 px-3 text-xs bg-[#0a2540] hover:bg-[#0d3155] text-white"
+                        >
+                          Űrlap
+                        </Button>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-sm font-semibold">Phone</p>
-                      <p className="text-sm text-muted-foreground">{response.phone || "N/A"}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold">Location</p>
-                      <p className="text-sm text-muted-foreground">{response.location || "N/A"}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold">Timeline</p>
-                      <p className="text-sm text-muted-foreground">{response.timeline || "N/A"}</p>
-                    </div>
-                    {/* <div>
-                      <p className="text-sm font-semibold">Car</p>
-                      <p className="text-sm text-muted-foreground">
-                        {response.car_brand} {response.car_model || "N/A"}
-                      </p>
-                    </div> */}
-                    {/* <div>
-                      <p className="text-sm font-semibold">Annual KM</p>
-                      <p className="text-sm text-muted-foreground">{response.km_per_year?.toLocaleString() || "N/A"}</p>
-                    </div> */}
-                    {/* <div>
-                      <p className="text-sm font-semibold">Phases</p>
-                      <p className="text-sm text-muted-foreground">{response.phases || "N/A"}</p>
-                    </div> */}
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <Button variant="default" size="sm" onClick={() => handleQualifyLead(response)}>
-                      Fill Form
-                    </Button>
-                    <Select
-                      value={response.status}
-                      onValueChange={(value) => handleStatusChange(response.id, value as LeadStatus)}
-                    >
-                      <SelectTrigger className="w-[140px] bg-background">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent className="bg-background z-50">
-                        {statusOptions.map((option) => (
-                          <SelectItem key={option.value} value={option.value}>
-                            {option.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </CardContent>
-              </Card>
-            ))
+                  </CardContent>
+                </Card>
+              );
+            })
           )}
         </div>
 
+        {/* Pagination */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-center gap-4">
+          <div className="flex items-center justify-between mt-8 pt-4 border-t border-slate-200">
             <div className="flex items-center gap-2">
-              <label htmlFor="perPage" className="text-sm text-muted-foreground whitespace-nowrap">
-                Per page:
+              <label htmlFor="perPage" className="text-xs text-muted-foreground">
+                Oldalanként:
               </label>
               <Input
                 id="perPage"
@@ -376,55 +432,55 @@ export default function LeadManager() {
                     }, 300);
                   }
                 }}
-                className="w-20"
+                className="w-16 h-8 text-xs"
               />
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-              disabled={currentPage === 1}
-            >
-              <ChevronLeft className="h-4 w-4 mr-1" />
-              Previous
-            </Button>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="h-8 px-2"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+
               {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                 let pageNum;
-                if (totalPages <= 5) {
-                  pageNum = i + 1;
-                } else if (currentPage <= 3) {
-                  pageNum = i + 1;
-                } else if (currentPage >= totalPages - 2) {
-                  pageNum = totalPages - 4 + i;
-                } else {
-                  pageNum = currentPage - 2 + i;
-                }
+                if (totalPages <= 5) pageNum = i + 1;
+                else if (currentPage <= 3) pageNum = i + 1;
+                else if (currentPage >= totalPages - 2) pageNum = totalPages - 4 + i;
+                else pageNum = currentPage - 2 + i;
 
                 return (
                   <Button
                     key={pageNum}
-                    variant={currentPage === pageNum ? "default" : "outline"}
+                    variant="ghost"
                     size="sm"
                     onClick={() => setCurrentPage(pageNum)}
-                    className="w-10"
+                    className={`h-8 w-8 text-xs ${
+                      currentPage === pageNum
+                        ? "bg-[#0a2540] text-white hover:bg-[#0d3155] hover:text-white"
+                        : "text-slate-500"
+                    }`}
                   >
                     {pageNum}
                   </Button>
                 );
               })}
-            </div>
 
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-              disabled={currentPage === totalPages}
-            >
-              Next
-              <ChevronRight className="h-4 w-4 ml-1" />
-            </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+                className="h-8 px-2"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         )}
       </div>
