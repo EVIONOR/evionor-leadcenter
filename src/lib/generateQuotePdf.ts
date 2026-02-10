@@ -148,7 +148,7 @@ export const generateQuotePdf = async (data: QuoteData): Promise<Blob> => {
 
   // Right column - Customer
   const rightCol = margin + colWidth + 10;
-  let yRight = 52;
+  let yRight = 58;
 
   doc.setTextColor(100, 116, 139);
   doc.setFontSize(8);
