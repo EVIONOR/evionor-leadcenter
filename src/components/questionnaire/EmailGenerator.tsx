@@ -420,6 +420,7 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
       const productUrl = getProductUrl(product);
       
       try {
+        console.log("Generating PDF for:", product, "price:", chargerPrice);
         const pdfBlob = generateQuotePdf({
           customerName: data.contactName,
           customerEmail: data.email,
@@ -429,8 +430,9 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
           items: [{ name: product, quantity: 1, grossPrice: chargerPrice }],
           productUrl,
         });
+        console.log("PDF blob generated, size:", pdfBlob.size);
 
-        const fileName = `ajanlat-${data.contactName.replace(/\s+/g, "-").toLowerCase()}-${product.replace(/\s+/g, "-").toLowerCase()}-${Date.now()}.pdf`;
+        const fileName = `ajanlat-${data.contactName.replace(/[^a-zA-Z0-9]/g, "-").toLowerCase()}-${product.replace(/[^a-zA-Z0-9]/g, "-").toLowerCase()}-${Date.now()}.pdf`;
         
         const { data: uploadData, error: uploadError } = await supabase.storage
           .from("quotes")
@@ -438,12 +440,15 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
 
         if (uploadError) {
           console.error("PDF upload error:", uploadError);
+          toast.error(`PDF feltöltési hiba: ${product}`, { description: uploadError.message });
         } else {
           const { data: urlData } = supabase.storage.from("quotes").getPublicUrl(fileName);
           quoteUrls[product] = urlData.publicUrl;
+          console.log("PDF uploaded successfully:", quoteUrls[product]);
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error("PDF generation error:", err);
+        toast.error(`PDF generálási hiba: ${product}`, { description: err?.message || "Ismeretlen hiba" });
       }
     }
 

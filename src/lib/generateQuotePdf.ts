@@ -1,5 +1,4 @@
 import jsPDF from "jspdf";
-import { formatPrice } from "@/data/priceList";
 
 interface QuoteItem {
   name: string;
