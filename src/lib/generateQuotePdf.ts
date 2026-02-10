@@ -87,7 +87,7 @@ export const generateQuotePdf = async (data: QuoteData): Promise<Blob> => {
   doc.text(quoteNumber, margin, 44);
 
   // ===== COMPANY & CUSTOMER INFO =====
-  let y = 52;
+  let y = 58;
   const colWidth = contentWidth / 2 - 5;
   const labelCol = margin;
   const valueCol = margin + 42;
