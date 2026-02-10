@@ -413,98 +413,147 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
 
     const email = `
 <!DOCTYPE html>
-<html lang="hu">
+<html lang="hu" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="x-apple-disable-message-reformatting">
+    <meta name="format-detection" content="telephone=no,address=no,email=no,date=no,url=no">
     <title>EV-Töltő Beszerzési Ajánlat</title>
+    <!--[if mso]>
+    <noscript>
+        <xml>
+            <o:OfficeDocumentSettings>
+                <o:PixelsPerInch>96</o:PixelsPerInch>
+            </o:OfficeDocumentSettings>
+        </xml>
+    </noscript>
+    <style>
+        table { border-collapse: collapse; }
+        td { font-family: Arial, sans-serif; }
+    </style>
+    <![endif]-->
+    <style>
+        @media only screen and (max-width: 620px) {
+            .email-container { width: 100% !important; margin: 0 auto !important; }
+            .fluid { max-width: 100% !important; height: auto !important; }
+            .stack-column { display: block !important; width: 100% !important; }
+            .content-padding { padding: 20px 16px !important; }
+        }
+    </style>
 </head>
-<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5;">
-    <div style="max-width: 600px; margin: 32px auto; background-color: #ffffff; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);">
-        
-        <!-- Header -->
-        <div style="background: linear-gradient(135deg, #0071e3 0%, #005bb5 100%); padding: 12px 20px; text-align: center;">
-            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 20px;">
-                <tr>
-                    <td align="center">
-                        <table cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 20px; display: inline-block;" bgcolor="#ffffff">
-                            <tr>
-                                <td style="padding: 8px 20px; background-color: #ffffff; border-radius: 20px;" bgcolor="#ffffff">
-                                    <a href="https://evionor.hu" target="_blank" style="display: block; text-decoration: none;">
-                                        <img src="https://evionor.hu/cdn/shop/files/evionor-logo.png?v=1761743181" alt="Evionor Logo" width="220" style="height: auto; display: block; border: 0; background-color: #ffffff; max-width: 100%;" />
-                                    </a>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-            <h1 style="margin: 0; color: #ffffff; font-size: 22px; font-weight: 600; letter-spacing: -0.5px;">EV-Töltő Beszerzési Ajánlat</h1>
-            <p style="margin: 6px 0 0 0; color: rgba(255, 255, 255, 0.9); font-size: 13px;">Személyre szabott megoldás az Ön igényeihez</p>
-        </div>
+<body style="margin: 0; padding: 0; width: 100%; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; background-color: #f0f2f5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+    
+    <!-- Preheader (hidden inbox preview text) -->
+    <div style="display: none; font-size: 1px; line-height: 1px; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all;">
+        Személyre szabott EV-töltő ajánlat az Ön igényei alapján – ${data.contactName}
+    </div>
 
-        <!-- Content -->
-        <div style="padding: 20px 14px;">
+    <!-- Email wrapper table -->
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f0f2f5;">
+        <tr>
+            <td align="center" style="padding: 32px 12px;">
+
+                <!-- Email container -->
+                <table role="presentation" class="email-container" cellspacing="0" cellpadding="0" border="0" width="600" style="max-width: 600px; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);">
+
+                    <!-- Header -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #0a2540 0%, #1a3a5c 50%, #0071e3 100%); padding: 28px 24px 24px; text-align: center;" bgcolor="#0a2540">
+                            <!-- Logo with fallback -->
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 20px;">
+                                <tr>
+                                    <td align="center">
+                                        <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 14px;" bgcolor="#ffffff">
+                                            <tr>
+                                                <td style="padding: 10px 24px; background-color: #ffffff; border-radius: 14px;" bgcolor="#ffffff">
+                                                    <a href="https://evionor.hu" target="_blank" style="display: block; text-decoration: none;">
+                                                        <img src="https://evionor.hu/cdn/shop/files/evionor-logo.png?v=1761743181" alt="EVIONOR" width="200" style="height: auto; display: block; border: 0; background-color: #ffffff; max-width: 100%; font-family: Arial, sans-serif; font-size: 24px; font-weight: 700; color: #0a2540;" />
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            <!-- Title -->
+                            <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 700; letter-spacing: -0.5px; line-height: 1.3;">EV-Töltő Beszerzési Ajánlat</h1>
+                            <p style="margin: 8px 0 0 0; color: rgba(255, 255, 255, 0.85); font-size: 14px; font-weight: 400;">Személyre szabott megoldás az Ön igényeihez</p>
+                        </td>
+                    </tr>
+
+                    <!-- Content -->
+                    <tr>
+                        <td class="content-padding" style="padding: 28px 24px;">
             
-            <!-- Intro -->
-            <p style="margin: 0 0 24px 0; color: #374151; font-size: 14px; line-height: 1.6;">${getGreeting(data.contactName)}</p>
-            <p style="margin: 0 0 32px 0; color: #374151; font-size: 14px; line-height: 1.6;">Köszönjük érdeklődését! Az Ön által megadott adatok alapján az alábbi ajánlatot készítettük.</p>
+                            <!-- Intro -->
+                            <p style="margin: 0 0 16px 0; color: #1a1a2e; font-size: 15px; line-height: 1.6; font-weight: 500;">${getGreeting(data.contactName)}</p>
+                            <p style="margin: 0 0 32px 0; color: #4a5568; font-size: 14px; line-height: 1.7;">Köszönjük érdeklődését! Az Ön által megadott adatok alapján az alábbi ajánlatot készítettük.</p>
 
-            <!-- Client Data Section -->
-            <div style="margin-bottom: 20px; background-color: #f3f4f6; padding: 10px; border-radius: 12px; border: 2px solid #e5e7eb;">
-                <h2 style="margin: 0 0 16px 0; color: #111827; font-size: 17px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 10px;">Ügyfél adatok</h2>
-                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                            <!-- Client Data Section -->
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 24px; background-color: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden;">
+                                <tr>
+                                    <td style="padding: 16px 16px 6px 16px; border-bottom: 2px solid #e2e8f0;">
+                                        <h2 style="margin: 0; color: #0a2540; font-size: 16px; font-weight: 700; letter-spacing: -0.3px;">Ügyfél adatok</h2>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 12px 16px 16px 16px;">
+                                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                     <tr>
-                        <td style="color: #6b7280; font-size: 12px; padding: 8px 0 4px 0;">Ügyfél</td>
+                        <td style="color: #64748b; font-size: 11px; padding: 6px 0 2px 0; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Ügyfél</td>
                     </tr>
                     <tr>
-                        <td style="color: #111827; font-size: 14px; font-weight: 500; padding: 0 0 10px 0; word-wrap: break-word; word-break: break-word;">${data.contactName}</td>
+                        <td style="color: #0a2540; font-size: 14px; font-weight: 600; padding: 0 0 12px 0; word-wrap: break-word; word-break: break-word;">${data.contactName}</td>
                     </tr>
                     <tr>
-                        <td style="color: #6b7280; font-size: 12px; padding: 8px 0 4px 0;">E-mail</td>
+                        <td style="color: #64748b; font-size: 11px; padding: 6px 0 2px 0; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">E-mail</td>
                     </tr>
                     <tr>
-                        <td style="color: #111827; font-size: 14px; font-weight: 500; padding: 0 0 10px 0; word-wrap: break-word; word-break: break-word;">${data.email}</td>
+                        <td style="color: #0a2540; font-size: 14px; font-weight: 500; padding: 0 0 12px 0; word-wrap: break-word; word-break: break-word;">${data.email}</td>
                     </tr>
                     <tr>
-                        <td style="color: #6b7280; font-size: 12px; padding: 8px 0 4px 0;">Telefonszám</td>
+                        <td style="color: #64748b; font-size: 11px; padding: 6px 0 2px 0; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Telefonszám</td>
                     </tr>
                     <tr>
-                        <td style="color: #111827; font-size: 14px; font-weight: 500; padding: 0 0 10px 0; word-wrap: break-word; word-break: break-word;">${data.phoneNumber}</td>
+                        <td style="color: #0a2540; font-size: 14px; font-weight: 500; padding: 0 0 12px 0; word-wrap: break-word; word-break: break-word;">${data.phoneNumber}</td>
                     </tr>
                     <tr>
-                        <td style="color: #6b7280; font-size: 12px; padding: 8px 0 4px 0;">Jármű</td>
+                        <td style="color: #64748b; font-size: 11px; padding: 6px 0 2px 0; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Jármű</td>
                     </tr>
                     <tr>
-                        <td style="color: #111827; font-size: 14px; font-weight: 500; padding: 0 0 10px 0; word-wrap: break-word; word-break: break-word;">${data.customCar ? data.customCar : `${data.carBrand} ${data.carModel}`}</td>
+                        <td style="color: #0a2540; font-size: 14px; font-weight: 500; padding: 0 0 12px 0; word-wrap: break-word; word-break: break-word;">${data.customCar ? data.customCar : `${data.carBrand} ${data.carModel}`}</td>
                     </tr>
                     ${data.city && data.zipCode
         ? `
                     <tr>
-                        <td style="color: #6b7280; font-size: 12px; padding: 8px 0 4px 0;">Helyszín</td>
+                        <td style="color: #64748b; font-size: 11px; padding: 6px 0 2px 0; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Helyszín</td>
                     </tr>
                     <tr>
-                        <td style="color: #111827; font-size: 14px; font-weight: 500; padding: 0 0 10px 0; word-wrap: break-word; word-break: break-word;">${data.city}, ${data.zipCode}</td>
+                        <td style="color: #0a2540; font-size: 14px; font-weight: 500; padding: 0 0 12px 0; word-wrap: break-word; word-break: break-word;">${data.city}, ${data.zipCode}</td>
                     </tr>
                     `
         : ""
       }
                     <tr>
-                        <td style="color: #6b7280; font-size: 12px; padding: 8px 0 4px 0;">Épület típus</td>
+                        <td style="color: #64748b; font-size: 11px; padding: 6px 0 2px 0; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Épület típus</td>
                     </tr>
                     <tr>
-                        <td style="color: #111827; font-size: 14px; font-weight: 500; padding: 0 0 10px 0; word-wrap: break-word; word-break: break-word;">${data.buildingType.replace("_", " ")}</td>
+                        <td style="color: #0a2540; font-size: 14px; font-weight: 500; padding: 0 0 12px 0; word-wrap: break-word; word-break: break-word;">${data.buildingType.replace("_", " ")}</td>
                     </tr>
                     <tr>
-                        <td style="color: #6b7280; font-size: 12px; padding: 8px 0 4px 0;">Elektromos rendszer</td>
+                        <td style="color: #64748b; font-size: 11px; padding: 6px 0 2px 0; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Elektromos rendszer</td>
                     </tr>
                     <tr>
-                        <td style="color: #111827; font-size: 14px; font-weight: 500; padding: 0 0 10px 0; word-wrap: break-word; word-break: break-word;">${data.phases} fázis, ${data.amperage} A</td>
+                        <td style="color: #0a2540; font-size: 14px; font-weight: 500; padding: 0 0 4px 0; word-wrap: break-word; word-break: break-word;">${data.phases} fázis, ${data.amperage} A</td>
                     </tr>
-                </table>
-            </div>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
 
-            <!-- Charger Sections - OSZLOP SZERŰEN -->
+            <!-- Charger Sections -->
             ${selectedTemplates
         .map((template, templateIndex) => {
           const product = template.products[0];
@@ -516,118 +565,169 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
           const installationPrice = data.needsInstallation ? installationPackage.price : 0;
 
           return `
-            ${templateIndex > 0 ? '<div style="margin: 24px 0; height: 2px; background: linear-gradient(90deg, transparent, #d1d5db 20%, #d1d5db 80%, transparent); opacity: 0.5;"></div>' : ""}
+            ${templateIndex > 0 ? '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 28px 0;"><tr><td style="height: 1px; background: linear-gradient(90deg, transparent 0%, #cbd5e1 30%, #cbd5e1 70%, transparent 100%);"></td></tr></table>' : ""}
             
             <!-- Töltő ${templateIndex + 1}: ${template.name} -->
-            <div style="margin-bottom: 24px; background-color: #f3f4f6; padding: 10px; border-radius: 12px; border: 2px solid #e5e7eb;">
-                <h2 style="margin: 0 0 16px 0; color: #111827; font-size: 17px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 10px;">Ajánlott töltő ${templateIndex + 1}</h2>
-                <p style="margin: 0 0 16px 0; color: #0071e3; font-size: 15px; font-weight: 600; word-wrap: break-word;">${template.name}</p>
-                
-                <!-- Töltő kép -->
-                ${getChargerImageUrl(product)
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 24px; background-color: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden;">
+                <tr>
+                    <td style="padding: 16px 16px 6px 16px; border-bottom: 2px solid #e2e8f0;">
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                                <td>
+                                    <p style="margin: 0 0 2px 0; color: #64748b; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Ajánlott töltő ${templateIndex + 1}</p>
+                                    <h2 style="margin: 0; color: #0a2540; font-size: 16px; font-weight: 700; letter-spacing: -0.3px;">${template.name}</h2>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 16px;">
+                        <!-- Töltő kép -->
+                        ${getChargerImageUrl(product)
               ? `
-                <div style="text-align: center; margin-bottom: 16px; padding: 8px; background-color: white; border-radius: 8px; border: 1px solid #e5e7eb;">
-                    <a href="${productUrl}" style="display: inline-block; text-decoration: none;">
-                        <img src="${getChargerImageUrl(product)}" alt="${product}" style="max-width: 260px; width: 100%; height: auto; display: block; margin: 0 auto;" />
-                    </a>
-                </div>
-                `
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 16px;">
+                            <tr>
+                                <td align="center" style="padding: 12px; background-color: #ffffff; border-radius: 10px; border: 1px solid #e2e8f0;">
+                                    <a href="${productUrl}" style="display: inline-block; text-decoration: none;">
+                                        <img src="${getChargerImageUrl(product)}" alt="${product} – EV töltőállomás" width="240" style="max-width: 240px; width: 100%; height: auto; display: block; margin: 0 auto; border: 0; font-family: Arial, sans-serif; font-size: 14px; color: #64748b;" />
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+                        `
               : ""
             }
-                
-                <div style="padding: 8px; background-color: white; border-radius: 8px; margin-bottom: 16px; border: 1px solid #e5e7eb;">
-                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                        <tr>
-                            <td style="padding-bottom: 6px;"><a href="${productUrl}" style="color: #111827; font-size: 15px; font-weight: 600; text-decoration: none; border-bottom: 2px solid #0071e3; word-wrap: break-word; word-break: break-word; display: inline-block;">${product}</a></td>
-                        </tr>
-                        <tr>
-                            <td style="color: #0071e3; font-size: 17px; font-weight: 700;">${originalPrice ? `<span style="color: #9ca3af; text-decoration: line-through; font-size: 14px; font-weight: 400; margin-right: 8px;">${formatPrice(originalPrice)}</span>` : ''}${formatPrice(chargerPrice)}</td>
-                        </tr>
-                    </table>
-                </div>
-                
-                <div style="margin-top: 16px; padding: 8px; background-color: white; border-radius: 8px; border: 1px solid #e5e7eb;">
-                    <p style="margin: 0 0 10px 0; color: #374151; font-size: 13px; font-weight: 600;">Jellemzők:</p>
-                    <ul style="margin: 0; padding: 0 0 0 18px; color: #374151; font-size: 13px; line-height: 1.7; word-wrap: break-word;">
-                        ${getCharacteristics(product)}
-                    </ul>
-                </div>
+                        
+                        <!-- Product name & price -->
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 16px;">
+                            <tr>
+                                <td style="padding: 14px;">
+                                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                                        <tr>
+                                            <td style="padding-bottom: 8px;"><a href="${productUrl}" style="color: #0a2540; font-size: 15px; font-weight: 700; text-decoration: none; border-bottom: 2px solid #0071e3; word-wrap: break-word; word-break: break-word; display: inline-block;">${product}</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="color: #0071e3; font-size: 20px; font-weight: 800;">${originalPrice ? `<span style="color: #94a3b8; text-decoration: line-through; font-size: 14px; font-weight: 400; margin-right: 8px;">${formatPrice(originalPrice)}</span>` : ''}${formatPrice(chargerPrice)}</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                        
+                        <!-- Characteristics -->
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 10px; border: 1px solid #e2e8f0;">
+                            <tr>
+                                <td style="padding: 14px;">
+                                    <p style="margin: 0 0 10px 0; color: #0a2540; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px;">Jellemzők</p>
+                                    <ul style="margin: 0; padding: 0 0 0 18px; color: #4a5568; font-size: 13px; line-height: 1.8; word-wrap: break-word;">
+                                        ${getCharacteristics(product)}
+                                    </ul>
+                                </td>
+                            </tr>
+                        </table>
 
-                ${loadManagementPackage || data.needsInstallation
+                        ${loadManagementPackage || data.needsInstallation
               ? `
-                <!-- Opciós tételek Section -->
-                <div style="margin-top: 16px; background-color: white; padding: 8px; border-radius: 8px; border: 1px solid #e5e7eb;">
-                    <h3 style="margin: 0 0 12px 0; color: #111827; font-size: 15px; font-weight: 600;">Opciós tételek</h3>
-                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                        ${loadManagementPackage
+                        <!-- Opciós tételek -->
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top: 16px; background-color: #ffffff; border-radius: 10px; border: 1px solid #e2e8f0;">
+                            <tr>
+                                <td style="padding: 14px;">
+                                    <h3 style="margin: 0 0 12px 0; color: #0a2540; font-size: 14px; font-weight: 700;">Opciós tételek</h3>
+                                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                                        ${loadManagementPackage
                 ? `
-                        <tr>
-                            <td style="padding: 6px 0; width: 65%;"><a href="${loadManagementPackage.url}" target="_blank" style="color: #111827; font-size: 13px; font-weight: 500; text-decoration: none; border-bottom: 2px solid #0071e3; word-wrap: break-word; word-break: break-word; display: inline-block;">${loadManagementPackage.name}</a></td>
-                            <td style="padding: 6px 0 6px 10px; color: #0071e3; font-size: 15px; font-weight: 700; text-align: right;">${formatPrice(loadManagementPackage.price)}</td>
-                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px 0; width: 65%;"><a href="${loadManagementPackage.url}" target="_blank" style="color: #0a2540; font-size: 13px; font-weight: 600; text-decoration: none; border-bottom: 2px solid #0071e3; word-wrap: break-word; word-break: break-word; display: inline-block;">${loadManagementPackage.name}</a></td>
+                                            <td style="padding: 8px 0 8px 10px; color: #0071e3; font-size: 15px; font-weight: 800; text-align: right;">${formatPrice(loadManagementPackage.price)}</td>
+                                        </tr>
+                                        `
+                : ""
+              }
+                                        ${data.needsInstallation
+                ? `
+                                        <tr>
+                                            <td style="padding: 8px 0; vertical-align: top; width: 65%;">
+                                                <a href="${installationPackage.url}" target="_blank" style="color: #0a2540; font-size: 13px; font-weight: 600; text-decoration: none; border-bottom: 2px solid #0071e3; word-wrap: break-word; word-break: break-word; display: inline-block;">${installationPackage.name}</a>
+                                            </td>
+                                            <td style="padding: 8px 0 8px 10px; color: #0071e3; font-size: 15px; font-weight: 800; text-align: right; vertical-align: top;">${formatPrice(installationPrice)}</td>
+                                        </tr>
+                                        `
+                : ""
+              }
+                                    </table>
+                                    ${data.needsInstallation
+                ? `
+                                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top: 14px;">
+                                        <tr>
+                                            <td align="center">
+                                                <a href="${getCartUrl(product)}" style="display: inline-block; background-color: #059669; color: #ffffff; padding: 12px 28px; border-radius: 10px; text-decoration: none; font-size: 14px; font-weight: 700; letter-spacing: -0.2px;">Telepítéssel kérem! &rarr;</a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    `
+                : ""
+              }
+                                </td>
+                            </tr>
+                        </table>
                         `
-                : ""
-              }
-                        ${data.needsInstallation
-                ? `
-                        <tr>
-                            <td style="padding: 6px 0; vertical-align: top; width: 65%;">
-                                <a href="${installationPackage.url}" target="_blank" style="color: #111827; font-size: 13px; font-weight: 500; text-decoration: none; border-bottom: 2px solid #0071e3; word-wrap: break-word; word-break: break-word; display: inline-block;">${installationPackage.name}</a>
-                            </td>
-                            <td style="padding: 6px 0 6px 10px; color: #0071e3; font-size: 15px; font-weight: 700; text-align: right; vertical-align: top;">${formatPrice(installationPrice)}</td>
-                        </tr>
-                        `
-                : ""
-              }
-                    </table>
-                    ${data.needsInstallation
-                ? `
-                    <div style="text-align: center; margin-top: 12px;">
-                        <a href="${getCartUrl(product)}" style="display: inline-block; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; padding: 8px 20px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: 600; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);">Telepítéssel kérem!</a>
-                    </div>
-                    `
-                : ""
-              }
-                </div>
-                `
               : ""
             }
 
-                <!-- Price Summary for this charger -->
-                <div style="margin-top: 20px; background-color: white; padding: 8px; border-radius: 8px; border: 2px solid #0071e3;">
-                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                        <tr style="border-bottom: 2px solid #0071e3;">
-                            <td style="padding: 10px 0; color: #111827; font-size: 14px; font-weight: 700;">Töltő ára:</td>
-                            <td style="padding: 10px 0 10px 10px; color: #0071e3; font-size: 17px; font-weight: 700; text-align: right;">${originalPrice ? `<span style="color: #9ca3af; text-decoration: line-through; font-size: 14px; font-weight: 400; margin-right: 8px;">${formatPrice(originalPrice)}</span>` : ''}${formatPrice(chargerPrice)}</td>
-                        </tr>
-                    </table>
-                    <div style="text-align: center; margin-top: 16px;">
-                        <a href="${getProductUrl(product)}" style="display: inline-block; background: linear-gradient(135deg, #0071e3 0%, #005bb5 100%); color: #ffffff; padding: 10px 24px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 600; box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3);">Megnézem</a>
-                    </div>
-                </div>
-            </div>
+                        <!-- Price Summary -->
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top: 20px; background-color: #f0f7ff; border-radius: 10px; border: 2px solid #0071e3; overflow: hidden;">
+                            <tr>
+                                <td style="padding: 16px;">
+                                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                                        <tr>
+                                            <td style="padding: 0 0 12px 0; color: #0a2540; font-size: 14px; font-weight: 700;">Töltő ára:</td>
+                                            <td style="padding: 0 0 12px 0; color: #0071e3; font-size: 20px; font-weight: 800; text-align: right;">${originalPrice ? `<span style="color: #94a3b8; text-decoration: line-through; font-size: 14px; font-weight: 400; margin-right: 8px;">${formatPrice(originalPrice)}</span>` : ''}${formatPrice(chargerPrice)}</td>
+                                        </tr>
+                                    </table>
+                                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                                        <tr>
+                                            <td align="center" style="padding-top: 4px;">
+                                                <a href="${getProductUrl(product)}" style="display: inline-block; background-color: #0071e3; color: #ffffff; padding: 12px 32px; border-radius: 10px; text-decoration: none; font-size: 14px; font-weight: 700; letter-spacing: -0.2px;">Megnézem &rarr;</a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
               `;
         })
         .join("")}
 
             ${selectedAdditionals.length > 0
         ? `
-            <!-- Accessories Section - CSAK EGYSZER -->
-            <div style="margin-bottom: 20px; background-color: #f3f4f6; padding: 10px; border-radius: 12px; border: 2px solid #e5e7eb;">
-                <h2 style="margin: 0 0 16px 0; color: #111827; font-size: 17px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 10px;">Kiegészítők (opcionális)</h2>
-                <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                    ${selectedAdditionals
+            <!-- Accessories Section -->
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 24px; background-color: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden;">
+                <tr>
+                    <td style="padding: 16px 16px 6px 16px; border-bottom: 2px solid #e2e8f0;">
+                        <h2 style="margin: 0; color: #0a2540; font-size: 16px; font-weight: 700; letter-spacing: -0.3px;">Kiegészítők (opcionális)</h2>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 12px 16px 16px 16px;">
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                            ${selectedAdditionals
           .map(
             (item) => `
-                    <tr>
-                        <td style="padding: 6px 0; color: #374151; font-size: 13px; width: 65%;">${item}</td>
-                        <td style="padding: 6px 0 6px 10px; color: #111827; font-size: 13px; font-weight: 500; text-align: right;">${formatPrice(additionalItemPrices[item] || 0)}</td>
-                    </tr>
-                    `,
+                            <tr>
+                                <td style="padding: 8px 0; color: #4a5568; font-size: 13px; width: 65%; border-bottom: 1px solid #f1f5f9;">${item}</td>
+                                <td style="padding: 8px 0 8px 10px; color: #0a2540; font-size: 14px; font-weight: 600; text-align: right; border-bottom: 1px solid #f1f5f9;">${formatPrice(additionalItemPrices[item] || 0)}</td>
+                            </tr>
+                            `,
           )
           .join("")}
-                </table>
-            </div>
+                        </table>
+                    </td>
+                </tr>
+            </table>
             `
         : ""
       }
@@ -641,101 +741,157 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
           data.networkExpansion
           ? `
             <!-- Additional Installation Requirements -->
-            <div style="margin-bottom: 20px; background-color: #f3f4f6; padding: 10px; border-radius: 12px; border: 2px solid #e5e7eb;">
-                <h2 style="margin: 0 0 16px 0; color: #111827; font-size: 17px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 10px;">További telepítési követelmények</h2>
-                <div style="padding: 8px; background-color: white; border-radius: 8px; border: 1px solid #e5e7eb;">
-                    <ul style="margin: 0 0 10px 0; padding: 0 0 0 18px; color: #374151; font-size: 13px; line-height: 1.7; word-wrap: break-word;">
-                        ${data.needsPole ? "<li>Oszlop szükséges</li>" : ""}
-                        ${data.needsElectricalPlanning ? "<li>Villamos tervezés szükséges</li>" : ""}
-                        ${data.overvoltageProtection ? "<li>Túlfeszültség védelem</li>" : ""}
-                        ${data.infrastructureDevelopment && data.infrastructureDetails ? `<li>Infrastruktúra fejlesztés: ${data.infrastructureDetails}</li>` : ""}
-                        ${data.networkExpansion ? `<li>Hálózatbővítés: ${data.expansionPhase} fázis, ${data.expansionAmperage} A</li>` : ""}
-                    </ul>
-                    <p style="margin: 0; padding: 10px; background-color: #eff6ff; border-left: 3px solid #3b82f6; color: #1e3a8a; font-size: 12px; line-height: 1.6; word-wrap: break-word;">
-                        <strong>Megjegyzés:</strong> A sztenderd telepítési tartalmon túli munkavégzésről a helyszínen készül lista. Az árlistája a <a href="https://www.evionor.hu" style="color: #0071e3; text-decoration: underline;">honlapunkon elérhető</a>.
-                    </p>
-                </div>
-            </div>
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 24px; background-color: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden;">
+                <tr>
+                    <td style="padding: 16px 16px 6px 16px; border-bottom: 2px solid #e2e8f0;">
+                        <h2 style="margin: 0; color: #0a2540; font-size: 16px; font-weight: 700; letter-spacing: -0.3px;">További telepítési követelmények</h2>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 12px 16px 16px 16px;">
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 8px; border: 1px solid #e2e8f0;">
+                            <tr>
+                                <td style="padding: 12px;">
+                                    <ul style="margin: 0 0 10px 0; padding: 0 0 0 18px; color: #4a5568; font-size: 13px; line-height: 1.8; word-wrap: break-word;">
+                                        ${data.needsPole ? "<li>Oszlop szükséges</li>" : ""}
+                                        ${data.needsElectricalPlanning ? "<li>Villamos tervezés szükséges</li>" : ""}
+                                        ${data.overvoltageProtection ? "<li>Túlfeszültség védelem</li>" : ""}
+                                        ${data.infrastructureDevelopment && data.infrastructureDetails ? `<li>Infrastruktúra fejlesztés: ${data.infrastructureDetails}</li>` : ""}
+                                        ${data.networkExpansion ? `<li>Hálózatbővítés: ${data.expansionPhase} fázis, ${data.expansionAmperage} A</li>` : ""}
+                                    </ul>
+                                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #eff6ff; border-radius: 6px;">
+                                        <tr>
+                                            <td style="padding: 10px 12px; border-left: 3px solid #3b82f6; color: #1e3a8a; font-size: 12px; line-height: 1.6; word-wrap: break-word;">
+                                                <strong>Megjegyzés:</strong> A sztenderd telepítési tartalmon túli munkavégzésről a helyszínen készül lista. Az árlistája a <a href="https://www.evionor.hu" style="color: #0071e3; text-decoration: underline;">honlapunkon elérhető</a>.
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
             `
           : ""
         }
 
             ${data.groundworkWallPenetration
           ? `
-            <div style="margin-bottom: 20px; padding: 8px; background-color: #fef3c7; border-radius: 8px; border-left: 4px solid #f59e0b;">
-                <p style="margin: 0 0 6px 0; color: #92400e; font-size: 13px; font-weight: 600;">Földmunka/Faláttörés:</p>
-                <p style="margin: 0; color: #78350f; font-size: 13px; line-height: 1.6; word-wrap: break-word;">${data.groundworkWallPenetration}</p>
-            </div>
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 24px;">
+                <tr>
+                    <td style="padding: 14px; background-color: #fef3c7; border-radius: 10px; border-left: 4px solid #f59e0b;">
+                        <p style="margin: 0 0 6px 0; color: #92400e; font-size: 13px; font-weight: 700;">Földmunka/Faláttörés:</p>
+                        <p style="margin: 0; color: #78350f; font-size: 13px; line-height: 1.6; word-wrap: break-word;">${data.groundworkWallPenetration}</p>
+                    </td>
+                </tr>
+            </table>
             `
           : ""
         }
 
             <!-- Standard Installation Description -->
-            <div style="margin-bottom: 20px; background-color: #f3f4f6; padding: 10px; border-radius: 12px; border: 2px solid #e5e7eb;">
-                <h2 style="margin: 0 0 16px 0; color: #111827; font-size: 17px; font-weight: 600; border-bottom: 2px solid #d1d5db; padding-bottom: 10px;">Sztenderd telepítés</h2>
-                <div style="padding: 8px; background-color: white; border-radius: 8px; border: 1px solid #e5e7eb;">
-                    <p style="margin: 0 0 10px 0; color: #374151; font-size: 13px; line-height: 1.7;">
-                        A telepítés magában foglalja:
-                    </p>
-                    <ul style="margin: 0; padding: 0 0 0 18px; color: #374151; font-size: 13px; line-height: 1.7;">
-                        <li>Áramvédő kapcsoló (Legrand) beépítése meglévő szekrénybe</li>
-                        <li>Kismegszakító (Legrand) beszerelése meglévő szekrénybe</li>
-                        <li>Kültéri vagy beltéri kábel rögzítése (5m)</li>
-                        <li>Töltőállomás szakszerű felszerelése</li>
-                        <li>Beüzemelés és átadás</li>
-                    </ul>
-                </div>
-            </div>
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 24px; background-color: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden;">
+                <tr>
+                    <td style="padding: 16px 16px 6px 16px; border-bottom: 2px solid #e2e8f0;">
+                        <h2 style="margin: 0; color: #0a2540; font-size: 16px; font-weight: 700; letter-spacing: -0.3px;">Sztenderd telepítés</h2>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 12px 16px 16px 16px;">
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 8px; border: 1px solid #e2e8f0;">
+                            <tr>
+                                <td style="padding: 12px;">
+                                    <p style="margin: 0 0 10px 0; color: #4a5568; font-size: 13px; line-height: 1.7;">
+                                        A telepítés magában foglalja:
+                                    </p>
+                                    <ul style="margin: 0; padding: 0 0 0 18px; color: #4a5568; font-size: 13px; line-height: 1.8;">
+                                        <li>Áramvédő kapcsoló (Legrand) beépítése meglévő szekrénybe</li>
+                                        <li>Kismegszakító (Legrand) beszerelése meglévő szekrénybe</li>
+                                        <li>Kültéri vagy beltéri kábel rögzítése (5m)</li>
+                                        <li>Töltőállomás szakszerű felszerelése</li>
+                                        <li>Beüzemelés és átadás</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
             `
         : ""
       }
 
             <!-- Process Section -->
-            <div style="margin-bottom: 32px; background-color: #f9fafb; padding: 10px; border-radius: 12px;">
-                <h2 style="margin: 0 0 16px 0; color: #111827; font-size: 17px; font-weight: 600;">Folyamat</h2>
-                <ol style="margin: 0; padding: 0 0 0 18px; color: #374151; font-size: 13px; line-height: 1.8;">
-                    ${data.needsInstallation
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 32px; background-color: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden;">
+                <tr>
+                    <td style="padding: 16px 16px 6px 16px; border-bottom: 2px solid #e2e8f0;">
+                        <h2 style="margin: 0; color: #0a2540; font-size: 16px; font-weight: 700; letter-spacing: -0.3px;">Folyamat</h2>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 12px 16px 16px 16px;">
+                        <ol style="margin: 0; padding: 0 0 0 18px; color: #4a5568; font-size: 13px; line-height: 2;">
+                            ${data.needsInstallation
         ? `
-                    <li>Webshop megrendelés leadása</li>
-                    <li>Telepítés ütemezése</li>
-                    <li>Szakszerű kivitelezés 10 munkanapon belül</li>
-                    `
+                            <li>Webshop megrendelés leadása</li>
+                            <li>Telepítés ütemezése</li>
+                            <li>Szakszerű kivitelezés 10 munkanapon belül</li>
+                            `
         : `
-                    <li>Webshop megrendelés leadása</li>
-                    <li>Szállítás 5 munkanapon belül</li>
-                    `
+                            <li>Webshop megrendelés leadása</li>
+                            <li>Szállítás 5 munkanapon belül</li>
+                            `
       }
-                </ol>
-            </div>
+                        </ol>
+                    </td>
+                </tr>
+            </table>
 
             ${data.otherComments
         ? `
             <!-- Other Comments -->
-            <div style="margin-bottom: 32px; padding: 8px; background-color: #eff6ff; border-radius: 8px; border-left: 4px solid #3b82f6;">
-                <h2 style="margin: 0 0 10px 0; color: #1e40af; font-size: 15px; font-weight: 600;">Egyéb megjegyzések</h2>
-                <p style="margin: 0; color: #1e3a8a; font-size: 13px; line-height: 1.6; word-wrap: break-word;">${data.otherComments}</p>
-            </div>
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 32px;">
+                <tr>
+                    <td style="padding: 14px; background-color: #eff6ff; border-radius: 10px; border-left: 4px solid #3b82f6;">
+                        <h2 style="margin: 0 0 10px 0; color: #1e40af; font-size: 14px; font-weight: 700;">Egyéb megjegyzések</h2>
+                        <p style="margin: 0; color: #1e3a8a; font-size: 13px; line-height: 1.6; word-wrap: break-word;">${data.otherComments}</p>
+                    </td>
+                </tr>
+            </table>
             `
         : ""
       }
 
-            <!-- Closing -->
-            <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid #e5e7eb;">
-                <p style="margin: 0 0 20px 0; color: #374151; font-size: 14px; line-height: 1.6;">További kérdés esetén állunk rendelkezésére!</p>
-                <p style="margin: 0 0 6px 0; color: #6b7280; font-size: 13px;">Üdvözlettel,</p>
-                <p style="margin: 0 0 14px 0; color: #111827; font-size: 13px; font-weight: 600;">${senderName}</p>
-                <p style="margin: 0 0 4px 0; color: #111827; font-size: 13px; font-weight: 600;">Az EVIONOR Csapata</p>
-                <p style="margin: 0 0 4px 0; color: #0071e3; font-size: 13px;">+36 20 581 9166</p>
-                <p style="margin: 0 0 4px 0; color: #0071e3; font-size: 13px;"><a href="mailto:info@evionor.hu" style="color: #0071e3; text-decoration: none;">info@evionor.hu</a></p>
-                <p style="margin: 0; color: #0071e3; font-size: 13px;"><a href="https://www.evionor.hu" style="color: #0071e3; text-decoration: none;">www.evionor.hu</a></p>
-            </div>
-        </div>
+                            <!-- Closing -->
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top: 2px solid #e2e8f0; padding-top: 0;">
+                                <tr>
+                                    <td style="padding-top: 24px;">
+                                        <p style="margin: 0 0 20px 0; color: #4a5568; font-size: 14px; line-height: 1.6;">További kérdés esetén állunk rendelkezésére!</p>
+                                        <p style="margin: 0 0 6px 0; color: #64748b; font-size: 13px;">Üdvözlettel,</p>
+                                        <p style="margin: 0 0 14px 0; color: #0a2540; font-size: 14px; font-weight: 700;">${senderName}</p>
+                                        <p style="margin: 0 0 6px 0; color: #0a2540; font-size: 13px; font-weight: 700;">Az EVIONOR Csapata</p>
+                                        <p style="margin: 0 0 4px 0;"><a href="tel:+36205819166" style="color: #0071e3; font-size: 13px; text-decoration: none;">+36 20 581 9166</a></p>
+                                        <p style="margin: 0 0 4px 0;"><a href="mailto:info@evionor.hu" style="color: #0071e3; font-size: 13px; text-decoration: none;">info@evionor.hu</a></p>
+                                        <p style="margin: 0;"><a href="https://www.evionor.hu" style="color: #0071e3; font-size: 13px; text-decoration: none;">www.evionor.hu</a></p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
 
-        <!-- Footer -->
-        <div style="background-color: #f9fafb; padding: 10px 20px; text-align: center; border-top: 1px solid #e5e7eb;">
-            <p style="margin: 0; color: #9ca3af; font-size: 12px;">EVIONOR Magyarország 2025 ©</p>
-        </div>
-    </div>
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background-color: #0a2540; padding: 20px 24px; text-align: center;" bgcolor="#0a2540">
+                            <p style="margin: 0 0 4px 0; color: rgba(255, 255, 255, 0.7); font-size: 12px;">EVIONOR Magyarország &copy; 2025</p>
+                            <p style="margin: 0; color: rgba(255, 255, 255, 0.5); font-size: 11px;">Elektromos autó töltési megoldások</p>
+                        </td>
+                    </tr>
+                </table>
+
+            </td>
+        </tr>
+    </table>
 </body>
 </html>
     `.trim();
