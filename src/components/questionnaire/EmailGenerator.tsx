@@ -11,6 +11,7 @@ import { additionalItemPrices, formatPrice, priceList } from "@/data/priceList";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { saveSavedQuestionnaireResponse } from "@/integrations/evionor/client";
 import { supabase } from "@/integrations/supabase/client";
+import { generateQuotePdf } from "@/lib/generateQuotePdf";
 
 interface EmailGeneratorProps {
   data: QuestionnaireData;
@@ -411,6 +412,41 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
       return sum + (additionalItemPrices[item] || 0);
     }, 0);
 
+    // Generate and upload PDF quotes for each charger
+    const quoteUrls: Record<string, string> = {};
+    for (const template of selectedTemplates) {
+      const product = template.products[0];
+      const chargerPrice = findProductPrice(product);
+      const productUrl = getProductUrl(product);
+      
+      try {
+        const pdfBlob = generateQuotePdf({
+          customerName: data.contactName,
+          customerEmail: data.email,
+          customerPhone: data.phoneNumber,
+          customerCity: data.city,
+          customerZip: data.zipCode,
+          items: [{ name: product, quantity: 1, grossPrice: chargerPrice }],
+          productUrl,
+        });
+
+        const fileName = `ajanlat-${data.contactName.replace(/\s+/g, "-").toLowerCase()}-${product.replace(/\s+/g, "-").toLowerCase()}-${Date.now()}.pdf`;
+        
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from("quotes")
+          .upload(fileName, pdfBlob, { contentType: "application/pdf", upsert: true });
+
+        if (uploadError) {
+          console.error("PDF upload error:", uploadError);
+        } else {
+          const { data: urlData } = supabase.storage.from("quotes").getPublicUrl(fileName);
+          quoteUrls[product] = urlData.publicUrl;
+        }
+      } catch (err) {
+        console.error("PDF generation error:", err);
+      }
+    }
+
     const email = `
 <!DOCTYPE html>
 <html lang="hu" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -688,7 +724,8 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                         <tr>
                                             <td align="center" style="padding-top: 4px;">
-                                                <a href="${getProductUrl(product)}" style="display: inline-block; background-color: #0071e3; color: #ffffff; padding: 12px 32px; border-radius: 10px; text-decoration: none; font-size: 14px; font-weight: 700; letter-spacing: -0.2px;">Megnézem &rarr;</a>
+                                                <a href="${getProductUrl(product)}" style="display: inline-block; background-color: #0071e3; color: #ffffff; padding: 12px 28px; border-radius: 10px; text-decoration: none; font-size: 14px; font-weight: 700; letter-spacing: -0.2px;">Megnézem &rarr;</a>
+                                                ${quoteUrls[product] ? `<a href="${quoteUrls[product]}" style="display: inline-block; background-color: #0a2540; color: #ffffff; padding: 12px 28px; border-radius: 10px; text-decoration: none; font-size: 14px; font-weight: 700; letter-spacing: -0.2px; margin-left: 8px;">Ajánlat letöltése &#x1F4C4;</a>` : ''}
                                             </td>
                                         </tr>
                                     </table>
