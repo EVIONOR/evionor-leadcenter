@@ -28,7 +28,7 @@ const formatDate = (date: Date): string => {
   return `${date.getFullYear()}. ${String(date.getMonth() + 1).padStart(2, "0")}. ${String(date.getDate()).padStart(2, "0")}.`;
 };
 
-export const generateQuotePdf = (data: QuoteData): Blob => {
+export const generateQuotePdf = async (data: QuoteData): Promise<Blob> => {
   const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
   const pageWidth = 210;
   const margin = 20;
@@ -57,68 +57,76 @@ export const generateQuotePdf = (data: QuoteData): Blob => {
   doc.setFont("helvetica", "normal");
   doc.text(quoteNumber, margin, 28);
 
-  doc.setFontSize(16);
-  doc.setFont("helvetica", "bold");
-  doc.text("EVIONOR", pageWidth - margin, 18, { align: "right" });
-  doc.setFontSize(9);
-  doc.setFont("helvetica", "normal");
-  doc.text("evionor.hu", pageWidth - margin, 26, { align: "right" });
+  // Logo in top-right corner
+  try {
+    const logoImg = await loadImage("/images/evionor-logo-pdf.png");
+    doc.addImage(logoImg, "PNG", pageWidth - margin - 40, 8, 40, 24, undefined, "FAST");
+  } catch (e) {
+    // Fallback text if logo fails
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
+    doc.text("EVIONOR", pageWidth - margin, 18, { align: "right" });
+  }
 
   // ===== COMPANY & CUSTOMER INFO =====
   let y = 52;
   const colWidth = contentWidth / 2 - 5;
+  const labelCol = margin;
+  const valueCol = margin + 42;
 
   // Left column - Company
   doc.setTextColor(100, 116, 139); // #64748b
   doc.setFontSize(8);
   doc.setFont("helvetica", "bold");
-  doc.text("ÁRAJÁNLAT ADÓ", margin, y);
+  doc.text("ÁRAJÁNLAT KIBOCSÁTÓ", labelCol, y);
 
   y += 6;
   doc.setTextColor(10, 37, 64);
   doc.setFontSize(10);
   doc.setFont("helvetica", "bold");
-  doc.text("Nordisk Inova Kft", margin, y);
+  doc.text("Nordisk Inova Kft", labelCol, y);
 
   y += 5;
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
-  doc.text("Varjú Kálmán utca 19.", margin, y);
+  doc.text("Varjú Kálmán utca 19.", labelCol, y);
   y += 4;
-  doc.text("1194 Budapest, Magyarország", margin, y);
+  doc.text("1194 Budapest, Magyarország", labelCol, y);
 
   y += 7;
   doc.setFontSize(8);
   doc.setTextColor(100, 116, 139);
-  doc.text("Adószám:", margin, y);
+  doc.text("Adószám:", labelCol, y);
   doc.setTextColor(10, 37, 64);
-  doc.text("32900545-2-43", margin + 22, y);
+  doc.text("32900545-2-43", valueCol, y);
 
   y += 4;
   doc.setTextColor(100, 116, 139);
-  doc.text("Cégjegyzékszám:", margin, y);
+  doc.text("Cégjegyzékszám:", labelCol, y);
   doc.setTextColor(10, 37, 64);
-  doc.text("01-09-448550", margin + 35, y);
+  doc.text("01-09-448550", valueCol, y);
 
   y += 4;
   doc.setTextColor(100, 116, 139);
-  doc.text("Közösségi adószám:", margin, y);
+  doc.text("Közösségi adószám:", labelCol, y);
   doc.setTextColor(10, 37, 64);
-  doc.text("HU32900545", margin + 40, y);
+  doc.text("HU32900545", valueCol, y);
 
   y += 7;
   doc.setTextColor(100, 116, 139);
   doc.setFont("helvetica", "bold");
-  doc.text("BANKSZÁMLASZÁM", margin, y);
+  doc.text("BANKSZÁMLASZÁM", labelCol, y);
   y += 4;
   doc.setTextColor(10, 37, 64);
   doc.setFont("helvetica", "normal");
-  doc.text("HU25 1041 0400 0000 0190 1630 8774", margin, y);
+  doc.text("IBAN: HU25 1041 0400 0000 0190 1630 8774", labelCol, y);
+  y += 4;
+  doc.text("GIRO: 10410400-00000190-16308774", labelCol, y);
   y += 4;
   doc.setTextColor(100, 116, 139);
-  doc.text("Bank neve:", margin, y);
+  doc.text("Bank neve:", labelCol, y);
   doc.setTextColor(10, 37, 64);
-  doc.text("K&H Bank", margin + 22, y);
+  doc.text("K&H Bank", labelCol + 22, y);
 
   // Right column - Customer
   const rightCol = margin + colWidth + 10;
@@ -127,7 +135,7 @@ export const generateQuotePdf = (data: QuoteData): Blob => {
   doc.setTextColor(100, 116, 139);
   doc.setFontSize(8);
   doc.setFont("helvetica", "bold");
-  doc.text("ÁRAJÁNLAT KÉRŐ", rightCol, yRight);
+  doc.text("ÜGYFÉL ADATAI", rightCol, yRight);
 
   yRight += 6;
   doc.setTextColor(10, 37, 64);
