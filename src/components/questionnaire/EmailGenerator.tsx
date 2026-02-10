@@ -421,7 +421,7 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
       
       try {
         console.log("Generating PDF for:", product, "price:", chargerPrice);
-        const pdfBlob = generateQuotePdf({
+        const pdfBlob = await generateQuotePdf({
           customerName: data.contactName,
           customerEmail: data.email,
           customerPhone: data.phoneNumber,
