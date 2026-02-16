@@ -4,24 +4,18 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { QuestionnaireData } from "@/types/questionnaire";
 import { getCityByZip } from "@/data/hungarianCitiesComplete";
-import { carBrands, getModelsByBrand } from "@/data/carBrands";
+import { useEVData } from "@/hooks/useEVData";
+import { SearchableSelect } from "@/components/SearchableSelect";
 
 interface BasicInfoSectionProps {
   form: UseFormReturn<QuestionnaireData>;
 }
 
 export const BasicInfoSection = ({ form }: BasicInfoSectionProps) => {
+  const { brands, getModelsByBrand, isLoading } = useEVData();
   const selectedBrand = form.watch("carBrand");
   const selectedModel = form.watch("carModel");
   const availableModels = selectedBrand ? getModelsByBrand(selectedBrand) : [];
-  
-  // Check if the selected model exists in available models
-  const isCustomModel = selectedModel && !availableModels.includes(selectedModel) && selectedModel !== "Egyéb modell";
-  
-  // Add the custom model to the list if it doesn't exist
-  const modelsToShow = isCustomModel 
-    ? [...availableModels, selectedModel] 
-    : availableModels;
   
   const showCustomField = selectedBrand === "Egyéb" || selectedModel === "Egyéb modell";
   return (
@@ -82,26 +76,23 @@ export const BasicInfoSection = ({ form }: BasicInfoSectionProps) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Autó márka *</FormLabel>
-              <Select 
-                onValueChange={(value) => {
-                  field.onChange(value);
-                  form.setValue("carModel", "");
-                }} 
-                value={field.value}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Válasszon márkát" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent className="max-h-[300px]">
-                  {carBrands.map((brand) => (
-                    <SelectItem key={brand.brand} value={brand.brand}>
-                      {brand.brand}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <FormControl>
+                <SearchableSelect
+                  value={field.value}
+                  onValueChange={(value) => {
+                    field.onChange(value);
+                    form.setValue("carModel", "");
+                  }}
+                  options={[
+                    ...brands.map(b => ({ value: b, label: b })),
+                    { value: "Egyéb", label: "Egyéb" }
+                  ]}
+                  placeholder="Válasszon márkát"
+                  searchPlaceholder="Márka keresése..."
+                  emptyMessage="Nem található márka"
+                  disabled={isLoading}
+                />
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}
@@ -113,24 +104,24 @@ export const BasicInfoSection = ({ form }: BasicInfoSectionProps) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Autó típus *</FormLabel>
-              <Select 
-                onValueChange={field.onChange} 
-                value={field.value}
-                disabled={!selectedBrand}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder={selectedBrand ? "Válasszon típust" : "Először válasszon márkát"} />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent className="max-h-[300px]">
-                  {modelsToShow.map((model) => (
-                    <SelectItem key={model} value={model}>
-                      {model}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <FormControl>
+                <SearchableSelect
+                  value={field.value}
+                  onValueChange={field.onChange}
+                  options={[
+                    ...availableModels.map(m => ({
+                      value: m.model,
+                      label: `${m.model} (${m.consumption} kWh/100km)`
+                    })),
+                    ...(selectedBrand && selectedBrand !== "Egyéb" ? [{ value: "Egyéb modell", label: "Egyéb modell" }] : []),
+                    ...(selectedBrand === "Egyéb" ? [{ value: "Egyéb modell", label: "Egyéb modell" }] : [])
+                  ]}
+                  placeholder={selectedBrand ? "Válasszon típust" : "Először válasszon márkát"}
+                  searchPlaceholder="Típus keresése..."
+                  emptyMessage="Nem található típus"
+                  disabled={!selectedBrand || isLoading}
+                />
+              </FormControl>
               <FormDescription>
                 {!selectedBrand && "Először válasszon autó márkát"}
               </FormDescription>
