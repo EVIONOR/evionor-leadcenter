@@ -125,7 +125,7 @@ export const QuestionnaireForm = () => {
       email: "teszt@example.com",
       phoneNumber: "+36 20 123 4567",
       carBrand: "Tesla",
-      carModel: "Model 3",
+      carModel: "Model 3 Standard Range",
       customCar: "",
       zipCode: "1011",
       city: "Budapest",
