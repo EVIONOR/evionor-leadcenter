@@ -7,6 +7,7 @@ export interface UseEVDataReturn {
   brands: string[];
   getModelsByBrand: (brand: string) => EVModel[];
   getConsumption: (brand: string, model: string) => number;
+  getOnboardChargerKw: (brand: string, model: string) => number | undefined;
   isLoading: boolean;
   isUsingFallback: boolean;
 }
@@ -41,11 +42,17 @@ export function useEVData(): UseEVDataReturn {
     return ev?.consumption || 17.0;
   };
 
+  const getOnboardChargerKw = (brand: string, model: string): number | undefined => {
+    const ev = models.find(m => m.brand === brand && m.model === model);
+    return ev?.onboardChargerKw;
+  };
+
   return {
     models,
     brands,
     getModelsByBrand,
     getConsumption,
+    getOnboardChargerKw,
     isLoading,
     isUsingFallback,
   };

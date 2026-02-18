@@ -12,10 +12,11 @@ interface BasicInfoSectionProps {
 }
 
 export const BasicInfoSection = ({ form }: BasicInfoSectionProps) => {
-  const { brands, getModelsByBrand, isLoading } = useEVData();
+  const { brands, getModelsByBrand, getOnboardChargerKw, isLoading } = useEVData();
   const selectedBrand = form.watch("carBrand");
   const selectedModel = form.watch("carModel");
   const availableModels = selectedBrand ? getModelsByBrand(selectedBrand) : [];
+  const onboardChargerKw = selectedBrand && selectedModel ? getOnboardChargerKw(selectedBrand, selectedModel) : undefined;
   
   const showCustomField = selectedBrand === "Egyéb" || selectedModel === "Egyéb modell";
   return (
@@ -103,7 +104,7 @@ export const BasicInfoSection = ({ form }: BasicInfoSectionProps) => {
           name="carModel"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Autó típus *</FormLabel>
+              <FormLabel>Autó típus *{onboardChargerKw ? ` (fedélzeti töltő: ${onboardChargerKw}kW)` : ''}</FormLabel>
               <FormControl>
                 <SearchableSelect
                   value={field.value}

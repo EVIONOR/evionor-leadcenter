@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { saveSavedQuestionnaireResponse } from "@/integrations/evionor/client";
 import { supabase } from "@/integrations/supabase/client";
 import { generateQuotePdf } from "@/lib/generateQuotePdf";
+import { useEVData } from "@/hooks/useEVData";
 
 interface EmailGeneratorProps {
   data: QuestionnaireData;
@@ -84,6 +85,9 @@ const getInstallationPackage = (productName: string): InstallationPackage => {
 };
 
 export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorProps) => {
+  const { getOnboardChargerKw } = useEVData();
+  const onboardChargerKw = data.carBrand && data.carModel ? getOnboardChargerKw(data.carBrand, data.carModel) : undefined;
+  const carDisplayText = data.customCar ? data.customCar : `${data.carBrand} ${data.carModel}${onboardChargerKw ? ` (${onboardChargerKw}kW fedélzeti töltő)` : ''}`;
   const [selectedTemplates, setSelectedTemplates] = useState<ChargerTemplate[]>([]);
   const [selectedAdditionals, setSelectedAdditionals] = useState<string[]>([]);
   const [generatedEmail, setGeneratedEmail] = useState("");
@@ -564,7 +568,7 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                         <td style="color: #64748b; font-size: 11px; padding: 6px 0 2px 0; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Jármű</td>
                     </tr>
                     <tr>
-                        <td style="color: #0a2540; font-size: 14px; font-weight: 500; padding: 0 0 12px 0; word-wrap: break-word; word-break: break-word;">${data.customCar ? data.customCar : `${data.carBrand} ${data.carModel}`}</td>
+                        <td style="color: #0a2540; font-size: 14px; font-weight: 500; padding: 0 0 12px 0; word-wrap: break-word; word-break: break-word;">${carDisplayText}</td>
                     </tr>
                     ${data.city && data.zipCode
         ? `
