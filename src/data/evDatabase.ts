@@ -3,6 +3,7 @@ export interface EVModel {
   model: string;
   consumption: number; // kWh/100km
   year?: string;
+  onboardChargerKw?: number;
 }
 
 export const evDatabase: EVModel[] = [

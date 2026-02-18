@@ -14,6 +14,9 @@ export interface OpenEVVehicle {
   range: {
     rated: Array<{ cycle: string; range_km: number }>;
   };
+  charging?: {
+    ac?: { max_power_kw?: number; phases?: number };
+  };
   unique_code: string;
 }
 
@@ -73,6 +76,7 @@ export function transformOpenEVData(dataset: OpenEVDataset): EVModel[] {
       model: buildDisplayModel(v),
       consumption,
       year: String(v.year),
+      onboardChargerKw: v.charging?.ac?.max_power_kw,
     });
   }
 
