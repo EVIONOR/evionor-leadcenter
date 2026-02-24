@@ -336,7 +336,7 @@ const priceList = [
 	},
 	{
 		name: "Zaptec Go 22kW",
-		price: 353000,
+		price: 275000,
 	},
 	{
 		name: "Zaptec Solar MID",
