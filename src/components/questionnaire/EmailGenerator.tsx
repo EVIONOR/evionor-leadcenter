@@ -697,6 +697,13 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                                             </td>
                                             <td style="padding: 8px 0 8px 10px; color: #0071e3; font-size: 15px; font-weight: 800; text-align: right; vertical-align: top;">${formatPrice(installationPrice)}</td>
                                         </tr>
+                                        ${installationPackage.name === "Háromfázisú töltőtelepítés" ? `
+                                        <tr>
+                                            <td colspan="2" style="padding: 6px 0 2px 0; font-size: 12px; color: #059669; font-style: italic; line-height: 1.4;">
+                                                Van saját villanyszerelőd? Rendeld meg csak a töltőt! A telepítésben és a beüzemelésben díjmentesen támogatjuk!
+                                            </td>
+                                        </tr>
+                                        ` : ""}
                                         `
                 : ""
               }
