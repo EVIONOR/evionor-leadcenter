@@ -238,6 +238,7 @@ export function B2BQualifyForm({ lead, onBack, onSaved }: B2BQualifyFormProps) {
             <Select value={form.location_type || ""} onValueChange={(v) => updateField("location_type", v)}>
               <SelectTrigger className="h-9 text-sm"><SelectValue placeholder="Válassz..." /></SelectTrigger>
               <SelectContent>
+                <SelectItem value="family_house">Családi ház</SelectItem>
                 <SelectItem value="parking_garage">Parkolóház</SelectItem>
                 <SelectItem value="outdoor_parking">Kültéri parkoló</SelectItem>
                 <SelectItem value="office">Iroda</SelectItem>
