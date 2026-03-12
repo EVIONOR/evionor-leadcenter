@@ -27,6 +27,7 @@ export interface B2BQualification {
   features_needed: string[];
   offer_sent: boolean;
   discount_applied: boolean;
+  distance_from_panel: string | null;
   // Branch B fields
   has_electrical_prep: boolean | null;
   wants_photos: boolean | null;
