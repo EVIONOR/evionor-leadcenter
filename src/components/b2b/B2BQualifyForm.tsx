@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { evionorAuth } from "@/integrations/evionor/auth-client";
 import type { B2BQuestionnaireResponse } from "@/integrations/evionor/types";
 import type { B2BQualificationInsert } from "@/types/b2b";
 import { B2BEmailGenerator } from "./B2BEmailGenerator";
