@@ -936,7 +936,7 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                     <!-- Footer -->
                     <tr>
                         <td style="background-color: #0a2540; padding: 20px 24px; text-align: center;" bgcolor="#0a2540">
-                            <p style="margin: 0 0 4px 0; color: rgba(255, 255, 255, 0.7); font-size: 12px;">EVIONOR Magyarország &copy; 2025</p>
+                            <p style="margin: 0 0 4px 0; color: rgba(255, 255, 255, 0.7); font-size: 12px;">EVIONOR Magyarország &copy; 2026</p>
                             <p style="margin: 0; color: rgba(255, 255, 255, 0.5); font-size: 11px;">Elektromos autó töltési megoldások</p>
                         </td>
                     </tr>
