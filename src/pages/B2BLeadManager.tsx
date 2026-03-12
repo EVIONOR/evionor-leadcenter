@@ -133,23 +133,31 @@ export default function B2BLeadManager() {
 
   const handleStatusChange = async (lead: B2BLeadWithStatus, newStatus: B2BLeadStatus) => {
     try {
+      const { data: { session } } = await evionorAuth.auth.getSession();
+      const access_token = session?.access_token;
+
       if (lead.qualification_id) {
         // Update existing qualification
-        const { error } = await supabase
-          .from("b2b_qualifications")
-          .update({ status: newStatus } as any)
-          .eq("id", lead.qualification_id);
+        const { error } = await supabase.functions.invoke("manage-qualifications", {
+          body: { action: "update_status", access_token, id: lead.qualification_id, status: newStatus }
+        });
         if (error) throw error;
       } else {
         // Create new qualification with just the status
-        const { error } = await supabase.from("b2b_qualifications").insert({
-          source_b2b_id: lead.id,
-          company_name: lead.company_name,
-          contact_name: lead.name,
-          phone: lead.phone,
-          email: lead.email,
-          status: newStatus,
-        } as any);
+        const { error } = await supabase.functions.invoke("manage-qualifications", {
+          body: {
+            action: "insert",
+            access_token,
+            data: {
+              source_b2b_id: lead.id,
+              company_name: lead.company_name,
+              contact_name: lead.name,
+              phone: lead.phone,
+              email: lead.email,
+              status: newStatus,
+            }
+          }
+        });
         if (error) throw error;
       }
 
