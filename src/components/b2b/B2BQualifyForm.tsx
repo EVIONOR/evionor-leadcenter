@@ -53,6 +53,9 @@ export function B2BQualifyForm({ lead, onBack, onSaved }: B2BQualifyFormProps) {
     company_name: lead.company_name || "",
     contact_name: lead.name || "",
     phone: lead.phone || "",
+    zip_code: "",
+    city: "",
+    address: "",
     email: lead.email || "",
     project_type: "",
     location_type: "",
@@ -172,6 +175,33 @@ export function B2BQualifyForm({ lead, onBack, onSaved }: B2BQualifyFormProps) {
               value={form.email || ""}
               onChange={(e) => updateField("email", e.target.value)}
               className="h-9 text-sm"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label className="text-xs">Irányítószám</Label>
+            <Input
+              value={form.zip_code || ""}
+              onChange={(e) => updateField("zip_code", e.target.value)}
+              className="h-9 text-sm"
+              placeholder="pl. 1052"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label className="text-xs">Város</Label>
+            <Input
+              value={form.city || ""}
+              onChange={(e) => updateField("city", e.target.value)}
+              className="h-9 text-sm"
+              placeholder="pl. Budapest"
+            />
+          </div>
+          <div className="space-y-1.5 md:col-span-2">
+            <Label className="text-xs">Cím</Label>
+            <Input
+              value={form.address || ""}
+              onChange={(e) => updateField("address", e.target.value)}
+              className="h-9 text-sm"
+              placeholder="pl. Kossuth Lajos utca 1."
             />
           </div>
         </CardContent>

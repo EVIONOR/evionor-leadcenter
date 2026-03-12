@@ -16,9 +16,11 @@ export type Database = {
     Tables: {
       b2b_qualifications: {
         Row: {
+          address: string | null
           cable_or_socket: string | null
           car_types: string | null
           charger_count: number | null
+          city: string | null
           company_name: string | null
           contact_name: string | null
           created_at: string
@@ -51,11 +53,14 @@ export type Database = {
           updated_at: string
           urgency: string | null
           wants_photos: boolean | null
+          zip_code: string | null
         }
         Insert: {
+          address?: string | null
           cable_or_socket?: string | null
           car_types?: string | null
           charger_count?: number | null
+          city?: string | null
           company_name?: string | null
           contact_name?: string | null
           created_at?: string
@@ -88,11 +93,14 @@ export type Database = {
           updated_at?: string
           urgency?: string | null
           wants_photos?: boolean | null
+          zip_code?: string | null
         }
         Update: {
+          address?: string | null
           cable_or_socket?: string | null
           car_types?: string | null
           charger_count?: number | null
+          city?: string | null
           company_name?: string | null
           contact_name?: string | null
           created_at?: string
@@ -125,6 +133,7 @@ export type Database = {
           updated_at?: string
           urgency?: string | null
           wants_photos?: boolean | null
+          zip_code?: string | null
         }
         Relationships: []
       }
