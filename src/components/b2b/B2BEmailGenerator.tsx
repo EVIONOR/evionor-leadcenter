@@ -509,7 +509,6 @@ export function B2BEmailGenerator({
                                                             </td>
                                                         </tr>
                                                         ` : ""}
-                                                        ` : ""}
                                                     </table>
                                                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top: 12px;">
                                                         <tr>
