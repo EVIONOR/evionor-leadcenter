@@ -70,6 +70,7 @@ export interface B2BQualificationInsert {
   features_needed?: string[];
   offer_sent?: boolean;
   discount_applied?: boolean;
+  distance_from_panel?: string | null;
   has_electrical_prep?: boolean | null;
   wants_photos?: boolean | null;
   photos_received?: boolean;
