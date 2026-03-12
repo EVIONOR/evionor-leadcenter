@@ -439,11 +439,38 @@ export function B2BEmailGenerator({
                                                     <p style="margin: 0 0 8px 0; color: #0a2540; font-size: 13px; font-weight: 700; text-transform: uppercase;">Telepítés</p>
                                                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                                         <tr>
-                                                            <td style="color: #4a5568; font-size: 13px; padding: 4px 0;">Telepítési csomag (${installLabel})</td>
+                                                            <td style="color: #4a5568; font-size: 13px; padding: 4px 0;">1. töltő telepítése (${installLabel})</td>
                                                             <td style="color: #0a2540; font-size: 14px; font-weight: 600; text-align: right;">${formatPrice(installPrice)}</td>
                                                         </tr>
+                                                        ${emailCount > 1 ? `
+                                                        <tr>
+                                                            <td style="color: #4a5568; font-size: 13px; padding: 4px 0;">További ${emailCount - 1} db telepítés (${installDiscountInfo.label})</td>
+                                                            <td style="color: #059669; font-size: 14px; font-weight: 600; text-align: right;">
+                                                                <span style="color: #94a3b8; text-decoration: line-through; font-size: 12px; margin-right: 4px;">${formatPrice(installPrice)}</span>
+                                                                ${formatPrice(discountedInstallPrice)} / db
+                                                            </td>
+                                                        </tr>
+                                                        ` : ""}
                                                     </table>
                                                     <p style="margin: 10px 0 0 0; color: #4a5568; font-size: 12px; line-height: 1.6;">A telepítés tartalmazza: áramvédő és kismegszakító beépítése, kábel rögzítése, töltő felszerelése, beüzemelés és átadás.</p>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        ` : ""}
+
+                                        ${loadManager ? `
+                                        <!-- Load Manager -->
+                                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top: 16px; background-color: #ffffff; border-radius: 10px; border: 1px solid #e2e8f0;">
+                                            <tr>
+                                                <td style="padding: 14px;">
+                                                    <p style="margin: 0 0 8px 0; color: #0a2540; font-size: 13px; font-weight: 700; text-transform: uppercase;">Terhelésmenedzsment</p>
+                                                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                                                        <tr>
+                                                            <td style="color: #4a5568; font-size: 13px; padding: 4px 0;">${loadManager.name}</td>
+                                                            <td style="color: #0a2540; font-size: 14px; font-weight: 600; text-align: right;">${formatPrice(loadManager.grossPrice)}</td>
+                                                        </tr>
+                                                    </table>
+                                                    <p style="margin: 10px 0 0 0; color: #4a5568; font-size: 12px; line-height: 1.6;">Több töltő egyidejű használatához szükséges terhelésmenedzsment rendszer.</p>
                                                 </td>
                                             </tr>
                                         </table>
@@ -455,24 +482,33 @@ export function B2BEmailGenerator({
                                                 <td style="padding: 16px;">
                                                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                                         <tr>
-                                                            <td style="color: #0a2540; font-size: 14px; font-weight: 700;">Töltő ára${chargerCount && chargerCount > 1 ? ` (${chargerCount} db)` : ""}:</td>
-                                                            <td style="color: #0071e3; font-size: 20px; font-weight: 800; text-align: right;">${formatPrice(discountedPrice * (chargerCount || 1))}</td>
+                                                            <td style="color: #0a2540; font-size: 14px; font-weight: 700;">Töltő ára${emailCount > 1 ? ` (${emailCount} db)` : ""}:</td>
+                                                            <td style="color: #0071e3; font-size: 20px; font-weight: 800; text-align: right;">${formatPrice(discountedPrice * emailCount)}</td>
                                                         </tr>
                                                         ${includeInstallation ? `
                                                         <tr>
-                                                            <td style="color: #0a2540; font-size: 14px; font-weight: 700; padding-top: 8px;">Telepítés${chargerCount && chargerCount > 1 ? ` (${chargerCount} db)` : ""}:</td>
-                                                            <td style="color: #059669; font-size: 16px; font-weight: 700; text-align: right; padding-top: 8px;">${formatPrice(installPrice * (chargerCount || 1))}</td>
+                                                            <td style="color: #0a2540; font-size: 14px; font-weight: 700; padding-top: 8px;">Telepítés (${emailCount} db):</td>
+                                                            <td style="color: #059669; font-size: 16px; font-weight: 700; text-align: right; padding-top: 8px;">${formatPrice(installPrice + discountedInstallPrice * (emailCount - 1))}</td>
                                                         </tr>
+                                                        ` : ""}
+                                                        ${loadManager ? `
+                                                        <tr>
+                                                            <td style="color: #0a2540; font-size: 14px; font-weight: 700; padding-top: 8px;">Terhelésmenedzsment:</td>
+                                                            <td style="color: #059669; font-size: 16px; font-weight: 700; text-align: right; padding-top: 8px;">${formatPrice(loadManager.grossPrice)}</td>
+                                                        </tr>
+                                                        ` : ""}
+                                                        ${includeInstallation || loadManager ? `
                                                         <tr>
                                                             <td colspan="2" style="padding-top: 12px; border-top: 1px solid #cbd5e1;">
                                                                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                                                     <tr>
                                                                         <td style="color: #0a2540; font-size: 16px; font-weight: 800; padding-top: 4px;">Összesen:</td>
-                                                                        <td style="color: #0071e3; font-size: 22px; font-weight: 800; text-align: right; padding-top: 4px;">${formatPrice((discountedPrice + installPrice) * (chargerCount || 1))}</td>
+                                                                        <td style="color: #0071e3; font-size: 22px; font-weight: 800; text-align: right; padding-top: 4px;">${formatPrice(discountedPrice * emailCount + (includeInstallation ? installPrice + discountedInstallPrice * (emailCount - 1) : 0) + (loadManager ? loadManager.grossPrice : 0))}</td>
                                                                     </tr>
                                                                 </table>
                                                             </td>
                                                         </tr>
+                                                        ` : ""}
                                                         ` : ""}
                                                     </table>
                                                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top: 12px;">
