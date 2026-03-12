@@ -15,6 +15,15 @@ const Index = () => {
         <Button
           variant="outline"
           size="sm"
+          onClick={() => navigate('/b2b-leads')}
+          className="flex items-center gap-2"
+        >
+          <Building2 className="h-4 w-4" />
+          B2B Leads
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
           onClick={() => navigate('/leads')}
           className="flex items-center gap-2"
         >

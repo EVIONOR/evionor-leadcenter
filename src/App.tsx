@@ -75,6 +75,14 @@ const App = () => (
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/b2b-leads"
+                element={
+                  <ProtectedRoute>
+                    <B2BLeadManager />
+                  </ProtectedRoute>
+                }
+              />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </AuthProvider>
