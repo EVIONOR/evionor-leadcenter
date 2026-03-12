@@ -34,6 +34,26 @@ const INSTALLATION_TIERS = [
   { label: "30m kábelig", value: "30m", price: 349000 },
 ];
 
+const INSTALLATION_DISCOUNTS: Record<number, { discount: number; label: string }> = {
+  1: { discount: 0, label: "Teljes ár" },
+  2: { discount: 25, label: "25% kedvezmény" },
+  3: { discount: 30, label: "30% kedvezmény" },
+};
+
+const LOAD_MANAGERS = [
+  { brand: "Zaptec", name: "Zaptec Sense GEN CT Clamp Csomag", netPrice: 99450, grossPrice: Math.round(99450 * 1.27) },
+  { brand: "Easee", name: "Easee Equalizer Amp Csomag", netPrice: 110074, grossPrice: Math.round(110074 * 1.27) },
+];
+
+const detectLoadManager = (templates: ChargerTemplate[]): typeof LOAD_MANAGERS[0] | null => {
+  for (const t of templates) {
+    const product = t.products[0].toLowerCase();
+    if (product.includes("zaptec")) return LOAD_MANAGERS[0];
+    if (product.includes("easee")) return LOAD_MANAGERS[1];
+  }
+  return LOAD_MANAGERS[0]; // default
+};
+
 const productUrls: Record<string, string> = {
   "Charge Amps Halo 11kW": "https://evionor.hu/collections/all/products/charge-amps-halo-7-4kw-ev-tolto",
   "Charge Amps Luna 22kW": "https://evionor.hu/collections/all/products/charge-amps-luna-22kw-ev-tolto",
