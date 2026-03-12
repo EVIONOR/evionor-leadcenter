@@ -67,6 +67,7 @@ export function B2BQualifyForm({ lead, onBack, onSaved }: B2BQualifyFormProps) {
     needs_load_management: false,
     has_solar: false,
     has_wifi: false,
+    has_wifi_at_panel: false,
     cable_or_socket: "",
     features_needed: [],
     offer_sent: false,
