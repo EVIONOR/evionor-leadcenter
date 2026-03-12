@@ -285,7 +285,7 @@ export function B2BEmailGenerator({
     const discountedInstallPrice = getDiscountedInstallationPrice();
     const installDiscountInfo = getInstallationDiscountInfo();
     const installLabel = INSTALLATION_TIERS.find(t => t.value === installationTier)?.label || "5m kábelig";
-    const count = chargerCount || 1;
+    const emailCount = chargerCount || 1;
 
     const htmlEmail = `
 <!DOCTYPE html>
