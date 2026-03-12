@@ -81,6 +81,7 @@ export function B2BQualifyForm({ lead, onBack, onSaved }: B2BQualifyFormProps) {
     wants_photos: null,
     photos_received: false,
     needs_technical_callback: false,
+    distance_from_panel: "",
     lead_temperature: "warm",
     next_step: "",
     notes: "",
