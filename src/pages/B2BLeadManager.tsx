@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQueryState, parseAsInteger, parseAsStringLiteral } from "nuqs";
 import { getB2BQuestionnaireResponses } from "@/integrations/evionor/client";
