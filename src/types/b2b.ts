@@ -47,6 +47,9 @@ export interface B2BQualificationInsert {
   company_name?: string | null;
   contact_name?: string | null;
   phone?: string | null;
+  zip_code?: string | null;
+  city?: string | null;
+  address?: string | null;
   email?: string | null;
   project_type?: string | null;
   location_type?: string | null;
