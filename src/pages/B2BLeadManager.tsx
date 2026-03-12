@@ -238,6 +238,27 @@ export default function B2BLeadManager() {
               <p className="text-xs text-muted-foreground">{totalCount} B2B lead</p>
             </div>
           </div>
+          <div className="flex items-center gap-2">
+            <Label htmlFor="perPage" className="text-xs text-muted-foreground whitespace-nowrap">Oldalanként:</Label>
+            <Input
+              id="perPage"
+              type="number"
+              min={1}
+              max={100}
+              defaultValue={itemsPerPage}
+              onChange={(e) => {
+                const value = parseInt(e.target.value);
+                if (value > 0 && value <= 100) {
+                  if (debounceRef.current) clearTimeout(debounceRef.current);
+                  debounceRef.current = setTimeout(() => {
+                    setItemsPerPage(value);
+                    setCurrentPage(1);
+                  }, 3000);
+                }
+              }}
+              className="w-16 h-8 text-xs"
+            />
+          </div>
         </div>
       </div>
 
