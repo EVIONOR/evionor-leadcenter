@@ -22,8 +22,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const checkAdminRole = async (userId: string) => {
     try {
+      const { data: { session } } = await evionorAuth.auth.getSession();
+      const access_token = session?.access_token;
+
       const { data, error } = await supabase.functions.invoke<{ isAdmin: boolean }>('check-admin-role', {
-        body: { userId }
+        body: { userId, access_token }
       });
 
       if (error) {
