@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useQueryState, parseAsInteger, parseAsStringLiteral } from "nuqs";
 import { getB2BQuestionnaireResponses } from "@/integrations/evionor/client";
 import { supabase } from "@/integrations/supabase/client";
+import { evionorAuth } from "@/integrations/evionor/auth-client";
 import type { B2BQuestionnaireResponse } from "@/integrations/evionor/types";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -79,9 +80,11 @@ export default function B2BLeadManager() {
       if (!result?.data) throw new Error("No data received");
 
       // Fetch local qualifications to get statuses
-      const { data: qualifications } = await supabase
-        .from("b2b_qualifications")
-        .select("source_b2b_id, status, id");
+      const { data: { session } } = await evionorAuth.auth.getSession();
+      const { data: qualResult } = await supabase.functions.invoke("manage-qualifications", {
+        body: { action: "list", access_token: session?.access_token }
+      });
+      const qualifications = qualResult?.data || [];
 
       const statusMap = new Map<string, { status: string; id: string }>();
       (qualifications || []).forEach((q: any) => {
@@ -130,23 +133,31 @@ export default function B2BLeadManager() {
 
   const handleStatusChange = async (lead: B2BLeadWithStatus, newStatus: B2BLeadStatus) => {
     try {
+      const { data: { session } } = await evionorAuth.auth.getSession();
+      const access_token = session?.access_token;
+
       if (lead.qualification_id) {
         // Update existing qualification
-        const { error } = await supabase
-          .from("b2b_qualifications")
-          .update({ status: newStatus } as any)
-          .eq("id", lead.qualification_id);
+        const { error } = await supabase.functions.invoke("manage-qualifications", {
+          body: { action: "update_status", access_token, id: lead.qualification_id, status: newStatus }
+        });
         if (error) throw error;
       } else {
         // Create new qualification with just the status
-        const { error } = await supabase.from("b2b_qualifications").insert({
-          source_b2b_id: lead.id,
-          company_name: lead.company_name,
-          contact_name: lead.name,
-          phone: lead.phone,
-          email: lead.email,
-          status: newStatus,
-        } as any);
+        const { error } = await supabase.functions.invoke("manage-qualifications", {
+          body: {
+            action: "insert",
+            access_token,
+            data: {
+              source_b2b_id: lead.id,
+              company_name: lead.company_name,
+              contact_name: lead.name,
+              phone: lead.phone,
+              email: lead.email,
+              status: newStatus,
+            }
+          }
+        });
         if (error) throw error;
       }
 

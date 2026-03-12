@@ -12,23 +12,43 @@ Deno.serve(async (req) => {
 
   try {
     const evionorUrl = Deno.env.get('EVIONOR_SUPABASE_URL');
+    const evionorAnonKey = Deno.env.get('EVIONOR_SUPABASE_ANON_KEY');
     const evionorServiceKey = Deno.env.get('EVIONOR_SUPABASE_SERVICE_KEY');
 
-    if (!evionorUrl || !evionorServiceKey) {
+    if (!evionorUrl || !evionorAnonKey || !evionorServiceKey) {
       throw new Error('EVIONOR Supabase credentials not configured');
     }
 
-    console.log('Checking admin role for user');
-
-    const evionorSupabase = createClient(evionorUrl, evionorServiceKey);
-
-    const { userId } = await req.json();
+    const { userId, access_token } = await req.json();
 
     if (!userId) {
       throw new Error('User ID is required');
     }
 
-    console.log('Checking admin role for user:', userId);
+    // Verify the access token is valid and belongs to the claimed userId
+    if (!access_token || typeof access_token !== 'string') {
+      return new Response(
+        JSON.stringify({ isAdmin: false, error: 'Authentication required' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 401 }
+      );
+    }
+
+    const authClient = createClient(evionorUrl, evionorAnonKey, {
+      auth: { persistSession: false },
+    });
+
+    const { data: { user }, error: authError } = await authClient.auth.getUser(access_token);
+    if (authError || !user || user.id !== userId) {
+      return new Response(
+        JSON.stringify({ isAdmin: false, error: 'Invalid or mismatched token' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 401 }
+      );
+    }
+
+    // Check admin role using service key
+    const evionorSupabase = createClient(evionorUrl, evionorServiceKey, {
+      auth: { persistSession: false },
+    });
 
     const { data, error } = await evionorSupabase.rpc('has_role', {
       _user_id: userId,
@@ -39,8 +59,6 @@ Deno.serve(async (req) => {
       console.error('Error checking admin role:', error);
       throw error;
     }
-
-    console.log('Admin check result:', data);
 
     return new Response(
       JSON.stringify({ isAdmin: data === true }),

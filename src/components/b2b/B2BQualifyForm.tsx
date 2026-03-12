@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { evionorAuth } from "@/integrations/evionor/auth-client";
 import type { B2BQuestionnaireResponse } from "@/integrations/evionor/types";
 import type { B2BQualificationInsert } from "@/types/b2b";
 import { B2BEmailGenerator } from "./B2BEmailGenerator";
@@ -107,7 +108,10 @@ export function B2BQualifyForm({ lead, onBack, onSaved }: B2BQualifyFormProps) {
   const handleSave = async () => {
     setSaving(true);
     try {
-      const { error } = await supabase.from("b2b_qualifications").insert(form as any);
+      const { data: { session } } = await evionorAuth.auth.getSession();
+      const { data, error } = await supabase.functions.invoke("manage-qualifications", {
+        body: { action: "insert", access_token: session?.access_token, data: form }
+      });
       if (error) throw error;
 
       toast({ title: "Mentve", description: "Kvalifikáció sikeresen mentve" });

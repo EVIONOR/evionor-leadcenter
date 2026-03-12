@@ -3,6 +3,7 @@
 // Do not use this client directly in the frontend - always go through edge functions
 
 import { supabase } from "@/integrations/supabase/client";
+import { evionorAuth } from "@/integrations/evionor/auth-client";
 import type {
   B2BQuestionnaireResponse,
   ProductClick,
@@ -13,9 +14,18 @@ import type {
 } from "./types";
 
 /**
+ * Get the current EVIONOR access token for authenticated requests
+ */
+async function getAccessToken(): Promise<string> {
+  const { data: { session } } = await evionorAuth.auth.getSession();
+  if (!session?.access_token) {
+    throw new Error("Not authenticated");
+  }
+  return session.access_token;
+}
+
+/**
  * Query EVIONOR database tables through the edge function
- * @param table - Name of the table to query
- * @param options - Query options (limit, select, filters, pagination, etc.)
  */
 export async function queryEvionorTable<T>(
   table: "product_clicks" | "questionnaire_responses" | "roi_calculator_results" | "b2b_questionnaire_responses",
@@ -27,9 +37,12 @@ export async function queryEvionorTable<T>(
     order?: { column: string; ascending?: boolean };
   },
 ) {
+  const access_token = await getAccessToken();
+
   const { data, error } = await supabase.functions.invoke<{ data: T[]; count: number }>("query-evionor", {
     body: {
       action: "custom_query",
+      access_token,
       query: {
         table,
         select: options?.select || "*",
@@ -70,14 +83,12 @@ export async function getQuestionnaireResponses(options?: {
     filters.status = options.status;
   }
 
-  const result = queryEvionorTable<QuestionnaireResponse>("questionnaire_responses", { 
+  return queryEvionorTable<QuestionnaireResponse>("questionnaire_responses", { 
     limit: options?.limit || 20,
     offset: options?.offset || 0,
     filters: Object.keys(filters).length > 0 ? filters : undefined,
     order: { column: 'created_at', ascending: false }
   });
-  
-  return result;
 }
 
 /**
@@ -91,10 +102,13 @@ export async function getRoiCalculatorResults(limit = 100) {
  * Update questionnaire response status
  */
 export async function updateQuestionnaireStatus(id: string, status: string) {
+  const access_token = await getAccessToken();
+
   const { data, error } = await supabase.functions.invoke<{ data: QuestionnaireResponse }>("query-evionor", {
     body: {
       action: "update",
       table: "questionnaire_responses",
+      access_token,
       update: {
         id,
         data: { status }
@@ -116,10 +130,13 @@ export async function updateQuestionnaireStatus(id: string, status: string) {
 export async function saveSavedQuestionnaireResponse(
   responseData: SavedQuestionnaireResponseInsert
 ) {
+  const access_token = await getAccessToken();
+
   const { data, error } = await supabase.functions.invoke<{ data: SavedQuestionnaireResponse }>("query-evionor", {
     body: {
       action: "insert",
       table: "saved_questionnaire_responses",
+      access_token,
       data: responseData,
     },
   });
@@ -136,9 +153,12 @@ export async function saveSavedQuestionnaireResponse(
  * Get automatic processing setting
  */
 export async function getAutomaticProcessingSetting(): Promise<boolean> {
+  const access_token = await getAccessToken();
+
   const { data, error } = await supabase.functions.invoke<{ data: { enabled: boolean } }>("query-evionor", {
     body: {
       action: "get_setting",
+      access_token,
       setting_key: "automatic_processing_enabled",
     },
   });
@@ -155,9 +175,12 @@ export async function getAutomaticProcessingSetting(): Promise<boolean> {
  * Set automatic processing setting
  */
 export async function setAutomaticProcessingSetting(enabled: boolean): Promise<void> {
+  const access_token = await getAccessToken();
+
   const { error } = await supabase.functions.invoke("query-evionor", {
     body: {
       action: "update_setting",
+      access_token,
       setting_key: "automatic_processing_enabled",
       setting_value: { enabled },
     },
