@@ -184,3 +184,17 @@ export async function triggerLeadProcessing(): Promise<void> {
     throw error;
   }
 }
+
+/**
+ * Get B2B questionnaire responses from EVIONOR
+ */
+export async function getB2BQuestionnaireResponses(options?: {
+  limit?: number;
+  offset?: number;
+}) {
+  return queryEvionorTable<B2BQuestionnaireResponse>("b2b_questionnaire_responses", {
+    limit: options?.limit || 20,
+    offset: options?.offset || 0,
+    order: { column: 'created_at', ascending: false }
+  });
+}
