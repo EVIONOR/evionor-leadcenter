@@ -67,6 +67,7 @@ export function B2BQualifyForm({ lead, onBack, onSaved }: B2BQualifyFormProps) {
     needs_load_management: false,
     has_solar: false,
     has_wifi: false,
+    has_wifi_at_panel: false,
     cable_or_socket: "",
     features_needed: [],
     offer_sent: false,
@@ -363,7 +364,7 @@ export function B2BQualifyForm({ lead, onBack, onSaved }: B2BQualifyFormProps) {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 pt-2">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2">
               <div className="flex items-center gap-2">
                 <Switch
                   checked={form.needs_load_management || false}
@@ -386,7 +387,16 @@ export function B2BQualifyForm({ lead, onBack, onSaved }: B2BQualifyFormProps) {
                   onCheckedChange={(v) => updateField("has_wifi", v)}
                 />
                 <Label className="text-xs flex items-center gap-1">
-                  <Wifi className="h-3 w-3" /> Wi-Fi
+                  <Wifi className="h-3 w-3" /> Wi-Fi a töltőpontnál
+                </Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <Switch
+                  checked={form.has_wifi_at_panel || false}
+                  onCheckedChange={(v) => updateField("has_wifi_at_panel", v)}
+                />
+                <Label className="text-xs flex items-center gap-1">
+                  <Wifi className="h-3 w-3" /> Wi-Fi a betáp elosztónál
                 </Label>
               </div>
             </div>

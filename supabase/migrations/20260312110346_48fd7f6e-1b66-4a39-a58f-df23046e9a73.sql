@@ -1,0 +1,1 @@
+ALTER TABLE public.b2b_qualifications ADD COLUMN has_wifi_at_panel boolean DEFAULT NULL;
