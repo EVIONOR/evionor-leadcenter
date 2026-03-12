@@ -4,6 +4,7 @@
 
 import { supabase } from "@/integrations/supabase/client";
 import type {
+  B2BQuestionnaireResponse,
   ProductClick,
   QuestionnaireResponse,
   RoiCalculatorResult,
@@ -17,7 +18,7 @@ import type {
  * @param options - Query options (limit, select, filters, pagination, etc.)
  */
 export async function queryEvionorTable<T>(
-  table: "product_clicks" | "questionnaire_responses" | "roi_calculator_results",
+  table: "product_clicks" | "questionnaire_responses" | "roi_calculator_results" | "b2b_questionnaire_responses",
   options?: {
     limit?: number;
     offset?: number;
@@ -182,4 +183,18 @@ export async function triggerLeadProcessing(): Promise<void> {
     console.error("Error triggering lead processing:", error);
     throw error;
   }
+}
+
+/**
+ * Get B2B questionnaire responses from EVIONOR
+ */
+export async function getB2BQuestionnaireResponses(options?: {
+  limit?: number;
+  offset?: number;
+}) {
+  return queryEvionorTable<B2BQuestionnaireResponse>("b2b_questionnaire_responses", {
+    limit: options?.limit || 20,
+    offset: options?.offset || 0,
+    order: { column: 'created_at', ascending: false }
+  });
 }
