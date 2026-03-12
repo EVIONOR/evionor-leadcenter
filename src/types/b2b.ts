@@ -19,6 +19,7 @@ export interface B2BQualification {
   needs_load_management: boolean | null;
   has_solar: boolean | null;
   has_wifi: boolean | null;
+  has_wifi_at_panel: boolean | null;
   cable_or_socket: string | null;
   features_needed: string[];
   offer_sent: boolean;
