@@ -202,7 +202,7 @@ export default function B2BLeadManager() {
         <div className="max-w-4xl mx-auto px-4 md:px-8 py-6">
           <B2BQualifyForm
             lead={selectedLead}
-            onBack={() => setSelectedLead(null)}
+            onBack={() => { setSelectedLead(null); fetchResponses(); }}
             onSaved={() => {
               setSelectedLead(null);
               fetchResponses();
