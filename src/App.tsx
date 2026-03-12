@@ -7,6 +7,7 @@ import { NuqsAdapter } from 'nuqs/adapters/react-router';
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import Index from "./pages/Index";
 import LeadManager from "./pages/LeadManager";
+import B2BLeadManager from "./pages/B2BLeadManager";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 
