@@ -957,7 +957,7 @@ function generateEmailHtml(data) {
 
     <!-- Footer -->
     <div class="footer-section" style="background-color: #f9fafb; padding: 10px 20px; text-align: center; border-top: 1px solid #e5e7eb;">
-      <p style="margin: 0; color: #9ca3af; font-size: 12px;">EVIONOR Magyarország 2025 ©</p>
+      <p style="margin: 0; color: #9ca3af; font-size: 12px;">EVIONOR Magyarország 2026 ©</p>
     </div>
   </div>
 </body>
