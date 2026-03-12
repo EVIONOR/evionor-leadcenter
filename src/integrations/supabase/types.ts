@@ -14,6 +14,117 @@ export type Database = {
   }
   public: {
     Tables: {
+      b2b_qualifications: {
+        Row: {
+          cable_or_socket: string | null
+          car_types: string | null
+          charger_count: number | null
+          company_name: string | null
+          contact_name: string | null
+          created_at: string
+          discount_applied: boolean | null
+          email: string | null
+          ev_type: string | null
+          features_needed: string[] | null
+          has_electrical_prep: boolean | null
+          has_own_electrician: boolean | null
+          has_solar: boolean | null
+          has_wifi: boolean | null
+          id: string
+          lead_temperature: string | null
+          location_type: string | null
+          main_fuse: string | null
+          needs_load_management: boolean | null
+          needs_technical_callback: boolean | null
+          next_step: string | null
+          notes: string | null
+          offer_sent: boolean | null
+          phases: string | null
+          phone: string | null
+          photos_received: boolean | null
+          project_type: string | null
+          qualification_branch: string | null
+          source_b2b_id: string | null
+          status: string | null
+          timeline: string | null
+          updated_at: string
+          urgency: string | null
+          wants_photos: boolean | null
+        }
+        Insert: {
+          cable_or_socket?: string | null
+          car_types?: string | null
+          charger_count?: number | null
+          company_name?: string | null
+          contact_name?: string | null
+          created_at?: string
+          discount_applied?: boolean | null
+          email?: string | null
+          ev_type?: string | null
+          features_needed?: string[] | null
+          has_electrical_prep?: boolean | null
+          has_own_electrician?: boolean | null
+          has_solar?: boolean | null
+          has_wifi?: boolean | null
+          id?: string
+          lead_temperature?: string | null
+          location_type?: string | null
+          main_fuse?: string | null
+          needs_load_management?: boolean | null
+          needs_technical_callback?: boolean | null
+          next_step?: string | null
+          notes?: string | null
+          offer_sent?: boolean | null
+          phases?: string | null
+          phone?: string | null
+          photos_received?: boolean | null
+          project_type?: string | null
+          qualification_branch?: string | null
+          source_b2b_id?: string | null
+          status?: string | null
+          timeline?: string | null
+          updated_at?: string
+          urgency?: string | null
+          wants_photos?: boolean | null
+        }
+        Update: {
+          cable_or_socket?: string | null
+          car_types?: string | null
+          charger_count?: number | null
+          company_name?: string | null
+          contact_name?: string | null
+          created_at?: string
+          discount_applied?: boolean | null
+          email?: string | null
+          ev_type?: string | null
+          features_needed?: string[] | null
+          has_electrical_prep?: boolean | null
+          has_own_electrician?: boolean | null
+          has_solar?: boolean | null
+          has_wifi?: boolean | null
+          id?: string
+          lead_temperature?: string | null
+          location_type?: string | null
+          main_fuse?: string | null
+          needs_load_management?: boolean | null
+          needs_technical_callback?: boolean | null
+          next_step?: string | null
+          notes?: string | null
+          offer_sent?: boolean | null
+          phases?: string | null
+          phone?: string | null
+          photos_received?: boolean | null
+          project_type?: string | null
+          qualification_branch?: string | null
+          source_b2b_id?: string | null
+          status?: string | null
+          timeline?: string | null
+          updated_at?: string
+          urgency?: string | null
+          wants_photos?: boolean | null
+        }
+        Relationships: []
+      }
       leads: {
         Row: {
           car_brand: string | null
