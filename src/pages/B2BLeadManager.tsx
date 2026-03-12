@@ -80,9 +80,11 @@ export default function B2BLeadManager() {
       if (!result?.data) throw new Error("No data received");
 
       // Fetch local qualifications to get statuses
-      const { data: qualifications } = await supabase
-        .from("b2b_qualifications")
-        .select("source_b2b_id, status, id");
+      const { data: { session } } = await evionorAuth.auth.getSession();
+      const { data: qualResult } = await supabase.functions.invoke("manage-qualifications", {
+        body: { action: "list", access_token: session?.access_token }
+      });
+      const qualifications = qualResult?.data || [];
 
       const statusMap = new Map<string, { status: string; id: string }>();
       (qualifications || []).forEach((q: any) => {
