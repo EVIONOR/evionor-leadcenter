@@ -224,6 +224,7 @@ export function B2BQualifyForm({ lead, onBack, onSaved }: B2BQualifyFormProps) {
             <Select value={form.project_type || ""} onValueChange={(v) => updateField("project_type", v)}>
               <SelectTrigger className="h-9 text-sm"><SelectValue placeholder="Válassz..." /></SelectTrigger>
               <SelectContent>
+                <SelectItem value="family_house">Családi ház</SelectItem>
                 <SelectItem value="fleet">Flotta töltés</SelectItem>
                 <SelectItem value="workplace">Munkahelyi töltés</SelectItem>
                 <SelectItem value="public">Nyilvános töltő</SelectItem>
