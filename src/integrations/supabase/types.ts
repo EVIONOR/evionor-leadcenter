@@ -30,6 +30,7 @@ export type Database = {
           has_own_electrician: boolean | null
           has_solar: boolean | null
           has_wifi: boolean | null
+          has_wifi_at_panel: boolean | null
           id: string
           lead_temperature: string | null
           location_type: string | null
@@ -66,6 +67,7 @@ export type Database = {
           has_own_electrician?: boolean | null
           has_solar?: boolean | null
           has_wifi?: boolean | null
+          has_wifi_at_panel?: boolean | null
           id?: string
           lead_temperature?: string | null
           location_type?: string | null
@@ -102,6 +104,7 @@ export type Database = {
           has_own_electrician?: boolean | null
           has_solar?: boolean | null
           has_wifi?: boolean | null
+          has_wifi_at_panel?: boolean | null
           id?: string
           lead_temperature?: string | null
           location_type?: string | null
