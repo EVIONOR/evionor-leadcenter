@@ -705,6 +705,23 @@ export function B2BQualifyForm({ lead, onBack, onSaved }: B2BQualifyFormProps) {
         </CardContent>
       </Card>
 
+      {/* Section 6: Email Generator */}
+      {(form.qualification_branch === "A" || form.qualification_branch === "B") && form.email && (
+        <B2BEmailGenerator
+          companyName={form.company_name || ""}
+          contactName={form.contact_name || ""}
+          email={form.email || ""}
+          phone={form.phone || ""}
+          city={form.city || undefined}
+          zipCode={form.zip_code || undefined}
+          address={form.address || undefined}
+          phases={form.phases || undefined}
+          mainFuse={form.main_fuse || undefined}
+          distanceFromPanel={form.distance_from_panel || undefined}
+          chargerCount={form.charger_count || undefined}
+        />
+      )}
+
       {/* Save button */}
       <div className="flex justify-end gap-3 pb-8">
         <Button variant="outline" onClick={onBack}>
