@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import type { B2BQuestionnaireResponse } from "@/integrations/evionor/types";
 import type { B2BQualificationInsert } from "@/types/b2b";
+import { B2BEmailGenerator } from "./B2BEmailGenerator";
 import {
   ArrowLeft,
   Building2,
@@ -25,6 +26,7 @@ import {
   Wifi,
   Cable,
   Thermometer,
+  Ruler,
 } from "lucide-react";
 
 const FEATURE_OPTIONS = [
