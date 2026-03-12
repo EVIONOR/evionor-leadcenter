@@ -193,21 +193,67 @@ export function B2BEmailGenerator({
     }
   };
 
+  const getInstallationDiscountInfo = () => {
+    const count = chargerCount || 1;
+    if (count >= 4) return { discount: 0, label: "Egyedi ajánlat szükséges", isCustom: true };
+    const info = INSTALLATION_DISCOUNTS[count] || INSTALLATION_DISCOUNTS[1];
+    return { ...info, isCustom: false };
+  };
+
+  const getDiscountedInstallationPrice = (): number => {
+    const basePrice = getInstallationPrice();
+    const count = chargerCount || 1;
+    if (count >= 4) return basePrice;
+    const discountInfo = INSTALLATION_DISCOUNTS[count] || INSTALLATION_DISCOUNTS[1];
+    return Math.round(basePrice * (1 - discountInfo.discount / 100));
+  };
+
   const generateEmail = async () => {
     if (selectedTemplates.length === 0) return;
+    const count = chargerCount || 1;
+    if (count >= 4 && includeInstallation) {
+      toast.error("4+ töltőnél egyedi ajánlat szükséges a telepítésre. Kérjük vegye fel a kapcsolatot.");
+      return;
+    }
     setIsGenerating(true);
+
+    const loadManager = count > 1 ? detectLoadManager(selectedTemplates) : null;
 
     // Generate PDFs
     const quoteUrls: Record<string, string> = {};
     for (const template of selectedTemplates) {
       const product = template.products[0];
       const chargerPrice = applyDiscount(findProductPrice(product));
-      const items = [{ name: product, quantity: chargerCount || 1, grossPrice: chargerPrice }];
+      const items = [{ name: product, quantity: count, grossPrice: chargerPrice }];
       if (includeInstallation) {
+        const installDiscountInfo = getInstallationDiscountInfo();
+        const discountedInstallPrice = getDiscountedInstallationPrice();
+        const fullInstallPrice = getInstallationPrice();
+        // First charger full price, rest discounted
+        if (count === 1) {
+          items.push({
+            name: `Telepítés (${INSTALLATION_TIERS.find(t => t.value === installationTier)?.label})`,
+            quantity: 1,
+            grossPrice: fullInstallPrice,
+          });
+        } else {
+          items.push({
+            name: `Telepítés (${INSTALLATION_TIERS.find(t => t.value === installationTier)?.label})`,
+            quantity: 1,
+            grossPrice: fullInstallPrice,
+          });
+          items.push({
+            name: `Telepítés – ${installDiscountInfo.label} (${INSTALLATION_TIERS.find(t => t.value === installationTier)?.label})`,
+            quantity: count - 1,
+            grossPrice: discountedInstallPrice,
+          });
+        }
+      }
+      if (loadManager) {
         items.push({
-          name: `Telepítés (${INSTALLATION_TIERS.find(t => t.value === installationTier)?.label})`,
-          quantity: chargerCount || 1,
-          grossPrice: getInstallationPrice(),
+          name: loadManager.name,
+          quantity: 1,
+          grossPrice: loadManager.grossPrice,
         });
       }
 
