@@ -17,7 +17,7 @@ import type {
  * @param options - Query options (limit, select, filters, pagination, etc.)
  */
 export async function queryEvionorTable<T>(
-  table: "product_clicks" | "questionnaire_responses" | "roi_calculator_results",
+  table: "product_clicks" | "questionnaire_responses" | "roi_calculator_results" | "b2b_questionnaire_responses",
   options?: {
     limit?: number;
     offset?: number;

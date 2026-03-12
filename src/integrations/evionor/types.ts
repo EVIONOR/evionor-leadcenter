@@ -240,6 +240,24 @@ export interface LeadManagerSetting {
   updated_by: string | null;
 }
 
+export interface B2BQuestionnaireResponse {
+  id: string;
+  company_name: string | null;
+  name: string;
+  email: string;
+  phone: string;
+  fleet_count: number;
+  km_per_year: number;
+  charging_stations: number;
+  home_chargers: number;
+  phases: string | null;
+  location: string;
+  timeline: string;
+  usage_environment: string | null;
+  data_consent: boolean;
+  created_at: string;
+}
+
 export interface LeadManagerSettingInsert {
   id?: string;
   setting_key: string;
