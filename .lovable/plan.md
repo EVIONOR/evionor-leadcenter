@@ -1,56 +1,43 @@
 
 
-# B2B Kvalifikacio Bovites - Terv
+# Fedélzeti Tolto (Onboard Charger) Megjelenitese
 
-## 1. B ag bovites: telepitesi es tolto kivalasztasi kerdesek
+## Osszefoglalo
+Az ev-data.json tartalmazza a `charging.ac.max_power_kw` mezot (pl. 11.0 kW), amely a fedélzeti töltő mérete. Ezt az adatot ki kell bővíteni az EVModel interface-be, megjeleníteni a form "Autó típus" label mellett, és beilleszteni az email sablonba az autó típus mellé zárójelben.
 
-A B ag (nincs sajat villanyszerelo) bovul:
-- **Telepitesi korulmenyek**: elerheto betap fazisok, amper, toltopontok tavolsaga a foelosztotol
-- **Tolto kivalasztasi kerdesek**: ugyanazok mint az A agnal (auto tipusok, EV tipus, fazis, biztositek, terhelesmen., napelem, wifi, kabel/aljzat, funkciok)
+## Technikai lepesek
 
-Uj DB oszlopok a `b2b_qualifications` tablaban:
-- `distance_from_panel` (text) -- tavolsag a foelosztotol
+### 1. EVModel interface bovitese
+**Fajl:** `src/data/evDatabase.ts`
+- Uj opcionalis mezo: `onboardChargerKw?: number`
+- A fallback adatbazisban nem lesz kitoltve (opcionalis marad)
 
-A `phases` es `main_fuse` mar letezik, ezeket a B agnal is megjelenitem.
+### 2. OpenEV transzformacio bovitese
+**Fajl:** `src/data/openEvTransform.ts`
+- `OpenEVVehicle` interface-be `charging` mezo hozzaadasa:
+  ```
+  charging?: {
+    ac?: { max_power_kw?: number; phases?: number }
+  }
+  ```
+- `transformOpenEVData` fuggvenyben kinyerni a `v.charging?.ac?.max_power_kw` erteket es tarolni az `EVModel.onboardChargerKw`-ban
 
-## 2. B2B Email Generator komponens
+### 3. useEVData hook bovitese
+**Fajl:** `src/hooks/useEVData.ts`
+- Uj fuggveny: `getOnboardChargerKw(brand, model) => number | undefined`
+- Visszaadja a kivalasztott auto fedélzeti töltőjének méretét
 
-Uj komponens: `src/components/b2b/B2BEmailGenerator.tsx`
+### 4. BasicInfoSection - megjelenites a form label-ben
+**Fajl:** `src/components/questionnaire/sections/BasicInfoSection.tsx`
+- A `selectedModel` kivalasztasa utan lekerni az onboard charger erteket
+- Az "Autó típus" FormLabel szoveg melle kiirni: `Autó típus (fedélzeti töltő: 11kW)` -- csak ha van ertek
 
-Funkcionalitas:
-- **Tolto valasztas**: ugyanazok a chargerTemplates mint a B2C-ben (multi-select)
-- **Kedvezmeny**: operator altal beallithato % vagy fix osszeg kedvezmeny az arakra
-- **Telepites opcionalis**: toggle + kabel tavolsag valasztas a telepitesi arhoz:
-  - 5m kábelig: 219 000 Ft
-  - 10m kábelig: 249 000 Ft
-  - 20m kábelig: 299 000 Ft
-  - 30m kábelig: 349 000 Ft
-- **Email sablon**: a meglevo B2C email sablonra epul, de B2B adatokkal (cegnev, kapcsolattarto, helyszin)
-- **PDF ajanlat generalas** es feltoltes (mint a B2C-ben)
-- **Email kuldes** a Resend edge function-on keresztul
+### 5. Email sablon frissitese
+**Fajl:** `src/components/questionnaire/EmailGenerator.tsx`
+- Az auto tipust megjelenito sorban (sor ~567): a `carBrand carModel` melle zarojelben hozzaadni az onboard charger erteket
+- Peldaul: `Tesla Model 3 Standard Range (11kW fedélzeti töltő)`
+- Ehhez az `EmailGenerator` komponensnek is hasznalnia kell a `useEVData` hook-ot
 
-## 3. Integralas a B2BQualifyForm-ba
-
-A kvalifikalasi urlap aljara kerul az email generator szekciokent, vagy kulon tab/gombbal elerheto.
-
-## 4. Fajlok
-
-```text
-Uj:
-  src/components/b2b/B2BEmailGenerator.tsx
-
-Modositott:
-  src/components/b2b/B2BQualifyForm.tsx (B ag bovites + email generator integralas)
-  src/types/b2b.ts (distance_from_panel mezo)
-
-Migracio:
-  distance_from_panel oszlop hozzaadasa
-```
-
-## Technikai reszletek
-
-- A kedvezmeny %-ban mukodik, az operator 0-50% kozott allithatja be, minden toltore egysegesen alkalmazodik
-- A telepitesi ar a kabel tavolsag alapjan automatikusan valasztodik ki
-- Az email HTML sablon a meglevo B2C sablonra epul, de ceg-specifikus adatokkal (cegnev vs ugyfel nev, helyszin vs epulet tipus)
-- A `chargerTemplates` es `priceList` adatforrasokat ujrahasznaljuk
+### Emlekeztet az EVIONOR edge function-rol
+Az email sablon frissitese utan a `process-leads/index.ts`-ben is erdemeshet hasonlo modositast vegezni, de az manualis copy-paste szukseges az EVIONOR Supabase-be.
 

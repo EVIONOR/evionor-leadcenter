@@ -25,6 +25,7 @@ export type Database = {
           contact_name: string | null
           created_at: string
           discount_applied: boolean | null
+          distance_from_panel: string | null
           email: string | null
           ev_type: string | null
           features_needed: string[] | null
@@ -65,6 +66,7 @@ export type Database = {
           contact_name?: string | null
           created_at?: string
           discount_applied?: boolean | null
+          distance_from_panel?: string | null
           email?: string | null
           ev_type?: string | null
           features_needed?: string[] | null
@@ -105,6 +107,7 @@ export type Database = {
           contact_name?: string | null
           created_at?: string
           discount_applied?: boolean | null
+          distance_from_panel?: string | null
           email?: string | null
           ev_type?: string | null
           features_needed?: string[] | null
