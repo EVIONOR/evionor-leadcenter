@@ -297,22 +297,22 @@ export default function B2BLeadManager() {
                       </div>
 
                       {/* Center: Info fields */}
-                      <div className="flex-1 p-4 grid grid-cols-2 md:grid-cols-4 gap-3">
-                        <div className="flex items-start gap-2">
-                          <Mail className="h-3.5 w-3.5 text-muted-foreground mt-0.5 shrink-0" />
-                          <span className="text-xs text-muted-foreground truncate">{response.email || "N/A"}</span>
+                      <div className="flex-1 px-4 py-2.5 flex flex-col gap-1">
+                        <div className="flex items-center gap-3 flex-wrap">
+                          <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
+                            <Mail className="h-3 w-3 shrink-0" />{response.email || "N/A"}
+                          </span>
+                          <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
+                            <Phone className="h-3 w-3 shrink-0" />{response.phone || "N/A"}
+                          </span>
                         </div>
-                        <div className="flex items-start gap-2">
-                          <Phone className="h-3.5 w-3.5 text-muted-foreground mt-0.5 shrink-0" />
-                          <span className="text-xs text-muted-foreground">{response.phone || "N/A"}</span>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <MapPin className="h-3.5 w-3.5 text-muted-foreground mt-0.5 shrink-0" />
-                          <span className="text-xs text-muted-foreground">{response.location || "N/A"}</span>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <Clock className="h-3.5 w-3.5 text-muted-foreground mt-0.5 shrink-0" />
-                          <span className="text-xs text-muted-foreground">{response.timeline || "N/A"}</span>
+                        <div className="flex items-center gap-3 flex-wrap">
+                          <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
+                            <MapPin className="h-3 w-3 shrink-0" />{response.location || "N/A"}
+                          </span>
+                          <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
+                            <Clock className="h-3 w-3 shrink-0" />{response.timeline || "N/A"}
+                          </span>
                         </div>
                       </div>
 
