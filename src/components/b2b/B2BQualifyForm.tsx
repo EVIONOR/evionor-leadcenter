@@ -387,7 +387,16 @@ export function B2BQualifyForm({ lead, onBack, onSaved }: B2BQualifyFormProps) {
                   onCheckedChange={(v) => updateField("has_wifi", v)}
                 />
                 <Label className="text-xs flex items-center gap-1">
-                  <Wifi className="h-3 w-3" /> Wi-Fi
+                  <Wifi className="h-3 w-3" /> Wi-Fi a töltőpontnál
+                </Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <Switch
+                  checked={form.has_wifi_at_panel || false}
+                  onCheckedChange={(v) => updateField("has_wifi_at_panel", v)}
+                />
+                <Label className="text-xs flex items-center gap-1">
+                  <Wifi className="h-3 w-3" /> Wi-Fi a betáp elosztónál
                 </Label>
               </div>
             </div>
