@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQueryState, parseAsInteger, parseAsStringLiteral } from "nuqs";
 import { getB2BQuestionnaireResponses } from "@/integrations/evionor/client";
@@ -8,6 +8,8 @@ import type { B2BQuestionnaireResponse } from "@/integrations/evionor/types";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { B2BQualifyForm } from "@/components/b2b/B2BQualifyForm";
@@ -54,6 +56,7 @@ export default function B2BLeadManager() {
   const [selectedLead, setSelectedLead] = useState<B2BQuestionnaireResponse | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [statusFilter, setStatusFilter] = useQueryState(
     "status",
@@ -63,7 +66,7 @@ export default function B2BLeadManager() {
   );
 
   const [currentPage, setCurrentPage] = useQueryState("page", parseAsInteger.withDefault(1));
-  const itemsPerPage = 15;
+  const [itemsPerPage, setItemsPerPage] = useQueryState("perPage", parseAsInteger.withDefault(15));
   const totalPages = Math.ceil(totalCount / itemsPerPage);
 
   const fetchResponses = async () => {
@@ -129,7 +132,7 @@ export default function B2BLeadManager() {
     fetchResponses();
     const interval = setInterval(fetchResponses, 30000);
     return () => clearInterval(interval);
-  }, [currentPage, statusFilter]);
+  }, [currentPage, statusFilter, itemsPerPage]);
 
   const handleStatusChange = async (lead: B2BLeadWithStatus, newStatus: B2BLeadStatus) => {
     try {
@@ -234,6 +237,27 @@ export default function B2BLeadManager() {
               <h1 className="text-lg font-semibold text-foreground tracking-tight">B2B Lead Manager</h1>
               <p className="text-xs text-muted-foreground">{totalCount} B2B lead</p>
             </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Label htmlFor="perPage" className="text-xs text-muted-foreground whitespace-nowrap">Oldalanként:</Label>
+            <Input
+              id="perPage"
+              type="number"
+              min={1}
+              max={100}
+              defaultValue={itemsPerPage}
+              onChange={(e) => {
+                const value = parseInt(e.target.value);
+                if (value > 0 && value <= 100) {
+                  if (debounceRef.current) clearTimeout(debounceRef.current);
+                  debounceRef.current = setTimeout(() => {
+                    setItemsPerPage(value);
+                    setCurrentPage(1);
+                  }, 3000);
+                }
+              }}
+              className="w-16 h-8 text-xs"
+            />
           </div>
         </div>
       </div>
