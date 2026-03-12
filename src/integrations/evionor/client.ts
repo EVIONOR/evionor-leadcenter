@@ -4,6 +4,7 @@
 
 import { supabase } from "@/integrations/supabase/client";
 import type {
+  B2BQuestionnaireResponse,
   ProductClick,
   QuestionnaireResponse,
   RoiCalculatorResult,
