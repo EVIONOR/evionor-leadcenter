@@ -476,67 +476,172 @@ export function B2BQualifyForm({ lead, onBack, onSaved }: B2BQualifyFormProps) {
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium flex items-center gap-2">
               <Zap className="h-4 w-4" />
-              4B. Telepítés előkészítés
+              4B. Telepítés & Technikai felmérés
               <Badge variant="outline" className="text-[10px] border-amber-300 text-amber-700">B ág</Badge>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex items-center gap-3">
-              <Label className="text-xs">Van elektromos előkészítés?</Label>
-              <div className="flex gap-2">
-                <Button
-                  size="sm"
-                  variant={form.has_electrical_prep === true ? "default" : "outline"}
-                  className="text-xs h-8"
-                  onClick={() => updateField("has_electrical_prep", true)}
-                >
-                  Igen
-                </Button>
-                <Button
-                  size="sm"
-                  variant={form.has_electrical_prep === false ? "default" : "outline"}
-                  className="text-xs h-8"
-                  onClick={() => updateField("has_electrical_prep", false)}
-                >
-                  Nem
-                </Button>
+            {/* Installation circumstances */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="space-y-1.5">
+                <Label className="text-xs">Fázisok</Label>
+                <Select value={form.phases || ""} onValueChange={(v) => updateField("phases", v)}>
+                  <SelectTrigger className="h-9 text-sm"><SelectValue placeholder="Válassz..." /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1">1 fázis</SelectItem>
+                    <SelectItem value="3">3 fázis</SelectItem>
+                    <SelectItem value="unknown">Nem tudja</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs">Főbiztosíték</Label>
+                <Select value={form.main_fuse || ""} onValueChange={(v) => updateField("main_fuse", v)}>
+                  <SelectTrigger className="h-9 text-sm"><SelectValue placeholder="Válassz..." /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="16A">16A</SelectItem>
+                    <SelectItem value="20A">20A</SelectItem>
+                    <SelectItem value="25A">25A</SelectItem>
+                    <SelectItem value="32A">32A</SelectItem>
+                    <SelectItem value="40A">40A</SelectItem>
+                    <SelectItem value="63A">63A</SelectItem>
+                    <SelectItem value="80A">80A</SelectItem>
+                    <SelectItem value="100A+">100A+</SelectItem>
+                    <SelectItem value="unknown">Nem tudja</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs flex items-center gap-1">
+                  <Ruler className="h-3 w-3" /> Távolság a főelosztótól
+                </Label>
+                <Select value={form.distance_from_panel || ""} onValueChange={(v) => updateField("distance_from_panel", v)}>
+                  <SelectTrigger className="h-9 text-sm"><SelectValue placeholder="Válassz..." /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="5m">5m-en belül</SelectItem>
+                    <SelectItem value="10m">5-10m</SelectItem>
+                    <SelectItem value="20m">10-20m</SelectItem>
+                    <SelectItem value="30m">20-30m</SelectItem>
+                    <SelectItem value="30m+">30m felett</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
-            <div className="flex items-center gap-3">
-              <Label className="text-xs">Szeretne fotókat küldeni?</Label>
-              <div className="flex gap-2">
-                <Button
-                  size="sm"
-                  variant={form.wants_photos === true ? "default" : "outline"}
-                  className="text-xs h-8"
-                  onClick={() => updateField("wants_photos", true)}
-                >
-                  Igen
-                </Button>
-                <Button
-                  size="sm"
-                  variant={form.wants_photos === false ? "default" : "outline"}
-                  className="text-xs h-8"
-                  onClick={() => updateField("wants_photos", false)}
-                >
-                  Nem
-                </Button>
+
+            {/* Charger selection questions - same as Branch A */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+              <div className="space-y-1.5">
+                <Label className="text-xs">Autó típusok (flotta)</Label>
+                <Input
+                  value={form.car_types || ""}
+                  onChange={(e) => updateField("car_types", e.target.value)}
+                  placeholder="pl. Tesla Model 3, VW ID.4"
+                  className="h-9 text-sm"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs">EV típus</Label>
+                <Select value={form.ev_type || ""} onValueChange={(v) => updateField("ev_type", v)}>
+                  <SelectTrigger className="h-9 text-sm"><SelectValue placeholder="Válassz..." /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="bev">Tisztán elektromos (BEV)</SelectItem>
+                    <SelectItem value="phev">Plug-in hybrid (PHEV)</SelectItem>
+                    <SelectItem value="mixed">Vegyes</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs">Kábeles vagy aljzatos</Label>
+                <Select value={form.cable_or_socket || ""} onValueChange={(v) => updateField("cable_or_socket", v)}>
+                  <SelectTrigger className="h-9 text-sm"><SelectValue placeholder="Válassz..." /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="cable">Beépített kábel</SelectItem>
+                    <SelectItem value="socket">Aljzat (Type 2)</SelectItem>
+                    <SelectItem value="both">Mindkettő</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-3">
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2">
               <div className="flex items-center gap-2">
                 <Switch
-                  checked={form.photos_received || false}
-                  onCheckedChange={(v) => updateField("photos_received", v)}
+                  checked={form.needs_load_management || false}
+                  onCheckedChange={(v) => updateField("needs_load_management", v)}
                 />
-                <Label className="text-xs">Fotók megérkeztek</Label>
+                <Label className="text-xs">Terhelésmenedzsment</Label>
               </div>
               <div className="flex items-center gap-2">
                 <Switch
-                  checked={form.needs_technical_callback || false}
-                  onCheckedChange={(v) => updateField("needs_technical_callback", v)}
+                  checked={form.has_solar || false}
+                  onCheckedChange={(v) => updateField("has_solar", v)}
                 />
-                <Label className="text-xs">Technikai visszahívás kell</Label>
+                <Label className="text-xs flex items-center gap-1">
+                  <Sun className="h-3 w-3" /> Napelem
+                </Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <Switch
+                  checked={form.has_wifi || false}
+                  onCheckedChange={(v) => updateField("has_wifi", v)}
+                />
+                <Label className="text-xs flex items-center gap-1">
+                  <Wifi className="h-3 w-3" /> Wi-Fi a töltőpontnál
+                </Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <Switch
+                  checked={form.has_wifi_at_panel || false}
+                  onCheckedChange={(v) => updateField("has_wifi_at_panel", v)}
+                />
+                <Label className="text-xs flex items-center gap-1">
+                  <Wifi className="h-3 w-3" /> Wi-Fi az elosztónál
+                </Label>
+              </div>
+            </div>
+
+            {/* Features */}
+            <div className="space-y-2 pt-2">
+              <Label className="text-xs font-medium">Szükséges funkciók</Label>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                {FEATURE_OPTIONS.map((feature) => (
+                  <div key={feature} className="flex items-center gap-2">
+                    <Checkbox
+                      checked={(form.features_needed || []).includes(feature)}
+                      onCheckedChange={() => toggleFeature(feature)}
+                    />
+                    <Label className="text-xs cursor-pointer">{feature}</Label>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Installation prep */}
+            <div className="pt-2 border-t space-y-3">
+              <Label className="text-xs font-medium">Előkészítés</Label>
+              <div className="flex items-center gap-3">
+                <Label className="text-xs">Van elektromos előkészítés?</Label>
+                <div className="flex gap-2">
+                  <Button size="sm" variant={form.has_electrical_prep === true ? "default" : "outline"} className="text-xs h-8" onClick={() => updateField("has_electrical_prep", true)}>Igen</Button>
+                  <Button size="sm" variant={form.has_electrical_prep === false ? "default" : "outline"} className="text-xs h-8" onClick={() => updateField("has_electrical_prep", false)}>Nem</Button>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <Label className="text-xs">Szeretne fotókat küldeni?</Label>
+                <div className="flex gap-2">
+                  <Button size="sm" variant={form.wants_photos === true ? "default" : "outline"} className="text-xs h-8" onClick={() => updateField("wants_photos", true)}>Igen</Button>
+                  <Button size="sm" variant={form.wants_photos === false ? "default" : "outline"} className="text-xs h-8" onClick={() => updateField("wants_photos", false)}>Nem</Button>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="flex items-center gap-2">
+                  <Switch checked={form.photos_received || false} onCheckedChange={(v) => updateField("photos_received", v)} />
+                  <Label className="text-xs">Fotók megérkeztek</Label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Switch checked={form.needs_technical_callback || false} onCheckedChange={(v) => updateField("needs_technical_callback", v)} />
+                  <Label className="text-xs">Technikai visszahívás kell</Label>
+                </div>
               </div>
             </div>
           </CardContent>
