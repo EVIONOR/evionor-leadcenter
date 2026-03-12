@@ -34,6 +34,26 @@ const INSTALLATION_TIERS = [
   { label: "30m kábelig", value: "30m", price: 349000 },
 ];
 
+const INSTALLATION_DISCOUNTS: Record<number, { discount: number; label: string }> = {
+  1: { discount: 0, label: "Teljes ár" },
+  2: { discount: 25, label: "25% kedvezmény" },
+  3: { discount: 30, label: "30% kedvezmény" },
+};
+
+const LOAD_MANAGERS = [
+  { brand: "Zaptec", name: "Zaptec Sense GEN CT Clamp Csomag", netPrice: 99450, grossPrice: Math.round(99450 * 1.27) },
+  { brand: "Easee", name: "Easee Equalizer Amp Csomag", netPrice: 110074, grossPrice: Math.round(110074 * 1.27) },
+];
+
+const detectLoadManager = (templates: ChargerTemplate[]): typeof LOAD_MANAGERS[0] | null => {
+  for (const t of templates) {
+    const product = t.products[0].toLowerCase();
+    if (product.includes("zaptec")) return LOAD_MANAGERS[0];
+    if (product.includes("easee")) return LOAD_MANAGERS[1];
+  }
+  return LOAD_MANAGERS[0]; // default
+};
+
 const productUrls: Record<string, string> = {
   "Charge Amps Halo 11kW": "https://evionor.hu/collections/all/products/charge-amps-halo-7-4kw-ev-tolto",
   "Charge Amps Luna 22kW": "https://evionor.hu/collections/all/products/charge-amps-luna-22kw-ev-tolto",
@@ -173,21 +193,67 @@ export function B2BEmailGenerator({
     }
   };
 
+  const getInstallationDiscountInfo = () => {
+    const count = chargerCount || 1;
+    if (count >= 4) return { discount: 0, label: "Egyedi ajánlat szükséges", isCustom: true };
+    const info = INSTALLATION_DISCOUNTS[count] || INSTALLATION_DISCOUNTS[1];
+    return { ...info, isCustom: false };
+  };
+
+  const getDiscountedInstallationPrice = (): number => {
+    const basePrice = getInstallationPrice();
+    const count = chargerCount || 1;
+    if (count >= 4) return basePrice;
+    const discountInfo = INSTALLATION_DISCOUNTS[count] || INSTALLATION_DISCOUNTS[1];
+    return Math.round(basePrice * (1 - discountInfo.discount / 100));
+  };
+
   const generateEmail = async () => {
     if (selectedTemplates.length === 0) return;
+    const count = chargerCount || 1;
+    if (count >= 4 && includeInstallation) {
+      toast.error("4+ töltőnél egyedi ajánlat szükséges a telepítésre. Kérjük vegye fel a kapcsolatot.");
+      return;
+    }
     setIsGenerating(true);
+
+    const loadManager = count > 1 ? detectLoadManager(selectedTemplates) : null;
 
     // Generate PDFs
     const quoteUrls: Record<string, string> = {};
     for (const template of selectedTemplates) {
       const product = template.products[0];
       const chargerPrice = applyDiscount(findProductPrice(product));
-      const items = [{ name: product, quantity: chargerCount || 1, grossPrice: chargerPrice }];
+      const items = [{ name: product, quantity: count, grossPrice: chargerPrice }];
       if (includeInstallation) {
+        const installDiscountInfo = getInstallationDiscountInfo();
+        const discountedInstallPrice = getDiscountedInstallationPrice();
+        const fullInstallPrice = getInstallationPrice();
+        // First charger full price, rest discounted
+        if (count === 1) {
+          items.push({
+            name: `Telepítés (${INSTALLATION_TIERS.find(t => t.value === installationTier)?.label})`,
+            quantity: 1,
+            grossPrice: fullInstallPrice,
+          });
+        } else {
+          items.push({
+            name: `Telepítés (${INSTALLATION_TIERS.find(t => t.value === installationTier)?.label})`,
+            quantity: 1,
+            grossPrice: fullInstallPrice,
+          });
+          items.push({
+            name: `Telepítés – ${installDiscountInfo.label} (${INSTALLATION_TIERS.find(t => t.value === installationTier)?.label})`,
+            quantity: count - 1,
+            grossPrice: discountedInstallPrice,
+          });
+        }
+      }
+      if (loadManager) {
         items.push({
-          name: `Telepítés (${INSTALLATION_TIERS.find(t => t.value === installationTier)?.label})`,
-          quantity: chargerCount || 1,
-          grossPrice: getInstallationPrice(),
+          name: loadManager.name,
+          quantity: 1,
+          grossPrice: loadManager.grossPrice,
         });
       }
 
@@ -216,7 +282,10 @@ export function B2BEmailGenerator({
     const displayName = companyName || contactName;
     const greeting = companyName ? "Tisztelt Ügyfelünk!" : `Tisztelt ${contactName}!`;
     const installPrice = getInstallationPrice();
+    const discountedInstallPrice = getDiscountedInstallationPrice();
+    const installDiscountInfo = getInstallationDiscountInfo();
     const installLabel = INSTALLATION_TIERS.find(t => t.value === installationTier)?.label || "5m kábelig";
+    const emailCount = chargerCount || 1;
 
     const htmlEmail = `
 <!DOCTYPE html>
@@ -370,11 +439,38 @@ export function B2BEmailGenerator({
                                                     <p style="margin: 0 0 8px 0; color: #0a2540; font-size: 13px; font-weight: 700; text-transform: uppercase;">Telepítés</p>
                                                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                                         <tr>
-                                                            <td style="color: #4a5568; font-size: 13px; padding: 4px 0;">Telepítési csomag (${installLabel})</td>
+                                                            <td style="color: #4a5568; font-size: 13px; padding: 4px 0;">1. töltő telepítése (${installLabel})</td>
                                                             <td style="color: #0a2540; font-size: 14px; font-weight: 600; text-align: right;">${formatPrice(installPrice)}</td>
                                                         </tr>
+                                                        ${emailCount > 1 ? `
+                                                        <tr>
+                                                            <td style="color: #4a5568; font-size: 13px; padding: 4px 0;">További ${emailCount - 1} db telepítés (${installDiscountInfo.label})</td>
+                                                            <td style="color: #059669; font-size: 14px; font-weight: 600; text-align: right;">
+                                                                <span style="color: #94a3b8; text-decoration: line-through; font-size: 12px; margin-right: 4px;">${formatPrice(installPrice)}</span>
+                                                                ${formatPrice(discountedInstallPrice)} / db
+                                                            </td>
+                                                        </tr>
+                                                        ` : ""}
                                                     </table>
                                                     <p style="margin: 10px 0 0 0; color: #4a5568; font-size: 12px; line-height: 1.6;">A telepítés tartalmazza: áramvédő és kismegszakító beépítése, kábel rögzítése, töltő felszerelése, beüzemelés és átadás.</p>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        ` : ""}
+
+                                        ${loadManager ? `
+                                        <!-- Load Manager -->
+                                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top: 16px; background-color: #ffffff; border-radius: 10px; border: 1px solid #e2e8f0;">
+                                            <tr>
+                                                <td style="padding: 14px;">
+                                                    <p style="margin: 0 0 8px 0; color: #0a2540; font-size: 13px; font-weight: 700; text-transform: uppercase;">Terhelésmenedzsment</p>
+                                                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                                                        <tr>
+                                                            <td style="color: #4a5568; font-size: 13px; padding: 4px 0;">${loadManager.name}</td>
+                                                            <td style="color: #0a2540; font-size: 14px; font-weight: 600; text-align: right;">${formatPrice(loadManager.grossPrice)}</td>
+                                                        </tr>
+                                                    </table>
+                                                    <p style="margin: 10px 0 0 0; color: #4a5568; font-size: 12px; line-height: 1.6;">Több töltő egyidejű használatához szükséges terhelésmenedzsment rendszer.</p>
                                                 </td>
                                             </tr>
                                         </table>
@@ -386,20 +482,28 @@ export function B2BEmailGenerator({
                                                 <td style="padding: 16px;">
                                                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                                         <tr>
-                                                            <td style="color: #0a2540; font-size: 14px; font-weight: 700;">Töltő ára${chargerCount && chargerCount > 1 ? ` (${chargerCount} db)` : ""}:</td>
-                                                            <td style="color: #0071e3; font-size: 20px; font-weight: 800; text-align: right;">${formatPrice(discountedPrice * (chargerCount || 1))}</td>
+                                                            <td style="color: #0a2540; font-size: 14px; font-weight: 700;">Töltő ára${emailCount > 1 ? ` (${emailCount} db)` : ""}:</td>
+                                                            <td style="color: #0071e3; font-size: 20px; font-weight: 800; text-align: right;">${formatPrice(discountedPrice * emailCount)}</td>
                                                         </tr>
                                                         ${includeInstallation ? `
                                                         <tr>
-                                                            <td style="color: #0a2540; font-size: 14px; font-weight: 700; padding-top: 8px;">Telepítés${chargerCount && chargerCount > 1 ? ` (${chargerCount} db)` : ""}:</td>
-                                                            <td style="color: #059669; font-size: 16px; font-weight: 700; text-align: right; padding-top: 8px;">${formatPrice(installPrice * (chargerCount || 1))}</td>
+                                                            <td style="color: #0a2540; font-size: 14px; font-weight: 700; padding-top: 8px;">Telepítés (${emailCount} db):</td>
+                                                            <td style="color: #059669; font-size: 16px; font-weight: 700; text-align: right; padding-top: 8px;">${formatPrice(installPrice + discountedInstallPrice * (emailCount - 1))}</td>
                                                         </tr>
+                                                        ` : ""}
+                                                        ${loadManager ? `
+                                                        <tr>
+                                                            <td style="color: #0a2540; font-size: 14px; font-weight: 700; padding-top: 8px;">Terhelésmenedzsment:</td>
+                                                            <td style="color: #059669; font-size: 16px; font-weight: 700; text-align: right; padding-top: 8px;">${formatPrice(loadManager.grossPrice)}</td>
+                                                        </tr>
+                                                        ` : ""}
+                                                        ${includeInstallation || loadManager ? `
                                                         <tr>
                                                             <td colspan="2" style="padding-top: 12px; border-top: 1px solid #cbd5e1;">
                                                                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                                                     <tr>
                                                                         <td style="color: #0a2540; font-size: 16px; font-weight: 800; padding-top: 4px;">Összesen:</td>
-                                                                        <td style="color: #0071e3; font-size: 22px; font-weight: 800; text-align: right; padding-top: 4px;">${formatPrice((discountedPrice + installPrice) * (chargerCount || 1))}</td>
+                                                                        <td style="color: #0071e3; font-size: 22px; font-weight: 800; text-align: right; padding-top: 4px;">${formatPrice(discountedPrice * emailCount + (includeInstallation ? installPrice + discountedInstallPrice * (emailCount - 1) : 0) + (loadManager ? loadManager.grossPrice : 0))}</td>
                                                                     </tr>
                                                                 </table>
                                                             </td>
@@ -640,7 +744,7 @@ export function B2BEmailGenerator({
               <Label className="text-xs">Telepítés hozzáadása</Label>
             </div>
             {includeInstallation && (
-              <div className="space-y-1.5 pl-6">
+              <div className="space-y-2 pl-6">
                 <Label className="text-xs">Kábel távolság</Label>
                 <Select value={installationTier} onValueChange={setInstallationTier}>
                   <SelectTrigger className="h-9 text-sm"><SelectValue /></SelectTrigger>
@@ -652,9 +756,27 @@ export function B2BEmailGenerator({
                     ))}
                   </SelectContent>
                 </Select>
+                <div className="text-xs text-muted-foreground bg-muted p-2 rounded space-y-0.5">
+                  <p className="font-medium">Telepítési kedvezmények:</p>
+                  <p>1 töltő: teljes ár</p>
+                  <p>2 töltő: -25% a 2. telepítésre</p>
+                  <p>3 töltő: -30% a 2-3. telepítésre</p>
+                  <p>4+ töltő: egyedi ajánlat szükséges</p>
+                </div>
+                {(chargerCount || 1) >= 4 && (
+                  <p className="text-xs text-destructive font-medium">⚠️ 4+ töltőnél egyedi telepítési ajánlat szükséges!</p>
+                )}
               </div>
             )}
           </div>
+
+          {/* Load manager info */}
+          {(chargerCount || 1) > 1 && (
+            <div className="text-xs text-muted-foreground bg-muted p-2 rounded">
+              <p className="font-medium">🔌 Terhelésmenedzsment automatikusan hozzáadva:</p>
+              <p>{detectLoadManager(selectedTemplates)?.name || "Terhelésmenedzser"} – {formatPrice(detectLoadManager(selectedTemplates)?.grossPrice || 0)}</p>
+            </div>
+          )}
 
           <Separator />
 
