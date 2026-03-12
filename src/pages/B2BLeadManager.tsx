@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useQueryState, parseAsInteger, parseAsStringLiteral } from "nuqs";
 import { getB2BQuestionnaireResponses } from "@/integrations/evionor/client";
 import { supabase } from "@/integrations/supabase/client";
+import { evionorAuth } from "@/integrations/evionor/auth-client";
 import type { B2BQuestionnaireResponse } from "@/integrations/evionor/types";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
