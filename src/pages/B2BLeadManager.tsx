@@ -8,6 +8,8 @@ import type { B2BQuestionnaireResponse } from "@/integrations/evionor/types";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { B2BQualifyForm } from "@/components/b2b/B2BQualifyForm";
