@@ -744,7 +744,7 @@ export function B2BEmailGenerator({
               <Label className="text-xs">Telepítés hozzáadása</Label>
             </div>
             {includeInstallation && (
-              <div className="space-y-1.5 pl-6">
+              <div className="space-y-2 pl-6">
                 <Label className="text-xs">Kábel távolság</Label>
                 <Select value={installationTier} onValueChange={setInstallationTier}>
                   <SelectTrigger className="h-9 text-sm"><SelectValue /></SelectTrigger>
@@ -756,9 +756,27 @@ export function B2BEmailGenerator({
                     ))}
                   </SelectContent>
                 </Select>
+                <div className="text-xs text-muted-foreground bg-muted p-2 rounded space-y-0.5">
+                  <p className="font-medium">Telepítési kedvezmények:</p>
+                  <p>1 töltő: teljes ár</p>
+                  <p>2 töltő: -25% a 2. telepítésre</p>
+                  <p>3 töltő: -30% a 2-3. telepítésre</p>
+                  <p>4+ töltő: egyedi ajánlat szükséges</p>
+                </div>
+                {(chargerCount || 1) >= 4 && (
+                  <p className="text-xs text-destructive font-medium">⚠️ 4+ töltőnél egyedi telepítési ajánlat szükséges!</p>
+                )}
               </div>
             )}
           </div>
+
+          {/* Load manager info */}
+          {(chargerCount || 1) > 1 && (
+            <div className="text-xs text-muted-foreground bg-muted p-2 rounded">
+              <p className="font-medium">🔌 Terhelésmenedzsment automatikusan hozzáadva:</p>
+              <p>{detectLoadManager(selectedTemplates)?.name || "Terhelésmenedzser"} – {formatPrice(detectLoadManager(selectedTemplates)?.grossPrice || 0)}</p>
+            </div>
+          )}
 
           <Separator />
 
