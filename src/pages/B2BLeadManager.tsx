@@ -56,6 +56,7 @@ export default function B2BLeadManager() {
   const [selectedLead, setSelectedLead] = useState<B2BQuestionnaireResponse | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [statusFilter, setStatusFilter] = useQueryState(
     "status",
