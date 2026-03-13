@@ -638,7 +638,7 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                             <tr>
                                 <td align="center" style="padding: 12px; background-color: #ffffff; border-radius: 10px; border: 1px solid #e2e8f0;">
                                     <a href="${productUrl}" style="display: inline-block; text-decoration: none;">
-                                        <img src="${getChargerImageUrl(product)}" alt="${product} – EV töltőállomás" width="240" style="max-width: 240px; width: 100%; height: auto; display: block; margin: 0 auto; border: 0; font-family: Arial, sans-serif; font-size: 14px; color: #64748b;" />
+                                        <img src="${getChargerImageUrl(product)}" alt="${getDisplayName(product)} – EV töltőállomás" width="240" style="max-width: 240px; width: 100%; height: auto; display: block; margin: 0 auto; border: 0; font-family: Arial, sans-serif; font-size: 14px; color: #64748b;" />
                                     </a>
                                 </td>
                             </tr>
