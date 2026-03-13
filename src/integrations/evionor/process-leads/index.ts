@@ -431,6 +431,8 @@ const cartUrls = {
 	"Easee Charge Up 22kW":
 		"https://evionor.hu/products/easee-charge-up-22kw-ev-tolto-telepitesi-csomgaban",
 };
+// Megjelenítési név: 22kW → EV·TÖLTŐ
+const getDisplayName = (name) => name.replace(/22kW/g, "EV·TÖLTŐ");
 const getProductUrl = (productName) =>
 	productUrls[productName] || "https://evionor.hu/webshop/";
 const getCartUrl = (productName) =>
