@@ -634,7 +634,7 @@ function generateEmailHtml(data) {
           <a href="${productUrl}" style="display: inline-block; text-decoration: none;">
             <img class="product-image" src="${getChargerImageUrl(
 							product,
-						)}" alt="${product}" style="max-width: 260px; width: 100%; height: auto; display: block; margin: 0 auto;" />
+						)}" alt="${getDisplayName(product)}" style="max-width: 260px; width: 100%; height: auto; display: block; margin: 0 auto;" />
           </a>
         </div>
         `
