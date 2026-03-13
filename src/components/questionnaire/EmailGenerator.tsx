@@ -155,6 +155,9 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
     return cartUrls[productName] || "https://evionor.hu/webshop/";
   };
 
+  // Megjelenítési név: 22kW → EV·TÖLTŐ
+  const getDisplayName = (name: string): string => name.replace(/22kW/g, "EV·TÖLTŐ");
+
   // Kép URL lekérése termék név alapján (evionor.hu CDN)
   const getChargerImageUrl = (productName: string): string => {
     // Pontos egyezések először, hogy ne keveredjenek össze
@@ -635,7 +638,7 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                             <tr>
                                 <td align="center" style="padding: 12px; background-color: #ffffff; border-radius: 10px; border: 1px solid #e2e8f0;">
                                     <a href="${productUrl}" style="display: inline-block; text-decoration: none;">
-                                        <img src="${getChargerImageUrl(product)}" alt="${product} – EV töltőállomás" width="240" style="max-width: 240px; width: 100%; height: auto; display: block; margin: 0 auto; border: 0; font-family: Arial, sans-serif; font-size: 14px; color: #64748b;" />
+                                        <img src="${getChargerImageUrl(product)}" alt="${getDisplayName(product)} – EV töltőállomás" width="240" style="max-width: 240px; width: 100%; height: auto; display: block; margin: 0 auto; border: 0; font-family: Arial, sans-serif; font-size: 14px; color: #64748b;" />
                                     </a>
                                 </td>
                             </tr>
@@ -650,7 +653,7 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                                 <td style="padding: 14px;">
                                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                         <tr>
-                                            <td style="padding-bottom: 8px;"><a href="${productUrl}" style="color: #0a2540; font-size: 15px; font-weight: 700; text-decoration: none; border-bottom: 2px solid #0071e3; word-wrap: break-word; word-break: break-word; display: inline-block;">${product}</a></td>
+                                            <td style="padding-bottom: 8px;"><a href="${productUrl}" style="color: #0a2540; font-size: 15px; font-weight: 700; text-decoration: none; border-bottom: 2px solid #0071e3; word-wrap: break-word; word-break: break-word; display: inline-block;">${getDisplayName(product)}</a></td>
                                         </tr>
                                         <tr>
                                             <td style="color: #0071e3; font-size: 20px; font-weight: 800;">${originalPrice ? `<span style="color: #94a3b8; text-decoration: line-through; font-size: 14px; font-weight: 400; margin-right: 8px;">${formatPrice(originalPrice)}</span>` : ''}${formatPrice(chargerPrice)}</td>

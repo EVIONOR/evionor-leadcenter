@@ -431,6 +431,8 @@ const cartUrls = {
 	"Easee Charge Up 22kW":
 		"https://evionor.hu/products/easee-charge-up-22kw-ev-tolto-telepitesi-csomgaban",
 };
+// Megjelenítési név: 22kW → EV·TÖLTŐ
+const getDisplayName = (name) => name.replace(/22kW/g, "EV·TÖLTŐ");
 const getProductUrl = (productName) =>
 	productUrls[productName] || "https://evionor.hu/webshop/";
 const getCartUrl = (productName) =>
@@ -632,7 +634,7 @@ function generateEmailHtml(data) {
           <a href="${productUrl}" style="display: inline-block; text-decoration: none;">
             <img class="product-image" src="${getChargerImageUrl(
 							product,
-						)}" alt="${product}" style="max-width: 260px; width: 100%; height: auto; display: block; margin: 0 auto;" />
+						)}" alt="${getDisplayName(product)}" style="max-width: 260px; width: 100%; height: auto; display: block; margin: 0 auto;" />
           </a>
         </div>
         `
@@ -642,7 +644,7 @@ function generateEmailHtml(data) {
         <div style="padding: 8px; background-color: white; border-radius: 8px; margin-bottom: 16px; border: 1px solid #e5e7eb;">
           <table width="100%" cellpadding="0" cellspacing="0" border="0">
             <tr>
-              <td style="padding-bottom: 6px;"><a href="${productUrl}" style="color: #111827; font-size: 15px; font-weight: 600; text-decoration: none; border-bottom: 2px solid #0071e3; word-wrap: break-word; word-break: break-word; display: inline-block;">${product}</a></td>
+              <td style="padding-bottom: 6px;"><a href="${productUrl}" style="color: #111827; font-size: 15px; font-weight: 600; text-decoration: none; border-bottom: 2px solid #0071e3; word-wrap: break-word; word-break: break-word; display: inline-block;">${getDisplayName(product)}</a></td>
             </tr>
             <tr>
               <td style="color: #0071e3; font-size: 17px; font-weight: 700;">${formatPrice(
