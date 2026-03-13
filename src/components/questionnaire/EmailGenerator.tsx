@@ -653,7 +653,7 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                                 <td style="padding: 14px;">
                                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                         <tr>
-                                            <td style="padding-bottom: 8px;"><a href="${productUrl}" style="color: #0a2540; font-size: 15px; font-weight: 700; text-decoration: none; border-bottom: 2px solid #0071e3; word-wrap: break-word; word-break: break-word; display: inline-block;">${product}</a></td>
+                                            <td style="padding-bottom: 8px;"><a href="${productUrl}" style="color: #0a2540; font-size: 15px; font-weight: 700; text-decoration: none; border-bottom: 2px solid #0071e3; word-wrap: break-word; word-break: break-word; display: inline-block;">${getDisplayName(product)}</a></td>
                                         </tr>
                                         <tr>
                                             <td style="color: #0071e3; font-size: 20px; font-weight: 800;">${originalPrice ? `<span style="color: #94a3b8; text-decoration: line-through; font-size: 14px; font-weight: 400; margin-right: 8px;">${formatPrice(originalPrice)}</span>` : ''}${formatPrice(chargerPrice)}</td>

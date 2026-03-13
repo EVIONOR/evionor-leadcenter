@@ -644,7 +644,7 @@ function generateEmailHtml(data) {
         <div style="padding: 8px; background-color: white; border-radius: 8px; margin-bottom: 16px; border: 1px solid #e5e7eb;">
           <table width="100%" cellpadding="0" cellspacing="0" border="0">
             <tr>
-              <td style="padding-bottom: 6px;"><a href="${productUrl}" style="color: #111827; font-size: 15px; font-weight: 600; text-decoration: none; border-bottom: 2px solid #0071e3; word-wrap: break-word; word-break: break-word; display: inline-block;">${product}</a></td>
+              <td style="padding-bottom: 6px;"><a href="${productUrl}" style="color: #111827; font-size: 15px; font-weight: 600; text-decoration: none; border-bottom: 2px solid #0071e3; word-wrap: break-word; word-break: break-word; display: inline-block;">${getDisplayName(product)}</a></td>
             </tr>
             <tr>
               <td style="color: #0071e3; font-size: 17px; font-weight: 700;">${formatPrice(
