@@ -425,7 +425,7 @@ const cartUrls = {
 	"Charge Amps Luna 22kW":
 		"https://evionor.hu/products/charge-amps-luna-22kw-ev-tolto-telepites-csomag",
 	"Zaptec Go 22kW":
-		"https://evionor.hu/products/zaptec-go-22kw-ev-tolto-telepitesi-csomgaban",
+		"https://evionor.hu/collections/all/products/zaptec-go-22kw-telepitesi-csomagban?_pos=8&_fid=5b9cabd46&_ss=c",
 	"Zaptec Solar MID":
 		"https://evionor.hu/products/zaptec-go-22kw-ev-tolto-telepitesi-csomgaban",
 	"Easee Charge Up 22kW":
