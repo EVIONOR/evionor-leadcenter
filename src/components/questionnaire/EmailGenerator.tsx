@@ -155,6 +155,9 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
     return cartUrls[productName] || "https://evionor.hu/webshop/";
   };
 
+  // Megjelenítési név: 22kW → EV·TÖLTŐ
+  const getDisplayName = (name: string): string => name.replace(/22kW/g, "EV·TÖLTŐ");
+
   // Kép URL lekérése termék név alapján (evionor.hu CDN)
   const getChargerImageUrl = (productName: string): string => {
     // Pontos egyezések először, hogy ne keveredjenek össze
