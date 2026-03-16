@@ -110,7 +110,7 @@ export function B2BQualifyForm({ lead, onBack, onSaved }: B2BQualifyFormProps) {
     try {
       const { data: { session } } = await evionorAuth.auth.getSession();
       const { data, error } = await supabase.functions.invoke("manage-qualifications", {
-        body: { action: "insert", access_token: session?.access_token, data: form }
+        body: { action: "upsert", access_token: session?.access_token, data: form }
       });
       if (error) throw error;
 
