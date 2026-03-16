@@ -284,7 +284,7 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
         <li style="font-size: 14px;">Funkciók: Terhelésmenedzsment kompatibilis (max. 3 töltőig), céges számlázási riportok, lágy indítás, okos otthon integráció</li>
         <li style="font-size: 14px;">Szoftverfrissítések: Automatikus frissítések</li>
         <li style="font-size: 14px;">Védelmi osztály: IP54 (időjárás álló)</li>
-        <li style="font-size: 14px;">Garancia: 5 év</li>
+        <li style="font-size: 14px; background-color: #d1fae5; padding: 4px 8px; border-radius: 6px; font-weight: 700; color: #065f46;">✓ Gyártói garancia 5 év</li>
       `;
     }
     if (productName.includes("Zaptec Solar MID")) {
@@ -297,7 +297,7 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
         <li style="font-size: 14px;">Funkciók: Terhelésmenedzsment, napelemes integráció (Solar load balancing), felhőalapú szolgáltatások, energiamérés, lágy indítás, energia szabályozás, okos otthon integráció</li>
         <li style="font-size: 14px;">Szoftverfrissítések: Automatikus letöltés</li>
         <li style="font-size: 14px;">Védelmi osztály: IP54</li>
-        <li style="font-size: 14px;">Garancia: 5 év</li>
+        <li style="font-size: 14px; background-color: #d1fae5; padding: 4px 8px; border-radius: 6px; font-weight: 700; color: #065f46;">✓ Gyártói garancia 5 év</li>
       `;
     }
     if (
@@ -313,7 +313,7 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
         <li style="font-size: 14px;">Funkciók: Terhelésmenedzsment kompatibilis, céges számlázási riportok, lágy indítás, okos otthon integráció</li>
         <li style="font-size: 14px;">Szoftverfrissítések: Automatikus letöltés</li>
         <li style="font-size: 14px;">Védelmi osztály: IP54 (időjárás álló)</li>
-        <li style="font-size: 14px;">Garancia: 5 év</li>
+        <li style="font-size: 14px; background-color: #d1fae5; padding: 4px 8px; border-radius: 6px; font-weight: 700; color: #065f46;">✓ Gyártói garancia 5 év</li>
       `;
     }
     if (productName.includes("Amina 1") || productName.includes("AMINA 1")) {
@@ -326,7 +326,7 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
         <li style="font-size: 14px;">Funkciók: Plug & Charge helyi töltés, terhelésmenedzsment nélkül</li>
         <li style="font-size: 14px;">Szoftverfrissítések: Nem támogatott</li>
         <li style="font-size: 14px;">Védelmi osztály: IP54</li>
-        <li style="font-size: 14px;">Garancia: 5 év</li>
+        <li style="font-size: 14px; background-color: #d1fae5; padding: 4px 8px; border-radius: 6px; font-weight: 700; color: #065f46;">✓ Gyártói garancia 5 év</li>
       `;
     }
     if (productName.includes("Charge Amps Halo")) {
@@ -339,7 +339,7 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
         <li style="font-size: 14px;">Funkciók: RFID hozzáférés-szabályozás, extra konnektor (pl. e-bike), LED jelzőfények</li>
         <li style="font-size: 14px;">Szoftverfrissítések: Automatikus frissítések</li>
         <li style="font-size: 14px;">Védelmi osztály: Töltőtest IP66, csatlakozó és konnektor IP44</li>
-        <li style="font-size: 14px;">Garancia: 5 év</li>
+        <li style="font-size: 14px; background-color: #d1fae5; padding: 4px 8px; border-radius: 6px; font-weight: 700; color: #065f46;">✓ Gyártói garancia 5 év</li>
       `;
     }
     if (productName.includes("Charge Amps Luna")) {
@@ -352,7 +352,7 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
         <li style="font-size: 14px;">Funkciók: Terhelésmenedzsment kompatibilis, céges számlázási riportok, okos otthon integráció</li>
         <li style="font-size: 14px;">Szoftverfrissítések: Automatikus frissítések</li>
         <li style="font-size: 14px;">Védelmi osztály: IP54, ütésállóság IK10</li>
-        <li style="font-size: 14px;">Garancia: 5 év</li>
+        <li style="font-size: 14px; background-color: #d1fae5; padding: 4px 8px; border-radius: 6px; font-weight: 700; color: #065f46;">✓ Gyártói garancia 5 év</li>
       `;
     }
     return "";

@@ -82,7 +82,8 @@ const getCharacteristics = (productName: string): string => {
       <li style="font-size: 14px;">Tápellátás: 6–32 A</li>
       <li style="font-size: 14px;">Földzárlat védelem: Beépített Type A áramvédő kapcsoló (30 mA) + 6 mA DC-védelem</li>
       <li style="font-size: 14px;">Kommunikáció: WiFi, 4G/LTE, RFID/NFC, OCPP 1.6J</li>
-      <li style="font-size: 14px;">Védelmi osztály: IP54 | Garancia: 5 év</li>
+      <li style="font-size: 14px;">Védelmi osztály: IP54</li>
+      <li style="font-size: 14px; background-color: #d1fae5; padding: 4px 8px; border-radius: 6px; font-weight: 700; color: #065f46;">✓ Gyártói garancia 5 év</li>
     `;
   }
   if (productName.includes("Zaptec Solar MID")) {
@@ -91,7 +92,8 @@ const getCharacteristics = (productName: string): string => {
       <li style="font-size: 14px;">Tápellátás: 6–32 A</li>
       <li style="font-size: 14px;">Napelemes integráció (Solar load balancing)</li>
       <li style="font-size: 14px;">Kommunikáció: WiFi, 4G LTE-M, RFID/NFC</li>
-      <li style="font-size: 14px;">Védelmi osztály: IP54 | Garancia: 5 év</li>
+      <li style="font-size: 14px;">Védelmi osztály: IP54</li>
+      <li style="font-size: 14px; background-color: #d1fae5; padding: 4px 8px; border-radius: 6px; font-weight: 700; color: #065f46;">✓ Gyártói garancia 5 év</li>
     `;
   }
   if (productName.includes("Zaptec Go")) {
@@ -100,7 +102,8 @@ const getCharacteristics = (productName: string): string => {
       <li style="font-size: 14px;">Tápellátás: 6–32 A</li>
       <li style="font-size: 14px;">Kommunikáció: WiFi, 4G LTE-M, RFID/NFC</li>
       <li style="font-size: 14px;">Terhelésmenedzsment kompatibilis</li>
-      <li style="font-size: 14px;">Védelmi osztály: IP54 | Garancia: 5 év</li>
+      <li style="font-size: 14px;">Védelmi osztály: IP54</li>
+      <li style="font-size: 14px; background-color: #d1fae5; padding: 4px 8px; border-radius: 6px; font-weight: 700; color: #065f46;">✓ Gyártói garancia 5 év</li>
     `;
   }
   if (productName.includes("AMINA 1") || productName.includes("Amina 1")) {
@@ -108,7 +111,8 @@ const getCharacteristics = (productName: string): string => {
       <li style="font-size: 14px;">Fázisok száma: 1</li>
       <li style="font-size: 14px;">Tápellátás: 230 V AC, 6–32 A</li>
       <li style="font-size: 14px;">Plug & Charge, app nélkül</li>
-      <li style="font-size: 14px;">Védelmi osztály: IP54 | Garancia: 5 év</li>
+      <li style="font-size: 14px;">Védelmi osztály: IP54</li>
+      <li style="font-size: 14px; background-color: #d1fae5; padding: 4px 8px; border-radius: 6px; font-weight: 700; color: #065f46;">✓ Gyártói garancia 5 év</li>
     `;
   }
   if (productName.includes("Charge Amps Halo")) {
@@ -116,7 +120,8 @@ const getCharacteristics = (productName: string): string => {
       <li style="font-size: 14px;">Fázisok száma: 1/3</li>
       <li style="font-size: 14px;">Tápellátás: 230/400 V, 16 A</li>
       <li style="font-size: 14px;">RFID hozzáférés-szabályozás, WiFi</li>
-      <li style="font-size: 14px;">Védelmi osztály: IP66 | Garancia: 5 év</li>
+      <li style="font-size: 14px;">Védelmi osztály: IP66</li>
+      <li style="font-size: 14px; background-color: #d1fae5; padding: 4px 8px; border-radius: 6px; font-weight: 700; color: #065f46;">✓ Gyártói garancia 5 év</li>
     `;
   }
   if (productName.includes("Charge Amps Luna")) {
@@ -124,7 +129,8 @@ const getCharacteristics = (productName: string): string => {
       <li style="font-size: 14px;">Fázisok száma: 1/3</li>
       <li style="font-size: 14px;">Tápellátás: 6–32 A</li>
       <li style="font-size: 14px;">Kommunikáció: WiFi, 4G LTE, RFID/NFC, OCPP 1.6J</li>
-      <li style="font-size: 14px;">Védelmi osztály: IP54, IK10 | Garancia: 5 év</li>
+      <li style="font-size: 14px;">Védelmi osztály: IP54, IK10</li>
+      <li style="font-size: 14px; background-color: #d1fae5; padding: 4px 8px; border-radius: 6px; font-weight: 700; color: #065f46;">✓ Gyártói garancia 5 év</li>
     `;
   }
   return "";
@@ -464,6 +470,7 @@ export function B2BEmailGenerator({
                                                         ` : ""}
                                                     </table>
                                                     <p style="margin: 10px 0 0 0; color: #4a5568; font-size: 12px; line-height: 1.6;">A telepítés tartalmazza: áramvédő és kismegszakító beépítése, kábel rögzítése, töltő felszerelése, beüzemelés és átadás.</p>
+                                                    <p style="margin: 8px 0 0 0; font-size: 12px; color: #059669; font-style: italic; line-height: 1.4;">Van saját villanyszerelője? Rendelje meg csak a töltőt! A telepítésben és a beüzemelésben díjmentesen támogatjuk!</p>
                                                 </td>
                                             </tr>
                                         </table>
