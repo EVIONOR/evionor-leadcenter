@@ -771,13 +771,19 @@ export function B2BEmailGenerator({
             )}
           </div>
 
-          {/* Load manager info */}
-          {(chargerCount || 1) > 1 && (
-            <div className="text-xs text-muted-foreground bg-muted p-2 rounded">
-              <p className="font-medium">🔌 Terhelésmenedzsment automatikusan hozzáadva:</p>
-              <p>{detectLoadManager(selectedTemplates)?.name || "Terhelésmenedzser"} – {formatPrice(detectLoadManager(selectedTemplates)?.grossPrice || 0)}</p>
+          {/* Load management toggle */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <Switch checked={includeLoadManagement} onCheckedChange={setIncludeLoadManagement} />
+              <Label className="text-xs">Terhelésmenedzsment hozzáadása</Label>
             </div>
-          )}
+            {includeLoadManagement && (
+              <div className="text-xs text-muted-foreground bg-muted p-2 rounded">
+                <p className="font-medium">🔌 {detectLoadManager(selectedTemplates)?.name || "Terhelésmenedzser"}</p>
+                <p>{formatPrice(detectLoadManager(selectedTemplates)?.grossPrice || 0)}</p>
+              </div>
+            )}
+          </div>
 
           <Separator />
 
