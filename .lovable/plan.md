@@ -1,20 +1,43 @@
 
 
-## Diagnózis
+# Fedélzeti Tolto (Onboard Charger) Megjelenitese
 
-A kód logikája helyes — a `loadManager` változó megfelelően van scope-olva és használva mind az email sablonban, mind a PDF-ben. 
+## Osszefoglalo
+Az ev-data.json tartalmazza a `charging.ac.max_power_kw` mezot (pl. 11.0 kW), amely a fedélzeti töltő mérete. Ezt az adatot ki kell bővíteni az EVModel interface-be, megjeleníteni a form "Autó típus" label mellett, és beilleszteni az email sablonba az autó típus mellé zárójelben.
 
-A valószínű probléma: **az email preview nem frissül automatikusan** ha a toggle-t a generálás UTÁN kapcsolja be a felhasználó. Az email HTML csak az "Email generálása" gomb megnyomásakor generálódik, és nem reagál a toggle változásaira utólag.
+## Technikai lepesek
 
-## Megoldás
+### 1. EVModel interface bovitese
+**Fajl:** `src/data/evDatabase.ts`
+- Uj opcionalis mezo: `onboardChargerKw?: number`
+- A fallback adatbazisban nem lesz kitoltve (opcionalis marad)
 
-**Fájl: `src/components/b2b/B2BEmailGenerator.tsx`**
+### 2. OpenEV transzformacio bovitese
+**Fajl:** `src/data/openEvTransform.ts`
+- `OpenEVVehicle` interface-be `charging` mezo hozzaadasa:
+  ```
+  charging?: {
+    ac?: { max_power_kw?: number; phases?: number }
+  }
+  ```
+- `transformOpenEVData` fuggvenyben kinyerni a `v.charging?.ac?.max_power_kw` erteket es tarolni az `EVModel.onboardChargerKw`-ban
 
-1. **Auto-regenerálás toggle változáskor** — Ha már van generált email (`generatedEmail` nem üres), a `includeLoadManagement` vagy `includeInstallation` toggle változásakor automatikusan újra kell generálni az emailt. Ezt egy `useEffect`-tel oldjuk meg, ami figyeli ezeket a state változókat.
+### 3. useEVData hook bovitese
+**Fajl:** `src/hooks/useEVData.ts`
+- Uj fuggveny: `getOnboardChargerKw(brand, model) => number | undefined`
+- Visszaadja a kivalasztott auto fedélzeti töltőjének méretét
 
-2. **Vizuális jelzés** — A toggle bekapcsolásakor, ha már van generált email, jelenítsünk meg egy figyelmeztetést: "Az email újragenerálása szükséges" — vagy inkább automatikusan generáljuk újra.
+### 4. BasicInfoSection - megjelenites a form label-ben
+**Fajl:** `src/components/questionnaire/sections/BasicInfoSection.tsx`
+- A `selectedModel` kivalasztasa utan lekerni az onboard charger erteket
+- Az "Autó típus" FormLabel szoveg melle kiirni: `Autó típus (fedélzeti töltő: 11kW)` -- csak ha van ertek
 
-3. **Alternatív egyszerűbb megoldás** — A generált emailt töröljük (`setGeneratedEmail("")`) amikor bármely beállítás változik (toggle, kedvezmény, töltő kiválasztás), így a felhasználónak újra kell nyomnia az "Email generálása" gombot a friss beállításokkal.
+### 5. Email sablon frissitese
+**Fajl:** `src/components/questionnaire/EmailGenerator.tsx`
+- Az auto tipust megjelenito sorban (sor ~567): a `carBrand carModel` melle zarojelben hozzaadni az onboard charger erteket
+- Peldaul: `Tesla Model 3 Standard Range (11kW fedélzeti töltő)`
+- Ehhez az `EmailGenerator` komponensnek is hasznalnia kell a `useEVData` hook-ot
 
-A 3. opció a legegyszerűbb és legkevésbé hibahajlamos: minden beállítás-változásnál reset-eljük a preview-t, így mindig friss emailt generál a felhasználó.
+### Emlekeztet az EVIONOR edge function-rol
+Az email sablon frissitese utan a `process-leads/index.ts`-ben is erdemeshet hasonlo modositast vegezni, de az manualis copy-paste szukseges az EVIONOR Supabase-be.
 

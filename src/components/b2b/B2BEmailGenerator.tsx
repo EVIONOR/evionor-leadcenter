@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -153,6 +153,14 @@ export function B2BEmailGenerator({
   const [emailSubject, setEmailSubject] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+
+  // Reset generated email when settings change so user always gets fresh output
+  useEffect(() => {
+    if (generatedEmail) {
+      setGeneratedEmail("");
+      setEmailSubject("");
+    }
+  }, [includeLoadManagement, includeInstallation, discountPercent, installationTier, selectedTemplates]);
 
   const findProductPrice = (productName: string): number => {
     const normalized = productName.toLowerCase().replace(/\s+/g, " ").trim();
