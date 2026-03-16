@@ -461,14 +461,18 @@ export function B2BEmailGenerator({
                                                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                                         <tr>
                                                             <td style="color: #4a5568; font-size: 13px; padding: 4px 0;">1. töltő telepítése (${installLabel})</td>
-                                                            <td style="color: #0a2540; font-size: 14px; font-weight: 600; text-align: right;">${formatPrice(installPrice)}</td>
+                                                            <td style="color: #0a2540; font-size: 14px; font-weight: 600; text-align: right;">
+                                                                ${formatPrice(Math.round(installPrice / 1.27))} + áfa
+                                                                <br/><span style="color: #94a3b8; font-size: 11px; font-weight: 400;">bruttó: ${formatPrice(installPrice)}</span>
+                                                            </td>
                                                         </tr>
                                                         ${emailCount > 1 ? `
                                                         <tr>
                                                             <td style="color: #4a5568; font-size: 13px; padding: 4px 0;">További ${emailCount - 1} db telepítés (${installDiscountInfo.label})</td>
                                                             <td style="color: #059669; font-size: 14px; font-weight: 600; text-align: right;">
-                                                                <span style="color: #94a3b8; text-decoration: line-through; font-size: 12px; margin-right: 4px;">${formatPrice(installPrice)}</span>
-                                                                ${formatPrice(discountedInstallPrice)} / db
+                                                                <span style="color: #94a3b8; text-decoration: line-through; font-size: 11px; margin-right: 4px;">${formatPrice(Math.round(installPrice / 1.27))}</span>
+                                                                ${formatPrice(Math.round(discountedInstallPrice / 1.27))} + áfa / db
+                                                                <br/><span style="color: #94a3b8; font-size: 11px; font-weight: 400;">bruttó: ${formatPrice(discountedInstallPrice)} / db</span>
                                                             </td>
                                                         </tr>
                                                         ` : ""}
