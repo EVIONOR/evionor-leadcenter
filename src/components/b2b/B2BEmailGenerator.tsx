@@ -218,7 +218,7 @@ export function B2BEmailGenerator({
     }
     setIsGenerating(true);
 
-    const loadManager = count > 1 ? detectLoadManager(selectedTemplates) : null;
+    const loadManager = includeLoadManagement ? detectLoadManager(selectedTemplates) : null;
 
     // Generate PDFs
     const quoteUrls: Record<string, string> = {};
