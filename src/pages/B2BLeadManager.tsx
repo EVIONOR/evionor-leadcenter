@@ -134,8 +134,6 @@ export default function B2BLeadManager() {
 
   useEffect(() => {
     fetchResponses();
-    const interval = setInterval(fetchResponses, 30000);
-    return () => clearInterval(interval);
   }, [currentPage, statusFilter, itemsPerPage]);
 
   const handleStatusChange = async (lead: B2BLeadWithStatus, newStatus: B2BLeadStatus) => {
