@@ -144,6 +144,7 @@ export function B2BEmailGenerator({
   const [selectedTemplates, setSelectedTemplates] = useState<ChargerTemplate[]>([]);
   const [discountPercent, setDiscountPercent] = useState(0);
   const [includeInstallation, setIncludeInstallation] = useState(false);
+  const [includeLoadManagement, setIncludeLoadManagement] = useState(false);
   const [installationTier, setInstallationTier] = useState("5m");
   const [senderName, setSenderName] = useState("Horváth Gáspár");
   const [generatedEmail, setGeneratedEmail] = useState("");
