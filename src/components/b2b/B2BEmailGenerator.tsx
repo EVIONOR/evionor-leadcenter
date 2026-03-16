@@ -144,6 +144,7 @@ export function B2BEmailGenerator({
   const [selectedTemplates, setSelectedTemplates] = useState<ChargerTemplate[]>([]);
   const [discountPercent, setDiscountPercent] = useState(0);
   const [includeInstallation, setIncludeInstallation] = useState(false);
+  const [includeLoadManagement, setIncludeLoadManagement] = useState(false);
   const [installationTier, setInstallationTier] = useState("5m");
   const [senderName, setSenderName] = useState("Horváth Gáspár");
   const [generatedEmail, setGeneratedEmail] = useState("");
@@ -217,7 +218,7 @@ export function B2BEmailGenerator({
     }
     setIsGenerating(true);
 
-    const loadManager = count > 1 ? detectLoadManager(selectedTemplates) : null;
+    const loadManager = includeLoadManagement ? detectLoadManager(selectedTemplates) : null;
 
     // Generate PDFs
     const quoteUrls: Record<string, string> = {};
@@ -770,13 +771,19 @@ export function B2BEmailGenerator({
             )}
           </div>
 
-          {/* Load manager info */}
-          {(chargerCount || 1) > 1 && (
-            <div className="text-xs text-muted-foreground bg-muted p-2 rounded">
-              <p className="font-medium">🔌 Terhelésmenedzsment automatikusan hozzáadva:</p>
-              <p>{detectLoadManager(selectedTemplates)?.name || "Terhelésmenedzser"} – {formatPrice(detectLoadManager(selectedTemplates)?.grossPrice || 0)}</p>
+          {/* Load management toggle */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <Switch checked={includeLoadManagement} onCheckedChange={setIncludeLoadManagement} />
+              <Label className="text-xs">Terhelésmenedzsment hozzáadása</Label>
             </div>
-          )}
+            {includeLoadManagement && (
+              <div className="text-xs text-muted-foreground bg-muted p-2 rounded">
+                <p className="font-medium">🔌 {detectLoadManager(selectedTemplates)?.name || "Terhelésmenedzser"}</p>
+                <p>{formatPrice(detectLoadManager(selectedTemplates)?.grossPrice || 0)}</p>
+              </div>
+            )}
+          </div>
 
           <Separator />
 
