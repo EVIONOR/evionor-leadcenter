@@ -149,6 +149,7 @@ export function B2BEmailGenerator({
   mainFuse,
   distanceFromPanel,
   chargerCount,
+  onEmailSent,
 }: B2BEmailGeneratorProps) {
   const [selectedTemplates, setSelectedTemplates] = useState<ChargerTemplate[]>([]);
   const [discountPercent, setDiscountPercent] = useState(0);
