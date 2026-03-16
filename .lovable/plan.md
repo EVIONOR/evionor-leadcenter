@@ -1,43 +1,19 @@
 
 
-# Fedélzeti Tolto (Onboard Charger) Megjelenitese
+## Probléma
 
-## Osszefoglalo
-Az ev-data.json tartalmazza a `charging.ac.max_power_kw` mezot (pl. 11.0 kW), amely a fedélzeti töltő mérete. Ezt az adatot ki kell bővíteni az EVModel interface-be, megjeleníteni a form "Autó típus" label mellett, és beilleszteni az email sablonba az autó típus mellé zárójelben.
+A `fetchResponses` függvény minden hívásnál `setLoading(true)`-t állít be, ami a teljes loading spinner-t mutatja (eltűnik a lista → spinner → újra megjelenik). Ez 30 másodpercenként ismétlődik a polling miatt, és minden `useEffect` trigger-nél (currentPage, statusFilter, itemsPerPage változás).
 
-## Technikai lepesek
+**Két probléma van:**
+1. **`setLoading(true)` minden fetch-nél** – a háttér-frissítéseknél nem kellene loading state-et mutatni, csak az első betöltésnél
+2. **30 mp-es polling felesleges** – a user csak belépéskor akarja frissíteni
 
-### 1. EVModel interface bovitese
-**Fajl:** `src/data/evDatabase.ts`
-- Uj opcionalis mezo: `onboardChargerKw?: number`
-- A fallback adatbazisban nem lesz kitoltve (opcionalis marad)
+## Javítás
 
-### 2. OpenEV transzformacio bovitese
-**Fajl:** `src/data/openEvTransform.ts`
-- `OpenEVVehicle` interface-be `charging` mezo hozzaadasa:
-  ```
-  charging?: {
-    ac?: { max_power_kw?: number; phases?: number }
-  }
-  ```
-- `transformOpenEVData` fuggvenyben kinyerni a `v.charging?.ac?.max_power_kw` erteket es tarolni az `EVModel.onboardChargerKw`-ban
+**Fájl: `src/pages/B2BLeadManager.tsx`**
 
-### 3. useEVData hook bovitese
-**Fajl:** `src/hooks/useEVData.ts`
-- Uj fuggveny: `getOnboardChargerKw(brand, model) => number | undefined`
-- Visszaadja a kivalasztott auto fedélzeti töltőjének méretét
+1. **Polling eltávolítása** – töröljük a `setInterval(fetchResponses, 30000)` sort az `useEffect`-ből
+2. **Loading csak első betöltésnél** – a `setLoading(true)` csak akkor fusson, ha `responses` üres (vagy egy `initialLoad` ref-fel). A háttérfrissítéseknél (kvalifikációs formból visszalépés, filter/page változás) ne mutasson loading spinner-t, hanem csendben frissítsen.
 
-### 4. BasicInfoSection - megjelenites a form label-ben
-**Fajl:** `src/components/questionnaire/sections/BasicInfoSection.tsx`
-- A `selectedModel` kivalasztasa utan lekerni az onboard charger erteket
-- Az "Autó típus" FormLabel szoveg melle kiirni: `Autó típus (fedélzeti töltő: 11kW)` -- csak ha van ertek
-
-### 5. Email sablon frissitese
-**Fajl:** `src/components/questionnaire/EmailGenerator.tsx`
-- Az auto tipust megjelenito sorban (sor ~567): a `carBrand carModel` melle zarojelben hozzaadni az onboard charger erteket
-- Peldaul: `Tesla Model 3 Standard Range (11kW fedélzeti töltő)`
-- Ehhez az `EmailGenerator` komponensnek is hasznalnia kell a `useEVData` hook-ot
-
-### Emlekeztet az EVIONOR edge function-rol
-Az email sablon frissitese utan a `process-leads/index.ts`-ben is erdemeshet hasonlo modositast vegezni, de az manualis copy-paste szukseges az EVIONOR Supabase-be.
+Konkrétan: bevezetünk egy `isInitialLoad` ref-et, és `setLoading(true)` csak akkor hívódik, ha `isInitialLoad.current === true`. Az első sikeres fetch után `isInitialLoad.current = false`.
 
