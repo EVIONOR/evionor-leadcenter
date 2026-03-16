@@ -25,6 +25,7 @@ interface B2BEmailGeneratorProps {
   mainFuse?: string;
   distanceFromPanel?: string;
   chargerCount?: number;
+  onEmailSent?: () => void;
 }
 
 const INSTALLATION_TIERS = [
