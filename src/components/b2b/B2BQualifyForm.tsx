@@ -731,7 +731,7 @@ export function B2BQualifyForm({ lead, onBack, onSaved }: B2BQualifyFormProps) {
               const { data: { session } } = await evionorAuth.auth.getSession();
               // Save the full form with qualified status
               await supabase.functions.invoke("manage-qualifications", {
-                body: { action: "insert", access_token: session?.access_token, data: { ...form, status: "qualified" } }
+                body: { action: "upsert", access_token: session?.access_token, data: { ...form, status: "qualified" } }
               });
             } catch (err) {
               console.error("Auto-qualify save error:", err);
