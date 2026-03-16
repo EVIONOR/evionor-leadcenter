@@ -1,14 +1,43 @@
 
 
-## Terv: "Saját villanyszerelő" szöveg mindig jelenjen meg
+# Fedélzeti Tolto (Onboard Charger) Megjelenitese
 
-**Probléma:** A szöveg jelenleg a telepítési blokkon belül van (sor 473), ami csak akkor renderelődik, ha az `includeInstallation` toggle be van kapcsolva.
+## Osszefoglalo
+Az ev-data.json tartalmazza a `charging.ac.max_power_kw` mezot (pl. 11.0 kW), amely a fedélzeti töltő mérete. Ezt az adatot ki kell bővíteni az EVModel interface-be, megjeleníteni a form "Autó típus" label mellett, és beilleszteni az email sablonba az autó típus mellé zárójelben.
 
-**Megoldás:** A szöveget ki kell emelni a telepítési feltételes blokkból, és önálló blokkként kell elhelyezni közvetlenül utána — a terhelésmenedzsment blokk előtt. Így mindig megjelenik az emailben, függetlenül attól, hogy a telepítés be van-e kapcsolva.
+## Technikai lepesek
 
-**Fájl:** `src/components/b2b/B2BEmailGenerator.tsx`
-- Sor 473: törlés (a szöveg eltávolítása a telepítési blokkból)
-- Sor 477 (`\` : ""\`}`) után új önálló blokk beszúrása:
-  - Zöld hátterű (#d1fae5) kártya, a B2B stílushoz illeszkedő formázással
-  - Szöveg: *"Van saját villanyszerelője? Rendelje meg csak a töltőt! A telepítésben és a beüzemelésben díjmentesen támogatjuk!"*
+### 1. EVModel interface bovitese
+**Fajl:** `src/data/evDatabase.ts`
+- Uj opcionalis mezo: `onboardChargerKw?: number`
+- A fallback adatbazisban nem lesz kitoltve (opcionalis marad)
+
+### 2. OpenEV transzformacio bovitese
+**Fajl:** `src/data/openEvTransform.ts`
+- `OpenEVVehicle` interface-be `charging` mezo hozzaadasa:
+  ```
+  charging?: {
+    ac?: { max_power_kw?: number; phases?: number }
+  }
+  ```
+- `transformOpenEVData` fuggvenyben kinyerni a `v.charging?.ac?.max_power_kw` erteket es tarolni az `EVModel.onboardChargerKw`-ban
+
+### 3. useEVData hook bovitese
+**Fajl:** `src/hooks/useEVData.ts`
+- Uj fuggveny: `getOnboardChargerKw(brand, model) => number | undefined`
+- Visszaadja a kivalasztott auto fedélzeti töltőjének méretét
+
+### 4. BasicInfoSection - megjelenites a form label-ben
+**Fajl:** `src/components/questionnaire/sections/BasicInfoSection.tsx`
+- A `selectedModel` kivalasztasa utan lekerni az onboard charger erteket
+- Az "Autó típus" FormLabel szoveg melle kiirni: `Autó típus (fedélzeti töltő: 11kW)` -- csak ha van ertek
+
+### 5. Email sablon frissitese
+**Fajl:** `src/components/questionnaire/EmailGenerator.tsx`
+- Az auto tipust megjelenito sorban (sor ~567): a `carBrand carModel` melle zarojelben hozzaadni az onboard charger erteket
+- Peldaul: `Tesla Model 3 Standard Range (11kW fedélzeti töltő)`
+- Ehhez az `EmailGenerator` komponensnek is hasznalnia kell a `useEVData` hook-ot
+
+### Emlekeztet az EVIONOR edge function-rol
+Az email sablon frissitese utan a `process-leads/index.ts`-ben is erdemeshet hasonlo modositast vegezni, de az manualis copy-paste szukseges az EVIONOR Supabase-be.
 
