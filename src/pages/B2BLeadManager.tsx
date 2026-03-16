@@ -128,6 +128,7 @@ export default function B2BLeadManager() {
       });
     } finally {
       setLoading(false);
+      isInitialLoad.current = false;
     }
   };
 
