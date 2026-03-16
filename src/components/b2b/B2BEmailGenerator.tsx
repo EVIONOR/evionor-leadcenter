@@ -656,7 +656,7 @@ export function B2BEmailGenerator({
       if (error) throw error;
       if (emailData?.success) {
         toast.success(`Email elküldve: ${email}`);
-      } else {
+        onEmailSent?.();
         throw new Error(emailData?.error || "Ismeretlen hiba");
       }
     } catch (error) {

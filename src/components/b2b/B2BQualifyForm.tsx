@@ -725,6 +725,7 @@ export function B2BQualifyForm({ lead, onBack, onSaved }: B2BQualifyFormProps) {
           mainFuse={form.main_fuse || undefined}
           distanceFromPanel={form.distance_from_panel || undefined}
           chargerCount={form.charger_count || undefined}
+          onEmailSent={() => updateField("status", "qualified")}
         />
       )}
 
