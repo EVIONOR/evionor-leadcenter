@@ -284,7 +284,7 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
         <li style="font-size: 14px;">Funkciók: Terhelésmenedzsment kompatibilis (max. 3 töltőig), céges számlázási riportok, lágy indítás, okos otthon integráció</li>
         <li style="font-size: 14px;">Szoftverfrissítések: Automatikus frissítések</li>
         <li style="font-size: 14px;">Védelmi osztály: IP54 (időjárás álló)</li>
-        <li style="font-size: 14px;">Garancia: 5 év</li>
+        <li style="font-size: 14px; background-color: #d1fae5; padding: 4px 8px; border-radius: 6px; font-weight: 700; color: #065f46;">✓ Gyártói garancia 5 év</li>
       `;
     }
     if (productName.includes("Zaptec Solar MID")) {
