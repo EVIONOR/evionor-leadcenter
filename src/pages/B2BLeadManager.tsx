@@ -57,6 +57,7 @@ export default function B2BLeadManager() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isInitialLoad = useRef(true);
 
   const [statusFilter, setStatusFilter] = useQueryState(
     "status",
@@ -70,7 +71,9 @@ export default function B2BLeadManager() {
   const totalPages = Math.ceil(totalCount / itemsPerPage);
 
   const fetchResponses = async () => {
-    setLoading(true);
+    if (isInitialLoad.current) {
+      setLoading(true);
+    }
     try {
       const offset = (currentPage - 1) * itemsPerPage;
       
@@ -125,13 +128,12 @@ export default function B2BLeadManager() {
       });
     } finally {
       setLoading(false);
+      isInitialLoad.current = false;
     }
   };
 
   useEffect(() => {
     fetchResponses();
-    const interval = setInterval(fetchResponses, 30000);
-    return () => clearInterval(interval);
   }, [currentPage, statusFilter, itemsPerPage]);
 
   const handleStatusChange = async (lead: B2BLeadWithStatus, newStatus: B2BLeadStatus) => {
