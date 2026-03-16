@@ -725,7 +725,18 @@ export function B2BQualifyForm({ lead, onBack, onSaved }: B2BQualifyFormProps) {
           mainFuse={form.main_fuse || undefined}
           distanceFromPanel={form.distance_from_panel || undefined}
           chargerCount={form.charger_count || undefined}
-          onEmailSent={() => updateField("status", "qualified")}
+          onEmailSent={async () => {
+            updateField("status", "qualified");
+            try {
+              const { data: { session } } = await evionorAuth.auth.getSession();
+              // Save the full form with qualified status
+              await supabase.functions.invoke("manage-qualifications", {
+                body: { action: "insert", access_token: session?.access_token, data: { ...form, status: "qualified" } }
+              });
+            } catch (err) {
+              console.error("Auto-qualify save error:", err);
+            }
+          }}
         />
       )}
 
