@@ -470,6 +470,7 @@ export function B2BEmailGenerator({
                                                         ` : ""}
                                                     </table>
                                                     <p style="margin: 10px 0 0 0; color: #4a5568; font-size: 12px; line-height: 1.6;">A telepítés tartalmazza: áramvédő és kismegszakító beépítése, kábel rögzítése, töltő felszerelése, beüzemelés és átadás.</p>
+                                                    <p style="margin: 8px 0 0 0; font-size: 12px; color: #059669; font-style: italic; line-height: 1.4;">Van saját villanyszerelője? Rendelje meg csak a töltőt! A telepítésben és a beüzemelésben díjmentesen támogatjuk!</p>
                                                 </td>
                                             </tr>
                                         </table>
