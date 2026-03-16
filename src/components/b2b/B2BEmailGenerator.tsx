@@ -501,7 +501,10 @@ export function B2BEmailGenerator({
                                                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                                         <tr>
                                                             <td style="color: #4a5568; font-size: 13px; padding: 4px 0;"><a href="${loadManager.url}" style="color: #0071e3; text-decoration: none; border-bottom: 1px solid #0071e3;">${loadManager.name}</a></td>
-                                                            <td style="color: #0a2540; font-size: 14px; font-weight: 600; text-align: right;">${formatPrice(loadManager.grossPrice)}</td>
+                                                            <td style="color: #0a2540; font-size: 14px; font-weight: 600; text-align: right;">
+                                                                ${formatPrice(loadManager.netPrice)} + áfa
+                                                                <br/><span style="color: #94a3b8; font-size: 11px; font-weight: 400;">bruttó: ${formatPrice(loadManager.grossPrice)}</span>
+                                                            </td>
                                                         </tr>
                                                     </table>
                                                     <p style="margin: 10px 0 0 0; color: #4a5568; font-size: 12px; line-height: 1.6;">Több töltő egyidejű használatához szükséges terhelésmenedzsment rendszer.</p>
