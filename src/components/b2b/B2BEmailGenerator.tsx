@@ -154,6 +154,14 @@ export function B2BEmailGenerator({
   const [isSending, setIsSending] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
 
+  // Reset generated email when settings change so user always gets fresh output
+  useEffect(() => {
+    if (generatedEmail) {
+      setGeneratedEmail("");
+      setEmailSubject("");
+    }
+  }, [includeLoadManagement, includeInstallation, discountPercent, installationTier, selectedTemplates]);
+
   const findProductPrice = (productName: string): number => {
     const normalized = productName.toLowerCase().replace(/\s+/g, " ").trim();
     let product = priceList.find(p => p.name.toLowerCase().replace(/\s+/g, " ") === normalized);
