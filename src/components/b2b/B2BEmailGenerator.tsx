@@ -428,9 +428,13 @@ export function B2BEmailGenerator({
                                                 <td style="padding: 14px;">
                                                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                                         <tr><td style="padding-bottom: 8px;"><a href="${prodUrl}" style="color: #0a2540; font-size: 15px; font-weight: 700; text-decoration: none; border-bottom: 2px solid #0071e3;">${product}</a></td></tr>
-                                                        <tr><td style="color: #0071e3; font-size: 20px; font-weight: 800;">
-                                                            ${hasDiscount || origPrice ? `<span style="color: #94a3b8; text-decoration: line-through; font-size: 14px; font-weight: 400; margin-right: 8px;">${formatPrice(origPrice || originalPrice)}</span>` : ""}${formatPrice(discountedPrice)}
+                                                        <tr><td>
+                                                            ${hasDiscount || origPrice ? `<span style="color: #94a3b8; text-decoration: line-through; font-size: 13px; font-weight: 400; margin-right: 8px;">${formatPrice(Math.round((origPrice || originalPrice) / 1.27))} + áfa</span>` : ""}
+                                                            <span style="color: #0071e3; font-size: 22px; font-weight: 800;">${formatPrice(Math.round(discountedPrice / 1.27))}</span>
+                                                            <span style="color: #64748b; font-size: 13px; font-weight: 500;"> + áfa</span>
                                                             ${hasDiscount ? `<span style="color: #059669; font-size: 12px; font-weight: 600; margin-left: 8px;">-${discountPercent}%</span>` : ""}
+                                                            <br/>
+                                                            <span style="color: #94a3b8; font-size: 12px; font-weight: 400;">bruttó: ${formatPrice(discountedPrice)}</span>
                                                         </td></tr>
                                                     </table>
                                                 </td>
@@ -457,14 +461,18 @@ export function B2BEmailGenerator({
                                                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                                         <tr>
                                                             <td style="color: #4a5568; font-size: 13px; padding: 4px 0;">1. töltő telepítése (${installLabel})</td>
-                                                            <td style="color: #0a2540; font-size: 14px; font-weight: 600; text-align: right;">${formatPrice(installPrice)}</td>
+                                                            <td style="color: #0a2540; font-size: 14px; font-weight: 600; text-align: right;">
+                                                                ${formatPrice(Math.round(installPrice / 1.27))} + áfa
+                                                                <br/><span style="color: #94a3b8; font-size: 11px; font-weight: 400;">bruttó: ${formatPrice(installPrice)}</span>
+                                                            </td>
                                                         </tr>
                                                         ${emailCount > 1 ? `
                                                         <tr>
                                                             <td style="color: #4a5568; font-size: 13px; padding: 4px 0;">További ${emailCount - 1} db telepítés (${installDiscountInfo.label})</td>
                                                             <td style="color: #059669; font-size: 14px; font-weight: 600; text-align: right;">
-                                                                <span style="color: #94a3b8; text-decoration: line-through; font-size: 12px; margin-right: 4px;">${formatPrice(installPrice)}</span>
-                                                                ${formatPrice(discountedInstallPrice)} / db
+                                                                <span style="color: #94a3b8; text-decoration: line-through; font-size: 11px; margin-right: 4px;">${formatPrice(Math.round(installPrice / 1.27))}</span>
+                                                                ${formatPrice(Math.round(discountedInstallPrice / 1.27))} + áfa / db
+                                                                <br/><span style="color: #94a3b8; font-size: 11px; font-weight: 400;">bruttó: ${formatPrice(discountedInstallPrice)} / db</span>
                                                             </td>
                                                         </tr>
                                                         ` : ""}
@@ -493,7 +501,10 @@ export function B2BEmailGenerator({
                                                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                                         <tr>
                                                             <td style="color: #4a5568; font-size: 13px; padding: 4px 0;"><a href="${loadManager.url}" style="color: #0071e3; text-decoration: none; border-bottom: 1px solid #0071e3;">${loadManager.name}</a></td>
-                                                            <td style="color: #0a2540; font-size: 14px; font-weight: 600; text-align: right;">${formatPrice(loadManager.grossPrice)}</td>
+                                                            <td style="color: #0a2540; font-size: 14px; font-weight: 600; text-align: right;">
+                                                                ${formatPrice(loadManager.netPrice)} + áfa
+                                                                <br/><span style="color: #94a3b8; font-size: 11px; font-weight: 400;">bruttó: ${formatPrice(loadManager.grossPrice)}</span>
+                                                            </td>
                                                         </tr>
                                                     </table>
                                                     <p style="margin: 10px 0 0 0; color: #4a5568; font-size: 12px; line-height: 1.6;">Több töltő egyidejű használatához szükséges terhelésmenedzsment rendszer.</p>
@@ -508,19 +519,31 @@ export function B2BEmailGenerator({
                                                 <td style="padding: 16px;">
                                                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                                         <tr>
-                                                            <td style="color: #0a2540; font-size: 14px; font-weight: 700;">Töltő ára${emailCount > 1 ? ` (${emailCount} db)` : ""}:</td>
-                                                            <td style="color: #0071e3; font-size: 20px; font-weight: 800; text-align: right;">${formatPrice(discountedPrice * emailCount)}</td>
+                                                            <td style="color: #0a2540; font-size: 14px; font-weight: 700;">Töltő${emailCount > 1 ? ` (${emailCount} db)` : ""} nettó:</td>
+                                                            <td style="text-align: right;">
+                                                                <span style="color: #0071e3; font-size: 20px; font-weight: 800;">${formatPrice(Math.round(discountedPrice * emailCount / 1.27))}</span>
+                                                                <span style="color: #64748b; font-size: 12px;"> + áfa</span>
+                                                                <br/><span style="color: #94a3b8; font-size: 11px;">bruttó: ${formatPrice(discountedPrice * emailCount)}</span>
+                                                            </td>
                                                         </tr>
                                                         ${includeInstallation ? `
                                                         <tr>
-                                                            <td style="color: #0a2540; font-size: 14px; font-weight: 700; padding-top: 8px;">Telepítés (${emailCount} db):</td>
-                                                            <td style="color: #059669; font-size: 16px; font-weight: 700; text-align: right; padding-top: 8px;">${formatPrice(installPrice + discountedInstallPrice * (emailCount - 1))}</td>
+                                                            <td style="color: #0a2540; font-size: 14px; font-weight: 700; padding-top: 8px;">Telepítés (${emailCount} db) nettó:</td>
+                                                            <td style="text-align: right; padding-top: 8px;">
+                                                                <span style="color: #059669; font-size: 16px; font-weight: 700;">${formatPrice(Math.round((installPrice + discountedInstallPrice * (emailCount - 1)) / 1.27))}</span>
+                                                                <span style="color: #64748b; font-size: 12px;"> + áfa</span>
+                                                                <br/><span style="color: #94a3b8; font-size: 11px;">bruttó: ${formatPrice(installPrice + discountedInstallPrice * (emailCount - 1))}</span>
+                                                            </td>
                                                         </tr>
                                                         ` : ""}
                                                         ${loadManager ? `
                                                         <tr>
-                                                            <td style="color: #0a2540; font-size: 14px; font-weight: 700; padding-top: 8px;">Terhelésmenedzsment:</td>
-                                                            <td style="color: #059669; font-size: 16px; font-weight: 700; text-align: right; padding-top: 8px;">${formatPrice(loadManager.grossPrice)}</td>
+                                                            <td style="color: #0a2540; font-size: 14px; font-weight: 700; padding-top: 8px;">Terhelésmenedzsment nettó:</td>
+                                                            <td style="text-align: right; padding-top: 8px;">
+                                                                <span style="color: #059669; font-size: 16px; font-weight: 700;">${formatPrice(loadManager.netPrice)}</span>
+                                                                <span style="color: #64748b; font-size: 12px;"> + áfa</span>
+                                                                <br/><span style="color: #94a3b8; font-size: 11px;">bruttó: ${formatPrice(loadManager.grossPrice)}</span>
+                                                            </td>
                                                         </tr>
                                                         ` : ""}
                                                         ${includeInstallation || loadManager ? `
@@ -528,8 +551,12 @@ export function B2BEmailGenerator({
                                                             <td colspan="2" style="padding-top: 12px; border-top: 1px solid #cbd5e1;">
                                                                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                                                     <tr>
-                                                                        <td style="color: #0a2540; font-size: 16px; font-weight: 800; padding-top: 4px;">Összesen:</td>
-                                                                        <td style="color: #0071e3; font-size: 22px; font-weight: 800; text-align: right; padding-top: 4px;">${formatPrice(discountedPrice * emailCount + (includeInstallation ? installPrice + discountedInstallPrice * (emailCount - 1) : 0) + (loadManager ? loadManager.grossPrice : 0))}</td>
+                                                                        <td style="color: #0a2540; font-size: 16px; font-weight: 800; padding-top: 4px;">Összesen nettó:</td>
+                                                                        <td style="text-align: right; padding-top: 4px;">
+                                                                            <span style="color: #0071e3; font-size: 22px; font-weight: 800;">${formatPrice(Math.round((discountedPrice * emailCount + (includeInstallation ? installPrice + discountedInstallPrice * (emailCount - 1) : 0) + (loadManager ? loadManager.grossPrice : 0)) / 1.27))}</span>
+                                                                            <span style="color: #64748b; font-size: 13px;"> + áfa</span>
+                                                                            <br/><span style="color: #94a3b8; font-size: 12px;">bruttó: ${formatPrice(discountedPrice * emailCount + (includeInstallation ? installPrice + discountedInstallPrice * (emailCount - 1) : 0) + (loadManager ? loadManager.grossPrice : 0))}</span>
+                                                                        </td>
                                                                     </tr>
                                                                 </table>
                                                             </td>
