@@ -107,6 +107,41 @@ Deno.serve(async (req) => {
         break;
       }
 
+      case "upsert": {
+        const { data: upsertData } = params;
+        if (!upsertData) throw new Error("data required");
+        const sourceId = upsertData.source_b2b_id;
+        if (!sourceId) throw new Error("source_b2b_id required for upsert");
+
+        // Check if qualification exists
+        const { data: existing } = await supabase
+          .from("b2b_qualifications")
+          .select("id")
+          .eq("source_b2b_id", sourceId)
+          .maybeSingle();
+
+        if (existing) {
+          // Update existing
+          const { id: _id, source_b2b_id: _sid, created_at: _ca, ...updateFields } = upsertData;
+          const { error } = await supabase
+            .from("b2b_qualifications")
+            .update(updateFields)
+            .eq("id", existing.id);
+          if (error) throw error;
+          result = { data: { id: existing.id }, updated: true };
+        } else {
+          // Insert new
+          const { data, error } = await supabase
+            .from("b2b_qualifications")
+            .insert(upsertData)
+            .select()
+            .single();
+          if (error) throw error;
+          result = { data, inserted: true };
+        }
+        break;
+      }
+
       default:
         throw new Error(`Unknown action: ${action}`);
     }

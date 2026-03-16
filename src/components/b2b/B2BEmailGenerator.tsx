@@ -25,6 +25,7 @@ interface B2BEmailGeneratorProps {
   mainFuse?: string;
   distanceFromPanel?: string;
   chargerCount?: number;
+  onEmailSent?: () => void;
 }
 
 const INSTALLATION_TIERS = [
@@ -148,6 +149,7 @@ export function B2BEmailGenerator({
   mainFuse,
   distanceFromPanel,
   chargerCount,
+  onEmailSent,
 }: B2BEmailGeneratorProps) {
   const [selectedTemplates, setSelectedTemplates] = useState<ChargerTemplate[]>([]);
   const [discountPercent, setDiscountPercent] = useState(0);
@@ -654,7 +656,7 @@ export function B2BEmailGenerator({
       if (error) throw error;
       if (emailData?.success) {
         toast.success(`Email elküldve: ${email}`);
-      } else {
+        onEmailSent?.();
         throw new Error(emailData?.error || "Ismeretlen hiba");
       }
     } catch (error) {
