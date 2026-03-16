@@ -469,7 +469,7 @@ export function B2BEmailGenerator({
                                                     <p style="margin: 0 0 8px 0; color: #0a2540; font-size: 13px; font-weight: 700; text-transform: uppercase;">Terhelésmenedzsment</p>
                                                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                                         <tr>
-                                                            <td style="color: #4a5568; font-size: 13px; padding: 4px 0;">${loadManager.name}</td>
+                                                            <td style="color: #4a5568; font-size: 13px; padding: 4px 0;"><a href="${loadManager.url}" style="color: #0071e3; text-decoration: none; border-bottom: 1px solid #0071e3;">${loadManager.name}</a></td>
                                                             <td style="color: #0a2540; font-size: 14px; font-weight: 600; text-align: right;">${formatPrice(loadManager.grossPrice)}</td>
                                                         </tr>
                                                     </table>
