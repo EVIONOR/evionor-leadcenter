@@ -71,7 +71,9 @@ export default function B2BLeadManager() {
   const totalPages = Math.ceil(totalCount / itemsPerPage);
 
   const fetchResponses = async () => {
-    setLoading(true);
+    if (isInitialLoad.current) {
+      setLoading(true);
+    }
     try {
       const offset = (currentPage - 1) * itemsPerPage;
       
