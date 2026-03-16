@@ -888,18 +888,32 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
                 <tr>
                     <td style="padding: 12px 16px 16px 16px;">
                         <ol style="margin: 0; padding: 0 0 0 18px; color: #4a5568; font-size: 13px; line-height: 2;">
-                            ${data.needsInstallation
-        ? `
-                            <li>Webshop megrendelés leadása</li>
-                            <li>Telepítés ütemezése</li>
-                            <li>Szakszerű kivitelezés 10 munkanapon belül</li>
-                            `
-        : `
-                            <li>Webshop megrendelés leadása</li>
-                            <li>Szállítás 5 munkanapon belül</li>
-                            `
-      }
+                            <li>Rendelje meg egyszerűen a termékeinket akár erre az emailre történő válasszal!</li>
+                            <li>A termékeket díjmentesen házhoz szállítjuk.</li>
+                            ${data.needsInstallation ? `
+                            <li>Rendelés után azonnal egyeztetjük a telepítés részleteit.</li>
+                            ` : ``}
                         </ol>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- Value Proposition -->
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 32px; background-color: #f0f9ff; border-radius: 12px; border: 1px solid #bae6fd;">
+                <tr>
+                    <td style="padding: 16px 16px 6px 16px; border-bottom: 2px solid #bae6fd;">
+                        <h2 style="margin: 0; color: #0a2540; font-size: 16px; font-weight: 700; letter-spacing: -0.3px;">Mit kap, ha termékeinket választja?</h2>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 14px 16px 18px 16px;">
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                            <tr><td style="padding: 4px 0; color: #334155; font-size: 13px; line-height: 1.6;">✅ Stabil és kényelmes autótöltést a mindennapokban.</td></tr>
+                            <tr><td style="padding: 4px 0; color: #334155; font-size: 13px; line-height: 1.6;">✅ Megbízható technológiát és gondtalan működést.</td></tr>
+                            <tr><td style="padding: 4px 0; color: #334155; font-size: 13px; line-height: 1.6;">✅ 5 év gyártói garanciával védjük a befektetését.</td></tr>
+                            <tr><td style="padding: 4px 0; color: #334155; font-size: 13px; line-height: 1.6;">✅ Vásárlás után élethosszig tartó szakmai segítséget.</td></tr>
+                        </table>
+                        <p style="margin: 14px 0 0 0; color: #0369a1; font-size: 13px; font-weight: 700; font-style: italic;">Az EVIONOR-al a skandináv megbízhatóságot választja.</p>
                     </td>
                 </tr>
             </table>
