@@ -57,6 +57,7 @@ export default function B2BLeadManager() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isInitialLoad = useRef(true);
 
   const [statusFilter, setStatusFilter] = useQueryState(
     "status",
