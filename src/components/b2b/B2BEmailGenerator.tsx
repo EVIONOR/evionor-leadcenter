@@ -470,11 +470,19 @@ export function B2BEmailGenerator({
                                                         ` : ""}
                                                     </table>
                                                     <p style="margin: 10px 0 0 0; color: #4a5568; font-size: 12px; line-height: 1.6;">A telepítés tartalmazza: áramvédő és kismegszakító beépítése, kábel rögzítése, töltő felszerelése, beüzemelés és átadás.</p>
-                                                    <p style="margin: 8px 0 0 0; font-size: 12px; color: #059669; font-style: italic; line-height: 1.4;">Van saját villanyszerelője? Rendelje meg csak a töltőt! A telepítésben és a beüzemelésben díjmentesen támogatjuk!</p>
                                                 </td>
                                             </tr>
                                         </table>
                                         ` : ""}
+
+                                        <!-- Saját villanyszerelő - always visible -->
+                                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top: 16px; background-color: #d1fae5; border-radius: 10px; border: 1px solid #a7f3d0;">
+                                            <tr>
+                                                <td style="padding: 14px;">
+                                                    <p style="margin: 0; color: #065f46; font-size: 13px; font-weight: 700; line-height: 1.5;">💡 Van saját villanyszerelője? Rendelje meg csak a töltőt! A telepítésben és a beüzemelésben díjmentesen támogatjuk!</p>
+                                                </td>
+                                            </tr>
+                                        </table>
 
                                         ${loadManager ? `
                                         <!-- Load Manager -->
