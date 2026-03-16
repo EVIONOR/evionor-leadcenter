@@ -41,8 +41,9 @@ const INSTALLATION_DISCOUNTS: Record<number, { discount: number; label: string }
 };
 
 const LOAD_MANAGERS = [
-  { brand: "Zaptec", name: "Zaptec Sense GEN CT Clamp Csomag", netPrice: 99450, grossPrice: Math.round(99450 * 1.27) },
-  { brand: "Easee", name: "Easee Equalizer Amp Csomag", netPrice: 110074, grossPrice: Math.round(110074 * 1.27) },
+  { brand: "Zaptec", name: "Zaptec Sense GEN CT Clamp Csomag", netPrice: 99450, grossPrice: Math.round(99450 * 1.27), url: "https://evionor.hu/collections/all/products/zaptec-sense-gen-ct-clamp-csomag-ev-mero?_pos=14&_fid=c1e909eaa&_ss=c" },
+  { brand: "Easee", name: "Easee Equalizer Amp Csomag", netPrice: 110074, grossPrice: Math.round(110074 * 1.27), url: "https://evionor.hu/collections/all/products/easee-equalizer-amp-csomag-ev-mero" },
+  { brand: "Charge Amps", name: "Charge Amps Amp Guard", netPrice: 103937, grossPrice: Math.round(103937 * 1.27), url: "https://evionor.hu/collections/all/products/charge-amps-amp-guard-63a-ev-mero?_pos=10&_fid=53fe77cfa&_ss=c" },
 ];
 
 const detectLoadManager = (templates: ChargerTemplate[]): typeof LOAD_MANAGERS[0] | null => {
@@ -50,6 +51,7 @@ const detectLoadManager = (templates: ChargerTemplate[]): typeof LOAD_MANAGERS[0
     const product = t.products[0].toLowerCase();
     if (product.includes("zaptec")) return LOAD_MANAGERS[0];
     if (product.includes("easee")) return LOAD_MANAGERS[1];
+    if (product.includes("charge amps")) return LOAD_MANAGERS[2];
   }
   return LOAD_MANAGERS[0]; // default
 };
@@ -467,7 +469,7 @@ export function B2BEmailGenerator({
                                                     <p style="margin: 0 0 8px 0; color: #0a2540; font-size: 13px; font-weight: 700; text-transform: uppercase;">Terhelésmenedzsment</p>
                                                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                                         <tr>
-                                                            <td style="color: #4a5568; font-size: 13px; padding: 4px 0;">${loadManager.name}</td>
+                                                            <td style="color: #4a5568; font-size: 13px; padding: 4px 0;"><a href="${loadManager.url}" style="color: #0071e3; text-decoration: none; border-bottom: 1px solid #0071e3;">${loadManager.name}</a></td>
                                                             <td style="color: #0a2540; font-size: 14px; font-weight: 600; text-align: right;">${formatPrice(loadManager.grossPrice)}</td>
                                                         </tr>
                                                     </table>
