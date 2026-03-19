@@ -13,6 +13,21 @@ import type {
   SavedQuestionnaireResponseInsert,
 } from "./types";
 
+type EvionorFilterValue = boolean | number | string | null;
+
+interface ResidentialAutomationSettingResponse {
+  blocked?: number;
+  blockedLeads?: Array<{
+    email: string;
+    leadId: string;
+    missingFields: string[];
+  }>;
+  enabled?: boolean;
+  error?: string;
+  processed?: number;
+  success: boolean;
+}
+
 /**
  * Get the current EVIONOR access token for authenticated requests
  */
@@ -33,7 +48,7 @@ export async function queryEvionorTable<T>(
     limit?: number;
     offset?: number;
     select?: string;
-    filters?: Record<string, any>;
+    filters?: Record<string, EvionorFilterValue>;
     order?: { column: string; ascending?: boolean };
   },
 ) {
@@ -77,7 +92,7 @@ export async function getQuestionnaireResponses(options?: {
   offset?: number;
   status?: string;
 }) {
-  const filters: Record<string, any> = {};
+  const filters: Record<string, EvionorFilterValue> = {};
   
   if (options?.status && options.status !== 'all') {
     filters.status = options.status;
@@ -155,11 +170,10 @@ export async function saveSavedQuestionnaireResponse(
 export async function getAutomaticProcessingSetting(): Promise<boolean> {
   const access_token = await getAccessToken();
 
-  const { data, error } = await supabase.functions.invoke<{ data: { enabled: boolean } }>("query-evionor", {
+  const { data, error } = await supabase.functions.invoke<ResidentialAutomationSettingResponse>("manage-residential-automation", {
     body: {
-      action: "get_setting",
       access_token,
-      setting_key: "automatic_processing_enabled",
+      action: "get",
     },
   });
 
@@ -168,7 +182,7 @@ export async function getAutomaticProcessingSetting(): Promise<boolean> {
     return false;
   }
 
-  return data?.data?.enabled ?? false;
+  return data?.success ? (data.enabled ?? false) : false;
 }
 
 /**
@@ -177,12 +191,11 @@ export async function getAutomaticProcessingSetting(): Promise<boolean> {
 export async function setAutomaticProcessingSetting(enabled: boolean): Promise<void> {
   const access_token = await getAccessToken();
 
-  const { error } = await supabase.functions.invoke("query-evionor", {
+  const { data, error } = await supabase.functions.invoke<ResidentialAutomationSettingResponse>("manage-residential-automation", {
     body: {
-      action: "update_setting",
       access_token,
-      setting_key: "automatic_processing_enabled",
-      setting_value: { enabled },
+      action: "set",
+      enabled,
     },
   });
 
@@ -190,15 +203,22 @@ export async function setAutomaticProcessingSetting(enabled: boolean): Promise<v
     console.error("Error setting automatic processing setting:", error);
     throw error;
   }
+
+  if (!data?.success) {
+    throw new Error(data?.error || "Failed to update automatic processing setting");
+  }
 }
 
 /**
  * Manually trigger lead processing
  */
 export async function triggerLeadProcessing(): Promise<void> {
-  const { error } = await supabase.functions.invoke("process-leads", {
+  const access_token = await getAccessToken();
+
+  const { error } = await supabase.functions.invoke("process-residential-offers", {
     body: {
-      manual_trigger: true,
+      access_token,
+      mode: "manual",
     },
   });
 
@@ -206,6 +226,42 @@ export async function triggerLeadProcessing(): Promise<void> {
     console.error("Error triggering lead processing:", error);
     throw error;
   }
+}
+
+export interface ResidentialAutomationDryRunResult {
+  blocked: number;
+  blockedLeads: Array<{
+    email: string;
+    leadId: string;
+    missingFields: string[];
+  }>;
+  errors: string[];
+  mode: string;
+  processed: number;
+  sent: number;
+  skipped: number;
+  success: boolean;
+}
+
+export async function runResidentialAutomationDryRun(): Promise<ResidentialAutomationDryRunResult> {
+  const access_token = await getAccessToken();
+
+  const { data, error } = await supabase.functions.invoke<ResidentialAutomationDryRunResult>(
+    "process-residential-offers",
+    {
+      body: {
+        access_token,
+        mode: "dry-run",
+      },
+    },
+  );
+
+  if (error || !data) {
+    console.error("Error running residential automation dry run:", error);
+    throw error || new Error("No dry run data returned");
+  }
+
+  return data;
 }
 
 /**

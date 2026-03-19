@@ -1,7 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { Resend } from "https://esm.sh/resend@4.0.0";
-
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+import { sendHtmlEmail } from "../_shared/sendMail.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -43,12 +41,12 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Sending email to:", to, from, cc);
 
-    const emailResponse = await resend.emails.send({
-      from: from || "EVIONOR <hello@notifications.evionor.hu>",
-      to: [to],
-      subject: subject,
-      html: html,
+    const emailResponse = await sendHtmlEmail({
       cc,
+      from,
+      html,
+      subject,
+      to,
     });
 
     console.log("Email sent successfully:", emailResponse);
@@ -66,12 +64,13 @@ const handler = async (req: Request): Promise<Response> => {
         },
       },
     );
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown send-email failure";
     console.error("Error in send-email function:", error);
     return new Response(
       JSON.stringify({
         success: false,
-        error: error.message,
+        error: errorMessage,
       }),
       {
         status: 500,
