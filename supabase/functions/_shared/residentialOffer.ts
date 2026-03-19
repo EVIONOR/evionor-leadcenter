@@ -1,9 +1,5 @@
 import { additionalItemPrices, formatPrice, priceList } from "./priceList.ts";
-import {
-  chargerTemplates,
-  type ChargerTemplate,
-  type QuestionnaireData,
-} from "./questionnaire.ts";
+import { chargerTemplates, type ChargerTemplate, type QuestionnaireData } from "./questionnaire.ts";
 
 export const RESIDENTIAL_OFFER_TEMPLATE_VERSION = "2026-03-19";
 export const DEFAULT_RESIDENTIAL_SENDER = "Horváth Gáspár";
@@ -65,7 +61,8 @@ const cartUrls: Record<string, string> = {
   "AMINA 1 - 7.4kW": "https://evionor.hu/products/amina-1-1-fazisu-tolto-telepitessel",
   "Charge Amps Halo 11kW": "https://evionor.hu/products/charge-amps-halo-7-4kw-11kw-ev-tolto-telepites-csomag",
   "Charge Amps Luna 22kW": "https://evionor.hu/products/charge-amps-luna-22kw-ev-tolto-telepites-csomag",
-  "Zaptec Go 22kW": "https://evionor.hu/collections/all/products/zaptec-go-22kw-telepitesi-csomagban?_pos=8&_fid=5b9cabd46&_ss=c",
+  "Zaptec Go 22kW":
+    "https://evionor.hu/collections/all/products/zaptec-go-22kw-telepitesi-csomagban?_pos=8&_fid=5b9cabd46&_ss=c",
   "Zaptec Solar MID": "https://evionor.hu/products/zaptec-go-22kw-ev-tolto-telepitesi-csomgaban",
   "Easee Charge Up 22kW": "https://evionor.hu/products/easee-charge-up-22kw-ev-tolto-telepitesi-csomgaban",
 };
@@ -109,10 +106,7 @@ function getChargerImageUrl(productName: string): string {
   if (productName.includes("Zaptec Solar MID")) {
     return "https://evionor.hu/cdn/shop/files/ZaptecGo2_Productimage_quater_asphaltblack.webp?v=1762325254&width=600";
   }
-  if (
-    productName.includes("Zaptec Go 22kW") ||
-    (productName.includes("Zaptec Go") && !productName.includes("Solar"))
-  ) {
+  if (productName.includes("Zaptec Go 22kW") || (productName.includes("Zaptec Go") && !productName.includes("Solar"))) {
     return "https://evionor.hu/cdn/shop/files/Zaptec_Go_Home_Charging_2329.webp?v=1762272030&width=600";
   }
   if (productName.includes("Easee Charge Up")) {
@@ -160,11 +154,7 @@ function getLoadManagementPackage(productName: string): LoadManagementPackage | 
 }
 
 function getInstallationPackage(productName: string): InstallationPackage {
-  if (
-    productName.includes("AMINA 1") ||
-    productName.includes("Amina 1") ||
-    productName.includes("Charge Amps Halo")
-  ) {
+  if (productName.includes("AMINA 1") || productName.includes("Amina 1") || productName.includes("Charge Amps Halo")) {
     return {
       name: "Egyfázisú töltőtelepítés",
       price: 199000,
@@ -274,10 +264,7 @@ function getCharacteristics(productName: string): string {
     `;
   }
 
-  if (
-    productName.includes("Zaptec Go 22kW") ||
-    (productName.includes("Zaptec Go") && !productName.includes("Solar"))
-  ) {
+  if (productName.includes("Zaptec Go 22kW") || (productName.includes("Zaptec Go") && !productName.includes("Solar"))) {
     return `
       <li style="font-size: 14px;">Fázisok száma: 1/3 fázis kompatibilis</li>
       <li style="font-size: 14px;">Töltési áramerősség: 6–32 A között állítható</li>
@@ -344,7 +331,7 @@ function escapeHtml(value: string): string {
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
-    .replaceAll("\"", "&quot;")
+    .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
 }
 
@@ -402,8 +389,7 @@ export function buildResidentialOffer(
   const senderName = input.senderName || DEFAULT_RESIDENTIAL_SENDER;
   const carDisplayText = getCarDisplayText(input);
   const buildingTypeLabel = input.buildingType ? input.buildingType.replace("_", " ") : "Nincs megadva";
-  const locationText =
-    input.city && input.zipCode ? `${escapeHtml(input.city)}, ${escapeHtml(input.zipCode)}` : "";
+  const locationText = input.city && input.zipCode ? `${escapeHtml(input.city)}, ${escapeHtml(input.zipCode)}` : "";
 
   const productSections = selectedTemplates
     .map((template, templateIndex) => {
@@ -427,8 +413,9 @@ export function buildResidentialOffer(
           </tr>
           <tr>
             <td style="padding: 16px;">
-              ${getChargerImageUrl(product)
-                ? `
+              ${
+                getChargerImageUrl(product)
+                  ? `
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 16px;">
                 <tr>
                   <td align="center" style="padding: 12px; background-color: #ffffff; border-radius: 10px; border: 1px solid #e2e8f0;">
@@ -439,7 +426,8 @@ export function buildResidentialOffer(
                 </tr>
               </table>
               `
-                : ""}
+                  : ""
+              }
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 16px;">
                 <tr>
                   <td style="padding: 14px;">
@@ -456,39 +444,47 @@ export function buildResidentialOffer(
                   </td>
                 </tr>
               </table>
-              ${loadManagementPackage || input.needsInstallation
-                ? `
+              ${
+                loadManagementPackage || input.needsInstallation
+                  ? `
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top: 16px; background-color: #ffffff; border-radius: 10px; border: 1px solid #e2e8f0;">
                 <tr>
                   <td style="padding: 14px;">
                     <h3 style="margin: 0 0 12px 0; color: #0a2540; font-size: 14px; font-weight: 700;">Opciós tételek</h3>
                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-                      ${loadManagementPackage
-                        ? `
+                      ${
+                        loadManagementPackage
+                          ? `
                       <tr>
                         <td style="padding: 8px 0; width: 65%;"><a href="${loadManagementPackage.url}" target="_blank" style="color: #0a2540; font-size: 13px; font-weight: 600; text-decoration: none; border-bottom: 2px solid #0071e3; display: inline-block;">${escapeHtml(loadManagementPackage.name)}</a></td>
                         <td style="padding: 8px 0 8px 10px; color: #0071e3; font-size: 15px; font-weight: 800; text-align: right;">${formatPrice(loadManagementPackage.price)}</td>
                       </tr>
                       `
-                        : ""}
-                      ${input.needsInstallation
-                        ? `
+                          : ""
+                      }
+                      ${
+                        input.needsInstallation
+                          ? `
                       <tr>
                         <td style="padding: 8px 0; width: 65%;"><a href="${installationPackage.url}" target="_blank" style="color: #0a2540; font-size: 13px; font-weight: 600; text-decoration: none; border-bottom: 2px solid #0071e3; display: inline-block;">${escapeHtml(installationPackage.name)}</a></td>
                         <td style="padding: 8px 0 8px 10px; color: #0071e3; font-size: 15px; font-weight: 800; text-align: right;">${formatPrice(installationPrice)}</td>
                       </tr>
-                      ${installationPackage.name === "Háromfázisú töltőtelepítés"
-                        ? `
+                      ${
+                        installationPackage.name === "Háromfázisú töltőtelepítés"
+                          ? `
                       <tr>
                         <td colspan="2" style="padding: 6px 0 2px 0; font-size: 12px; color: #059669; font-style: italic; line-height: 1.4;">Van saját villanyszerelőd? Rendeld meg csak a töltőt! A telepítésben és a beüzemelésben díjmentesen támogatjuk!</td>
                       </tr>
                       `
-                        : ""}
+                          : ""
+                      }
                       `
-                        : ""}
+                          : ""
+                      }
                     </table>
-                    ${input.needsInstallation
-                      ? `
+                    ${
+                      input.needsInstallation
+                        ? `
                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top: 14px;">
                       <tr>
                         <td align="center">
@@ -497,12 +493,14 @@ export function buildResidentialOffer(
                       </tr>
                     </table>
                     `
-                      : ""}
+                        : ""
+                    }
                   </td>
                 </tr>
               </table>
               `
-                : ""}
+                  : ""
+              }
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top: 20px; background-color: #f0f7ff; border-radius: 10px; border: 2px solid #0071e3; overflow: hidden;">
                 <tr>
                   <td style="padding: 16px;">
@@ -706,7 +704,7 @@ export function buildResidentialOffer(
                 </tr>
               </table>
               <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 700; letter-spacing: -0.5px; line-height: 1.3;">EV-Töltő Beszerzési Ajánlat</h1>
-              <p style="margin: 8px 0 0 0; color: rgba(255, 255, 255, 0.85); font-size: 14px;">Személyre szabott megoldás az Ön igényeihez</p>
+              <p style="margin: 8px 0 0 0; color: #ffffff; font-size: 14px;">Személyre szabott megoldás az Ön igényeihez</p>
             </td>
           </tr>
           <tr>
@@ -730,12 +728,14 @@ export function buildResidentialOffer(
                       <tr><td style="color: #0a2540; font-size: 14px; font-weight: 500; padding: 0 0 12px 0;">${escapeHtml(input.phoneNumber)}</td></tr>
                       <tr><td style="color: #64748b; font-size: 11px; padding: 6px 0 2px 0; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Jármű</td></tr>
                       <tr><td style="color: #0a2540; font-size: 14px; font-weight: 500; padding: 0 0 12px 0;">${escapeHtml(carDisplayText)}</td></tr>
-                      ${locationText
-                        ? `
+                      ${
+                        locationText
+                          ? `
                       <tr><td style="color: #64748b; font-size: 11px; padding: 6px 0 2px 0; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Helyszín</td></tr>
                       <tr><td style="color: #0a2540; font-size: 14px; font-weight: 500; padding: 0 0 12px 0;">${locationText}</td></tr>
                       `
-                        : ""}
+                          : ""
+                      }
                       <tr><td style="color: #64748b; font-size: 11px; padding: 6px 0 2px 0; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Épület típus</td></tr>
                       <tr><td style="color: #0a2540; font-size: 14px; font-weight: 500; padding: 0 0 12px 0;">${escapeHtml(buildingTypeLabel)}</td></tr>
                       <tr><td style="color: #64748b; font-size: 11px; padding: 6px 0 2px 0; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Elektromos rendszer</td></tr>
