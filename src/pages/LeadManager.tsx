@@ -53,6 +53,7 @@ export default function LeadManager() {
   const [autoProcessingEnabled, setAutoProcessingEnabled] = useState(false);
   const [loadingAutoSetting, setLoadingAutoSetting] = useState(true);
   const [runningDryRun, setRunningDryRun] = useState(false);
+  const [runningTestSend, setRunningTestSend] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
