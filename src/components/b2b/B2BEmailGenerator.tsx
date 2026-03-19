@@ -79,31 +79,46 @@ const getChargerImageUrl = (productName: string): string => {
 const getCharacteristics = (productName: string): string => {
   if (productName.includes("Easee Charge Up")) {
     return `
-      <li style="font-size: 14px;">Fázisok száma: 1/3</li>
-      <li style="font-size: 14px;">Tápellátás: 6–32 A</li>
-      <li style="font-size: 14px;">Földzárlat védelem: Beépített Type A áramvédő kapcsoló (30 mA) + 6 mA DC-védelem</li>
-      <li style="font-size: 14px;">Kommunikáció: WiFi, 4G/LTE, RFID/NFC, OCPP 1.6J</li>
-      <li style="font-size: 14px;">Védelmi osztály: IP54</li>
+      <li style="font-size: 14px;">Fázisok száma: 1/3 fázis kompatibilis</li>
+      <li style="font-size: 14px;">Töltési áramerősség: 6–32 A között állítható</li>
+      <li style="font-size: 14px;">Biztonság: Beépített hibaáram védelem</li>
+      <li style="font-size: 14px;">Hitelesítés: RFID/NFC vagy mobilalkalmazás</li>
+      <li style="font-size: 14px;">Kapcsolódás: Bluetooth, WiFi és 4G LTE-M (eSIM)</li>
+      <li style="font-size: 14px;">Okos funkciók: Terhelésmenedzsment kompatibilis</li>
+      <li style="font-size: 14px;">Extra funkciók: Lágy indítás, okosotthon integráció</li>
+      <li style="font-size: 14px;">Töltési adatok: Részletes töltési statisztikák</li>
+      <li style="font-size: 14px;">Szoftverfrissítések: Automatikus frissítés LTE-n</li>
+      <li style="font-size: 14px;">Védettség: IP54, kültéri használatra</li>
       <li style="font-size: 14px; background-color: #d1fae5; padding: 4px 8px; border-radius: 6px; font-weight: 700; color: #065f46;">✓ Gyártói garancia 5 év</li>
     `;
   }
   if (productName.includes("Zaptec Solar MID")) {
     return `
-      <li style="font-size: 14px;">Fázisok száma: 1/3</li>
-      <li style="font-size: 14px;">Tápellátás: 6–32 A</li>
-      <li style="font-size: 14px;">Napelemes integráció (Solar load balancing)</li>
-      <li style="font-size: 14px;">Kommunikáció: WiFi, 4G LTE-M, RFID/NFC</li>
-      <li style="font-size: 14px;">Védelmi osztály: IP54</li>
+      <li style="font-size: 14px;">Fázisok száma: 1/3 fázis kompatibilis</li>
+      <li style="font-size: 14px;">Töltési áramerősség: 6–32 A között állítható</li>
+      <li style="font-size: 14px;">Biztonság: Beépített hibaáram védelem</li>
+      <li style="font-size: 14px;">Hitelesítés: RFID/NFC vagy mobilalkalmazás</li>
+      <li style="font-size: 14px;">Kapcsolódás: Bluetooth, WiFi és 4G LTE-M (eSIM)</li>
+      <li style="font-size: 14px;">Okos funkciók: Terhelésmenedzsment kompatibilis</li>
+      <li style="font-size: 14px;">Extra funkciók: Lágy indítás, okosotthon integráció</li>
+      <li style="font-size: 14px;">Töltési adatok: Részletes töltési statisztikák</li>
+      <li style="font-size: 14px;">Szoftverfrissítések: Automatikus frissítés LTE-n</li>
+      <li style="font-size: 14px;">Védettség: IP54, kültéri használatra</li>
       <li style="font-size: 14px; background-color: #d1fae5; padding: 4px 8px; border-radius: 6px; font-weight: 700; color: #065f46;">✓ Gyártói garancia 5 év</li>
     `;
   }
   if (productName.includes("Zaptec Go")) {
     return `
-      <li style="font-size: 14px;">Fázisok száma: 1/3</li>
-      <li style="font-size: 14px;">Tápellátás: 6–32 A</li>
-      <li style="font-size: 14px;">Kommunikáció: WiFi, 4G LTE-M, RFID/NFC</li>
-      <li style="font-size: 14px;">Terhelésmenedzsment kompatibilis</li>
-      <li style="font-size: 14px;">Védelmi osztály: IP54</li>
+      <li style="font-size: 14px;">Fázisok száma: 1/3 fázis kompatibilis</li>
+      <li style="font-size: 14px;">Töltési áramerősség: 6–32 A között állítható</li>
+      <li style="font-size: 14px;">Biztonság: Beépített hibaáram védelem</li>
+      <li style="font-size: 14px;">Hitelesítés: RFID/NFC vagy mobilalkalmazás</li>
+      <li style="font-size: 14px;">Kapcsolódás: Bluetooth, WiFi és 4G LTE-M (eSIM)</li>
+      <li style="font-size: 14px;">Okos funkciók: Terhelésmenedzsment kompatibilis</li>
+      <li style="font-size: 14px;">Extra funkciók: Lágy indítás, okosotthon integráció</li>
+      <li style="font-size: 14px;">Töltési adatok: Részletes töltési statisztikák</li>
+      <li style="font-size: 14px;">Szoftverfrissítések: Automatikus frissítés LTE-n</li>
+      <li style="font-size: 14px;">Védettség: IP54, kültéri használatra</li>
       <li style="font-size: 14px; background-color: #d1fae5; padding: 4px 8px; border-radius: 6px; font-weight: 700; color: #065f46;">✓ Gyártói garancia 5 év</li>
     `;
   }
