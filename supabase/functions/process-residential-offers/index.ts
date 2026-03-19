@@ -73,7 +73,10 @@ Deno.serve(async (req) => {
       skipped: 0,
     };
 
-    for (const lead of leads) {
+    const maxLeads = mode === "test-send" ? 3 : leads.length;
+    const leadsToProcess = leads.slice(0, maxLeads);
+
+    for (const lead of leadsToProcess) {
       const audit = auditResidentialLead(lead);
       if (audit.missingFields.length > 0) {
         result.blocked += 1;
@@ -90,21 +93,35 @@ Deno.serve(async (req) => {
         const offerInput = normalizeResidentialLead(lead);
         const renderedOffer = await buildResidentialOfferWithQuotes(offerInput);
 
-        await sendHtmlEmail({
-          cc: ["info@evionor.hu"],
-          from: `${offerInput.senderName} - EVIONOR <hello@notifications.evionor.hu>`,
-          html: renderedOffer.html,
-          subject: renderedOffer.subject,
-          to: lead.email,
-        });
-
-        await markLeadAsAutoContacted(lead.id);
-        result.sent += 1;
+        if (mode === "test-send") {
+          for (const testEmail of testRecipients) {
+            await sendHtmlEmail({
+              cc: [],
+              from: `${offerInput.senderName} - EVIONOR <hello@notifications.evionor.hu>`,
+              html: renderedOffer.html,
+              subject: `[TESZT] ${renderedOffer.subject}`,
+              to: testEmail,
+            });
+          }
+          result.sent += 1;
+        } else {
+          await sendHtmlEmail({
+            cc: ["info@evionor.hu"],
+            from: `${offerInput.senderName} - EVIONOR <hello@notifications.evionor.hu>`,
+            html: renderedOffer.html,
+            subject: renderedOffer.subject,
+            to: lead.email,
+          });
+          await markLeadAsAutoContacted(lead.id);
+          result.sent += 1;
+        }
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
         result.errors.push(`Lead ${lead.id} (${lead.email}): ${message}`);
       }
     }
+
+    result.processed = leadsToProcess.length;
 
     return jsonResponse(
       {
