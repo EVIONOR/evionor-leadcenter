@@ -6,6 +6,7 @@ import {
   updateQuestionnaireStatus,
   getAutomaticProcessingSetting,
   runResidentialAutomationDryRun,
+  runResidentialAutomationTestSend,
   setAutomaticProcessingSetting,
 } from "@/integrations/evionor/client";
 import type { QuestionnaireResponse, LeadStatus } from "@/integrations/evionor/types";
@@ -52,6 +53,7 @@ export default function LeadManager() {
   const [autoProcessingEnabled, setAutoProcessingEnabled] = useState(false);
   const [loadingAutoSetting, setLoadingAutoSetting] = useState(true);
   const [runningDryRun, setRunningDryRun] = useState(false);
+  const [runningTestSend, setRunningTestSend] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -268,6 +270,26 @@ export default function LeadManager() {
     }
   };
 
+  const handleTestSend = async () => {
+    setRunningTestSend(true);
+    try {
+      const result = await runResidentialAutomationTestSend();
+      toast({
+        title: `Teszt küldés kész: ${result.sent || 0} email elküldve`,
+        description: `${result.processed || 0} lead feldolgozva, ${result.blocked || 0} blokkolt. Emailek: misho + istvan`,
+      });
+    } catch (error) {
+      console.error("Error running test send:", error);
+      toast({
+        title: "Teszt küldés hiba",
+        description: "Nem sikerült elküldeni a teszt emaileket.",
+        variant: "destructive",
+      });
+    } finally {
+      setRunningTestSend(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#f8fafc] flex items-center justify-center">
@@ -302,6 +324,15 @@ export default function LeadManager() {
           </div>
 
           <div className="flex items-center gap-3">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleTestSend}
+              disabled={runningTestSend}
+              className="h-9 border-orange-300 text-orange-700 hover:bg-orange-50"
+            >
+              {runningTestSend ? "Teszt küldés..." : "Teszt küldés"}
+            </Button>
             <Button
               variant="outline"
               size="sm"

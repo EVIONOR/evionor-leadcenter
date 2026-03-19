@@ -264,6 +264,27 @@ export async function runResidentialAutomationDryRun(): Promise<ResidentialAutom
   return data;
 }
 
+export async function runResidentialAutomationTestSend(): Promise<ResidentialAutomationDryRunResult> {
+  const access_token = await getAccessToken();
+
+  const { data, error } = await supabase.functions.invoke<ResidentialAutomationDryRunResult>(
+    "process-residential-offers",
+    {
+      body: {
+        access_token,
+        mode: "test-send",
+      },
+    },
+  );
+
+  if (error || !data) {
+    console.error("Error running residential automation test send:", error);
+    throw error || new Error("No test send data returned");
+  }
+
+  return data;
+}
+
 /**
  * Get B2B questionnaire responses from EVIONOR
  */
