@@ -1,43 +1,23 @@
 
 
-# Fedélzeti Tolto (Onboard Charger) Megjelenitese
+## Plan: Update Phase 3 Template Selection for Automated Offers
 
-## Osszefoglalo
-Az ev-data.json tartalmazza a `charging.ac.max_power_kw` mezot (pl. 11.0 kW), amely a fedélzeti töltő mérete. Ezt az adatot ki kell bővíteni az EVModel interface-be, megjeleníteni a form "Autó típus" label mellett, és beilleszteni az email sablonba az autó típus mellé zárójelben.
+### Context
+- Phase 1 already returns AMINA 1 + Charge Amps Halo — no change needed.
+- Phase 3 (non-solar) currently returns only Zaptec Go — needs to also include Easee Charge Up.
+- Solar integration cannot be derived from lead data (no field exists), so `solarIntegration` is hardcoded to `"nem"` in `normalizeResidentialLead`. The solar branch is unreachable for automated sends.
 
-## Technikai lepesek
+### Changes
 
-### 1. EVModel interface bovitese
-**Fajl:** `src/data/evDatabase.ts`
-- Uj opcionalis mezo: `onboardChargerKw?: number`
-- A fallback adatbazisban nem lesz kitoltve (opcionalis marad)
+**1. Update `getAutomaticResidentialTemplateIds` in both locations:**
+- `src/shared/residentialOffer.ts`
+- `supabase/functions/_shared/residentialOffer.ts`
 
-### 2. OpenEV transzformacio bovitese
-**Fajl:** `src/data/openEvTransform.ts`
-- `OpenEVVehicle` interface-be `charging` mezo hozzaadasa:
-  ```
-  charging?: {
-    ac?: { max_power_kw?: number; phases?: number }
-  }
-  ```
-- `transformOpenEVData` fuggvenyben kinyerni a `v.charging?.ac?.max_power_kw` erteket es tarolni az `EVModel.onboardChargerKw`-ban
+Change phase 3 non-solar return from `["template3b"]` to `["template3b", "template3a"]` (Zaptec Go + Easee Charge Up).
 
-### 3. useEVData hook bovitese
-**Fajl:** `src/hooks/useEVData.ts`
-- Uj fuggveny: `getOnboardChargerKw(brand, model) => number | undefined`
-- Visszaadja a kivalasztott auto fedélzeti töltőjének méretét
+**2. Redeploy edge functions:**
+- `process-residential-offers`
+- `render-residential-offer`
 
-### 4. BasicInfoSection - megjelenites a form label-ben
-**Fajl:** `src/components/questionnaire/sections/BasicInfoSection.tsx`
-- A `selectedModel` kivalasztasa utan lekerni az onboard charger erteket
-- Az "Autó típus" FormLabel szoveg melle kiirni: `Autó típus (fedélzeti töltő: 11kW)` -- csak ha van ertek
-
-### 5. Email sablon frissitese
-**Fajl:** `src/components/questionnaire/EmailGenerator.tsx`
-- Az auto tipust megjelenito sorban (sor ~567): a `carBrand carModel` melle zarojelben hozzaadni az onboard charger erteket
-- Peldaul: `Tesla Model 3 Standard Range (11kW fedélzeti töltő)`
-- Ehhez az `EmailGenerator` komponensnek is hasznalnia kell a `useEVData` hook-ot
-
-### Emlekeztet az EVIONOR edge function-rol
-Az email sablon frissitese utan a `process-leads/index.ts`-ben is erdemeshet hasonlo modositast vegezni, de az manualis copy-paste szukseges az EVIONOR Supabase-be.
+That's it — two file edits, two deploys.
 
