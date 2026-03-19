@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Save } from "lucide-react";
 import { saveSavedQuestionnaireResponse } from "@/integrations/evionor/client";
 import { useToast } from "@/hooks/use-toast";
-import { useState, useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { evionorAuth } from "@/integrations/evionor/auth-client";
 
 interface ClientSummaryProps {
   data: QuestionnaireData;
@@ -18,13 +18,14 @@ interface ClientSummaryProps {
 export const ClientSummary = ({ data, originalResponseId, autoSave = false }: ClientSummaryProps) => {
   const { toast } = useToast();
   const [isSaving, setIsSaving] = useState(false);
+  const hasAutoSavedRef = useRef(false);
 
-  const handleSave = async () => {
+  const handleSave = useCallback(async () => {
     try {
       setIsSaving(true);
       
       // Get current user
-      const { data: { user } } = await supabase.auth.getUser();
+      const { data: { user } } = await evionorAuth.auth.getUser();
       
       const responseData = {
         original_response_id: originalResponseId || null,
@@ -78,13 +79,15 @@ export const ClientSummary = ({ data, originalResponseId, autoSave = false }: Cl
     } finally {
       setIsSaving(false);
     }
-  };
+  }, [data, originalResponseId, toast]);
 
   useEffect(() => {
-    if (autoSave && !isSaving) {
-      handleSave();
+    if (!autoSave || isSaving || hasAutoSavedRef.current) {
+      return;
     }
-  }, [autoSave]);
+    hasAutoSavedRef.current = true;
+    void handleSave();
+  }, [autoSave, handleSave, isSaving]);
 
   return (
     <Card className="shadow-lg">

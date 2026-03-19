@@ -11,3 +11,12 @@ verify_jwt = false
 
 [functions.send-email]
 verify_jwt = false
+
+[functions.render-residential-offer]
+verify_jwt = false
+
+[functions.process-residential-offers]
+verify_jwt = false
+
+[functions.manage-residential-automation]
+verify_jwt = false

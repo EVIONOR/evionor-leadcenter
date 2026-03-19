@@ -5,6 +5,7 @@ import {
   getQuestionnaireResponses,
   updateQuestionnaireStatus,
   getAutomaticProcessingSetting,
+  runResidentialAutomationDryRun,
   setAutomaticProcessingSetting,
 } from "@/integrations/evionor/client";
 import type { QuestionnaireResponse, LeadStatus } from "@/integrations/evionor/types";
@@ -50,6 +51,7 @@ export default function LeadManager() {
   const [totalCount, setTotalCount] = useState(0);
   const [autoProcessingEnabled, setAutoProcessingEnabled] = useState(false);
   const [loadingAutoSetting, setLoadingAutoSetting] = useState(true);
+  const [runningDryRun, setRunningDryRun] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -229,9 +231,40 @@ export default function LeadManager() {
       console.error("Error updating automatic processing setting:", error);
       toast({
         title: "Hiba",
-        description: "Nem sikerült frissíteni a beállítást",
+        description: error instanceof Error ? error.message : "Nem sikerült frissíteni a beállítást",
         variant: "destructive",
       });
+    }
+  };
+
+  const handleDryRun = async () => {
+    setRunningDryRun(true);
+
+    try {
+      const result = await runResidentialAutomationDryRun();
+      if (result.blocked > 0) {
+        const firstBlockedLead = result.blockedLeads[0];
+        toast({
+          title: `Dry run kész: ${result.processed} lead ellenőrizve`,
+          description: `${result.blocked} lead blokkolt. Első hiba: ${firstBlockedLead?.email || "N/A"} -> ${firstBlockedLead?.missingFields.join(", ") || "ismeretlen"}`,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      toast({
+        title: "Dry run kész",
+        description: `${result.processed} lead ellenőrizve, blokkoló hiányosság nélkül.`,
+      });
+    } catch (error) {
+      console.error("Error running residential automation dry run:", error);
+      toast({
+        title: "Dry run hiba",
+        description: "Nem sikerült lefuttatni az auditot.",
+        variant: "destructive",
+      });
+    } finally {
+      setRunningDryRun(false);
     }
   };
 
@@ -269,6 +302,15 @@ export default function LeadManager() {
           </div>
 
           <div className="flex items-center gap-3">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleDryRun}
+              disabled={runningDryRun}
+              className="h-9"
+            >
+              {runningDryRun ? "Dry run..." : "Dry run"}
+            </Button>
             <div className="flex items-center gap-2 bg-slate-50 rounded-lg px-3 py-1.5 border border-slate-200">
               <Switch
                 id="auto-processing"
