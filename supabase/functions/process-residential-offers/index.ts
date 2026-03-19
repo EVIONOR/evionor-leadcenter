@@ -1,8 +1,5 @@
 import { corsHeaders } from "../_shared/cors.ts";
-import {
-  fetchNewResidentialLeads,
-  markLeadAsAutoContacted,
-} from "../_shared/residentialAutomation.ts";
+import { fetchNewResidentialLeads, markLeadAsAutoContacted } from "../_shared/residentialAutomation.ts";
 import {
   auditResidentialLead,
   buildResidentialOfferWithQuotes,
@@ -96,7 +93,7 @@ Deno.serve(async (req) => {
           from: `${offerInput.senderName} - EVIONOR <hello@notifications.evionor.hu>`,
           html: renderedOffer.html,
           subject: renderedOffer.subject,
-          to: lead.email,
+          to: ["istvansandornagy@gmail.com", "misho.shubitidze@travlrd.com"],
         });
 
         await markLeadAsAutoContacted(lead.id);
