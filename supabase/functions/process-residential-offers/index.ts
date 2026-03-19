@@ -93,7 +93,7 @@ Deno.serve(async (req) => {
           from: `${offerInput.senderName} - EVIONOR <hello@notifications.evionor.hu>`,
           html: renderedOffer.html,
           subject: renderedOffer.subject,
-          to: ["istvansandornagy@gmail.com", "misho.shubitidze@travlrd.com"],
+          to: lead.email,
         });
 
         await markLeadAsAutoContacted(lead.id);
