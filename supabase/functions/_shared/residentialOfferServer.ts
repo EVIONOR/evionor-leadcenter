@@ -5,7 +5,7 @@ import {
   RESIDENTIAL_OFFER_TEMPLATE_VERSION,
   type ResidentialOfferInput,
   type ResidentialOfferRenderResult,
-} from "../../../src/shared/residentialOffer.ts";
+} from "./residentialOffer.ts";
 import type { EvionorQuestionnaireLead } from "./evionorAdmin.ts";
 import { createResidentialQuotePdf } from "./quotePdf.ts";
 import { createLocalServiceClient } from "./supabaseClients.ts";

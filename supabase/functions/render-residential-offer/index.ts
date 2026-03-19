@@ -1,7 +1,7 @@
 import { corsHeaders } from "../_shared/cors.ts";
 import { requireEvionorAdmin } from "../_shared/evionorAdmin.ts";
 import { buildResidentialOfferWithQuotes } from "../_shared/residentialOfferServer.ts";
-import type { ResidentialOfferInput } from "../../../src/shared/residentialOffer.ts";
+import type { ResidentialOfferInput } from "../_shared/residentialOffer.ts";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
