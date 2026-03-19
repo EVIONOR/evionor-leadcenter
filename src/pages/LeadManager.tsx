@@ -288,6 +288,7 @@ export default function LeadManager() {
     } finally {
       setRunningTestSend(false);
     }
+  };
 
   if (loading) {
     return (
