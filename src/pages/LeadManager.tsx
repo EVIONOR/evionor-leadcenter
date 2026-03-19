@@ -326,6 +326,15 @@ export default function LeadManager() {
             <Button
               variant="outline"
               size="sm"
+              onClick={handleTestSend}
+              disabled={runningTestSend}
+              className="h-9 border-orange-300 text-orange-700 hover:bg-orange-50"
+            >
+              {runningTestSend ? "Teszt küldés..." : "Teszt küldés"}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
               onClick={handleDryRun}
               disabled={runningDryRun}
               className="h-9"
