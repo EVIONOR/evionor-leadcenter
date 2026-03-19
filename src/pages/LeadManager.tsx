@@ -270,6 +270,25 @@ export default function LeadManager() {
     }
   };
 
+  const handleTestSend = async () => {
+    setRunningTestSend(true);
+    try {
+      const result = await runResidentialAutomationTestSend();
+      toast({
+        title: `Teszt küldés kész: ${result.sent || 0} email elküldve`,
+        description: `${result.processed || 0} lead feldolgozva, ${result.blocked || 0} blokkolt. Emailek: misho + istvan`,
+      });
+    } catch (error) {
+      console.error("Error running test send:", error);
+      toast({
+        title: "Teszt küldés hiba",
+        description: "Nem sikerült elküldeni a teszt emaileket.",
+        variant: "destructive",
+      });
+    } finally {
+      setRunningTestSend(false);
+    }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#f8fafc] flex items-center justify-center">
