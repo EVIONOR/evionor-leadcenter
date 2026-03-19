@@ -211,7 +211,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      invoke_process_residential_offers_job: { Args: never; Returns: undefined }
     }
     Enums: {
       [_ in never]: never
