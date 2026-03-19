@@ -705,7 +705,7 @@ export function buildResidentialOffer(
           <tr>
             <td class="content-padding" style="padding: 28px 24px;">
               <p style="margin: 0 0 16px 0; color: #1a1a2e; font-size: 15px; line-height: 1.6; font-weight: 500;">${escapeHtml(getGreeting(input.contactName))}</p>
-              <p style="margin: 0 0 32px 0; color: #4a5568; font-size: 14px; line-height: 1.7;">Köszönjük érdeklődését! Az Ön által megadott adatok alapján az alábbi ajánlatot készítettük.</p>
+              <p style="margin: 0 0 32px 0; color: #4a5568; font-size: 14px; line-height: 1.7;"><p style="margin: 0 0 32px 0; color: #4a5568; font-size: 14px; line-height: 1.7;">Köszönjük érdeklődését! Az Ön által megadott adatok alapján az alábbi ajánlatot készítettük. Kérdésekkel válaszoljon erre az email-re vagy hívjon minket a +36 20 581 9166 számon! Kollégáink azonnal válaszolnak.</p></p>
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 24px; background-color: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden;">
                 <tr>
                   <td style="padding: 16px 16px 6px 16px; border-bottom: 2px solid #e2e8f0;">
