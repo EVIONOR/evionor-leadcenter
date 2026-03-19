@@ -6,6 +6,7 @@ import {
   updateQuestionnaireStatus,
   getAutomaticProcessingSetting,
   runResidentialAutomationDryRun,
+  runResidentialAutomationTestSend,
   setAutomaticProcessingSetting,
 } from "@/integrations/evionor/client";
 import type { QuestionnaireResponse, LeadStatus } from "@/integrations/evionor/types";
