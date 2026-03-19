@@ -1,9 +1,9 @@
-import { additionalItemPrices, formatPrice, priceList } from "../data/priceList.ts";
+import { additionalItemPrices, formatPrice, priceList } from "./priceList.ts";
 import {
   chargerTemplates,
   type ChargerTemplate,
   type QuestionnaireData,
-} from "../types/questionnaire.ts";
+} from "./questionnaire.ts";
 
 export const RESIDENTIAL_OFFER_TEMPLATE_VERSION = "2026-03-19";
 export const DEFAULT_RESIDENTIAL_SENDER = "Horváth Gáspár";
