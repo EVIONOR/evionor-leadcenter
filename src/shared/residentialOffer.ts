@@ -295,42 +295,43 @@ function getCharacteristics(productName: string): string {
 
   if (productName.includes("Amina 1") || productName.includes("AMINA 1")) {
     return `
-      <li style="font-size: 14px;">Fázisok száma: 1</li>
-      <li style="font-size: 14px;">Tápellátás: 230 V AC, 6–32 A</li>
-      <li style="font-size: 14px;">Földzárlat védelem: Beépített RDC-DD 6 mA (IEC 62955)</li>
-      <li style="font-size: 14px;">Hitelesítés: Nem támogatott</li>
-      <li style="font-size: 14px;">Kommunikációs protokollok: Nem támogatott</li>
-      <li style="font-size: 14px;">Funkciók: Plug & Charge helyi töltés, terhelésmenedzsment nélkül</li>
-      <li style="font-size: 14px;">Szoftverfrissítések: Nem támogatott</li>
-      <li style="font-size: 14px;">Védelmi osztály: IP54</li>
+      <li style="font-size: 14px;">Töltési áramerősség: 6–32 A között állítható</li>
+      <li style="font-size: 14px;">Biztonság: Beépített hibaáram védelem</li>
+      <li style="font-size: 14px;">Applikáció: Nem támogatott</li>
+      <li style="font-size: 14px;">Terhelésmenedzsment: nem támogatott</li>
+      <li style="font-size: 14px;">Egyszerű "Plug & Charge" töltés 7,4kW-ig</li>
+      <li style="font-size: 14px;">Védettség: IP54, kültéri használatra</li>
       <li style="font-size: 14px; background-color: #d1fae5; padding: 4px 8px; border-radius: 6px; font-weight: 700; color: #065f46;">✓ Gyártói garancia 5 év</li>
     `;
   }
 
   if (productName.includes("Charge Amps Halo")) {
     return `
-      <li style="font-size: 14px;">Fázisok száma: 1/3</li>
-      <li style="font-size: 14px;">Tápellátás: 230 V, 16 A (1-fázis) / 400 V, 16 A (3-fázis)</li>
-      <li style="font-size: 14px;">Földzárlat védelem: Beépített DC-védelem, Type A földzárlat-védő szükséges</li>
+      <li style="font-size: 14px;">Fázisok száma: 1/3 fázis kompatibilis</li>
+      <li style="font-size: 14px;">Töltési áram: 1 fázis 6-32 A / 3 fázis 6-16A</li>
+      <li style="font-size: 14px;">Biztonság: Beépített hibaáram védelem</li>
       <li style="font-size: 14px;">Hitelesítés: RFID</li>
-      <li style="font-size: 14px;">Kommunikációs protokollok: WiFi, RFID</li>
-      <li style="font-size: 14px;">Funkciók: RFID hozzáférés-szabályozás, extra konnektor (pl. e-bike), LED jelzőfények</li>
+      <li style="font-size: 14px;">Kapcsolódás: WiFi és RFID</li>
+      <li style="font-size: 14px;">Szabályzás: Terhelés menedzsment kompatibilis</li>
+      <li style="font-size: 14px;">Extra funkciók: Extra 220V konnektor</li>
       <li style="font-size: 14px;">Szoftverfrissítések: Automatikus frissítések</li>
-      <li style="font-size: 14px;">Védelmi osztály: Töltőtest IP66, csatlakozó és konnektor IP44</li>
+      <li style="font-size: 14px;">Védettség kültérre: IP66 töltőtest, IP44 csatlakozó</li>
       <li style="font-size: 14px; background-color: #d1fae5; padding: 4px 8px; border-radius: 6px; font-weight: 700; color: #065f46;">✓ Gyártói garancia 5 év</li>
     `;
   }
 
   if (productName.includes("Charge Amps Luna")) {
     return `
-      <li style="font-size: 14px;">Fázisok száma: 1/3</li>
-      <li style="font-size: 14px;">Tápellátás: 6–32 A</li>
-      <li style="font-size: 14px;">Földzárlat védelem: Beépített Type B áramvédő (AC 30 mA, DC 6 mA)</li>
-      <li style="font-size: 14px;">Hitelesítés: RFID</li>
-      <li style="font-size: 14px;">Kommunikációs protokollok: WiFi, 4G LTE (eSIM), Bluetooth Low Energy 5.0/5.3, RFID/NFC, OCPP 1.6J</li>
-      <li style="font-size: 14px;">Funkciók: Terhelésmenedzsment kompatibilis, céges számlázási riportok, okos otthon integráció</li>
-      <li style="font-size: 14px;">Szoftverfrissítések: Automatikus frissítések</li>
-      <li style="font-size: 14px;">Védelmi osztály: IP54, ütésállóság IK10</li>
+      <li style="font-size: 14px;">Fázisok száma: 1/3 fázis kompatibilis</li>
+      <li style="font-size: 14px;">Töltési áramerősség: 6–32 A között állítható</li>
+      <li style="font-size: 14px;">Biztonság: Beépített hibaáram védelem</li>
+      <li style="font-size: 14px;">Hitelesítés: RFID/NFC vagy mobilalkalmazás</li>
+      <li style="font-size: 14px;">Kapcsolódás: Bluetooth, WiFi és 4G LTE-M (eSIM)</li>
+      <li style="font-size: 14px;">Okos funkciók: Terhelésmenedzsment kompatibilis</li>
+      <li style="font-size: 14px;">Extra funkciók: Lágy indítás, okosotthon integráció</li>
+      <li style="font-size: 14px;">Töltési adatok: Részletes töltési statisztikák</li>
+      <li style="font-size: 14px;">Szoftverfrissítések: Automatikus frissítés LTE-n</li>
+      <li style="font-size: 14px;">Védettség: IP54, kültéri használatra</li>
       <li style="font-size: 14px; background-color: #d1fae5; padding: 4px 8px; border-radius: 6px; font-weight: 700; color: #065f46;">✓ Gyártói garancia 5 év</li>
     `;
   }
