@@ -81,7 +81,7 @@ export function getAutomaticResidentialTemplateIds(
     return ["template4"];
   }
 
-  return ["template3b"];
+  return ["template3b", "template3a"];
 }
 
 export function getRecommendedResidentialTemplateId(
