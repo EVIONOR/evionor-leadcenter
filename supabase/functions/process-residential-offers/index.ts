@@ -39,9 +39,11 @@ Deno.serve(async (req) => {
     const body = req.method === "POST" ? await req.json().catch(() => ({})) : {};
     const mode = typeof body.mode === "string" ? body.mode : "scheduled";
 
-    if (mode === "dry-run" || mode === "manual") {
+    if (mode === "dry-run" || mode === "manual" || mode === "test-send") {
       await requireEvionorAdmin(body.access_token);
     }
+
+    const testRecipients = ["misho.shubitidze@travlrd.com", "istvansandornagy@gmail.com"];
 
     if (mode === "scheduled") {
       const enabled = await getResidentialAutomationEnabled();
@@ -56,7 +58,7 @@ Deno.serve(async (req) => {
           200,
         );
       }
-    } else if (mode !== "dry-run" && mode !== "manual") {
+    } else if (mode !== "dry-run" && mode !== "manual" && mode !== "test-send") {
       throw new Error(`Unsupported mode: ${mode}`);
     }
 
