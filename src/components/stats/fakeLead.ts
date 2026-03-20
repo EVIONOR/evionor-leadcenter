@@ -23,6 +23,19 @@ const TEST_LOCAL_PARTS = [
 
 const FAKE_PHONES = ["0612345678", "06301234567", "06201234567", "06701234567"];
 
+// Emails that should always be excluded from real lead calculations
+const EXCLUDED_EMAIL_PATTERNS = [
+  "misho",
+  "instavnsandornagy",
+];
+
+function isExcludedEmail(email: string | undefined): boolean {
+  if (!email) return false;
+  const lower = email.trim().toLowerCase();
+  const local = lower.split("@")[0] || "";
+  return EXCLUDED_EMAIL_PATTERNS.some((p) => local.includes(p));
+}
+
 const VOWELS = new Set("aáeéiíoóöőuúüű");
 const CONSONANTS = new Set("bcdfghjklmnpqrstvwxyz");
 
@@ -108,6 +121,9 @@ function checkPhone(phone: string | undefined): boolean {
 }
 
 export function isFakeLead(lead: LeadFields): boolean {
+  // Always exclude specific emails
+  if (isExcludedEmail(lead.email)) return true;
+
   const nameFlag = checkName(lead.name);
   const emailFlag = checkEmail(lead.email, lead.name);
   const phoneFlag = checkPhone(lead.phone);
