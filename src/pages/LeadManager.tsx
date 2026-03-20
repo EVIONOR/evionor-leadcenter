@@ -415,6 +415,16 @@ export default function LeadManager() {
               {option.label}
             </button>
           ))}
+          <button
+            onClick={() => handleStatusFilterChange("false")}
+            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap ${
+              statusFilter === "false"
+                ? "bg-slate-700 text-white shadow-sm"
+                : "bg-white text-slate-500 hover:bg-slate-100 border border-slate-200"
+            }`}
+          >
+            False
+          </button>
         </div>
 
         {/* Lead cards */}
