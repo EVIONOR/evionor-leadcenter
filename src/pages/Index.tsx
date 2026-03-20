@@ -13,6 +13,7 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <div className="fixed top-4 right-4 z-50 flex gap-2 items-center">
         <span className="text-sm text-muted-foreground">{user?.email}</span>
+        <LeadStatsDialog />
         <Button
           variant="outline"
           size="sm"
