@@ -1,9 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { QuestionnaireForm } from "@/components/questionnaire/QuestionnaireForm";
 import { Button } from "@/components/ui/button";
-import { Users, LogOut, Building2 } from "lucide-react";
+import { Users, LogOut, Building2, BarChart3 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-import { LeadStatsDialog } from "@/components/stats/LeadStatsDialog";
 
 const Index = () => {
   const navigate = useNavigate();
