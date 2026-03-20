@@ -441,6 +441,12 @@ export function B2BQualifyForm({ lead, onBack, onSaved }: B2BQualifyFormProps) {
           mainFuse={form.main_fuse || undefined}
           distanceFromPanel={form.distance_from_panel || undefined}
           chargerCount={form.charger_count || undefined}
+          locationType={form.location_type || undefined}
+          hasOwnElectrician={form.has_own_electrician}
+          carTypes={form.car_types || undefined}
+          needsLoadManagement={form.needs_load_management || false}
+          needsMid={(form.features_needed || []).includes("MID-hitelesített mérés")}
+          notes={form.notes || undefined}
           onEmailSent={async () => {
             updateField("status", "qualified");
             try {
