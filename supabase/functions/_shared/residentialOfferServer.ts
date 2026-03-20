@@ -22,7 +22,6 @@ const AUTOMATION_REQUIRED_FIELDS = [
   { key: "phone", label: "phone" },
   { key: "car_brand", label: "car_brand" },
   { key: "car_model", label: "car_model" },
-  { key: "phases", label: "phases" },
 ] as const;
 
 function isSupportedPhase(value: string): value is "1" | "3" {
