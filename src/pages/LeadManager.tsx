@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useQueryState, parseAsInteger, parseAsStringLiteral } from "nuqs";
 import {
   getQuestionnaireResponses,
+  queryEvionorTable,
   updateQuestionnaireStatus,
   getAutomaticProcessingSetting,
   runResidentialAutomationDryRun,
@@ -10,6 +11,7 @@ import {
   setAutomaticProcessingSetting,
 } from "@/integrations/evionor/client";
 import type { QuestionnaireResponse, LeadStatus } from "@/integrations/evionor/types";
+import { isFakeLead } from "@/components/stats/fakeLead";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
