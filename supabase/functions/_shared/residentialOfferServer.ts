@@ -42,7 +42,7 @@ export function auditResidentialLead(lead: EvionorQuestionnaireLead): Residentia
 }
 
 export function normalizeResidentialLead(lead: EvionorQuestionnaireLead): ResidentialOfferInput {
-  const phases: "1" | "3" = isSupportedPhase(lead.phases) ? lead.phases : "1";
+  const phases: "1" | "3" = isSupportedPhase(lead.phases) ? lead.phases : "3";
   const normalizedInput: ResidentialOfferInput = {
     additionalItems: [],
     amperage: "32",
