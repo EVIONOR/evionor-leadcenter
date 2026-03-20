@@ -8,14 +8,10 @@ interface Lead {
   created_at: string;
   location?: string;
   timeline?: string;
-  status?: string;
 }
 
 interface LeadKPIsProps {
   leads: Lead[];
-  showRejected?: boolean;
-  falseCount?: number;
-  totalInRange?: number;
 }
 
 const TIMELINE_LABELS: Record<string, string> = {
@@ -33,20 +29,17 @@ const PIE_COLORS = [
   "hsl(0 70% 55%)",
 ];
 
-export function LeadKPIs({ leads, showRejected, falseCount, totalInRange }: LeadKPIsProps) {
+export function LeadKPIs({ leads }: LeadKPIsProps) {
   const total = leads.length;
 
-  const rejectedRatio = useMemo(() => {
-    if (!showRejected || !total) return null;
-    const count = leads.filter((l) => l.status === "rejected").length;
+  const bpOnly = useMemo(() => {
+    if (!total) return { count: 0, pct: 0 };
+    const count = leads.filter((l) => {
+      const county = getCountyByCity(l.location);
+      return county === "Budapest";
+    }).length;
     return { count, pct: Math.round((count / total) * 100) };
-  }, [leads, total, showRejected]);
-
-  const falseRatio = useMemo(() => {
-    const t = totalInRange ?? total;
-    if (!t || falseCount == null) return null;
-    return { count: falseCount, pct: Math.round((falseCount / t) * 100) };
-  }, [falseCount, totalInRange, total]);
+  }, [leads, total]);
 
   const bpPestRatio = useMemo(() => {
     if (!total) return { count: 0, pct: 0 };
@@ -62,7 +55,8 @@ export function LeadKPIs({ leads, showRejected, falseCount, totalInRange }: Lead
     }
     return Object.entries(counts)
       .map(([name, value]) => ({ name, value, pct: Math.round((value / total) * 100) }))
-      .sort((a, b) => b.value - a.value);
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 10);
   }, [leads, total]);
 
   const timelineData = useMemo(() => {
@@ -94,39 +88,20 @@ export function LeadKPIs({ leads, showRejected, falseCount, totalInRange }: Lead
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {/* Rejected ratio */}
-      {rejectedRatio && (
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base">Elutasított leadek</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-bold tabular-nums text-destructive">{rejectedRatio.pct}%</span>
-              <span className="text-sm text-muted-foreground">
-                ({rejectedRatio.count} / {total} lead)
-              </span>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* False lead ratio */}
-      {falseRatio && (
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base">False leadek</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-bold tabular-nums text-muted-foreground">{falseRatio.pct}%</span>
-              <span className="text-sm text-muted-foreground">
-                ({falseRatio.count} / {totalInRange ?? total} lead)
-              </span>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+      {/* Budapest only */}
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-base">Budapest</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-baseline gap-2">
+            <span className="text-3xl font-bold tabular-nums">{bpOnly.pct}%</span>
+            <span className="text-sm text-muted-foreground">
+              ({bpOnly.count} / {total} lead)
+            </span>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* BP + Pest ratio */}
       <Card>
@@ -143,17 +118,22 @@ export function LeadKPIs({ leads, showRejected, falseCount, totalInRange }: Lead
         </CardContent>
       </Card>
 
-      {/* County breakdown */}
+      {/* County breakdown - top 10 */}
       <Card className="md:col-span-2">
         <CardHeader className="pb-2">
-          <CardTitle className="text-base">Megyei megoszlás</CardTitle>
+          <CardTitle className="text-base">Top 10 megye</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-1 text-sm">
-            {countyData.map((d) => (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-x-4 gap-y-1 text-sm">
+            {countyData.map((d, i) => (
               <div key={d.name} className="flex justify-between">
-                <span className="truncate">{d.name}</span>
-                <span className="font-medium tabular-nums ml-2">{d.pct}%</span>
+                <span className="truncate">
+                  <span className="text-muted-foreground mr-1">{i + 1}.</span>
+                  {d.name}
+                </span>
+                <span className="font-medium tabular-nums ml-2">
+                  {d.pct}% <span className="text-muted-foreground text-xs">({d.value})</span>
+                </span>
               </div>
             ))}
           </div>

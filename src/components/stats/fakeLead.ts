@@ -121,6 +121,9 @@ function checkPhone(phone: string | undefined): boolean {
 }
 
 export function isFakeLead(lead: LeadFields): boolean {
+  // Always exclude specific emails
+  if (isExcludedEmail(lead.email)) return true;
+
   const nameFlag = checkName(lead.name);
   const emailFlag = checkEmail(lead.email, lead.name);
   const phoneFlag = checkPhone(lead.phone);
