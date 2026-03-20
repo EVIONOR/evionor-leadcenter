@@ -189,6 +189,7 @@ export function B2BEmailGenerator({
   const [emailSubject, setEmailSubject] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [loadManagementDiscount, setLoadManagementDiscount] = useState(0);
 
   // Reset generated email when settings change so user always gets fresh output
   useEffect(() => {
@@ -196,7 +197,7 @@ export function B2BEmailGenerator({
       setGeneratedEmail("");
       setEmailSubject("");
     }
-  }, [includeLoadManagement, includeInstallation, discountPercent, installationTier, selectedTemplates]);
+  }, [includeLoadManagement, includeInstallation, discountPercent, installationTier, selectedTemplates, loadManagementDiscount]);
 
   const findProductPrice = (productName: string): number => {
     const normalized = productName.toLowerCase().replace(/\s+/g, " ").trim();
@@ -264,7 +265,12 @@ export function B2BEmailGenerator({
     }
     setIsGenerating(true);
 
-    const loadManager = includeLoadManagement ? detectLoadManager(selectedTemplates) : null;
+    const loadManagerRaw = includeLoadManagement ? detectLoadManager(selectedTemplates) : null;
+    const loadManager = loadManagerRaw ? {
+      ...loadManagerRaw,
+      netPrice: Math.round(loadManagerRaw.netPrice * (1 - loadManagementDiscount / 100)),
+      grossPrice: Math.round(loadManagerRaw.grossPrice * (1 - loadManagementDiscount / 100)),
+    } : null;
 
     // Generate PDFs
     const quoteUrls: Record<string, string> = {};
@@ -821,7 +827,7 @@ export function B2BEmailGenerator({
 
           {/* Discount */}
           <div className="space-y-1.5">
-            <Label className="text-xs">Kedvezmény (%)</Label>
+            <Label className="text-xs">Töltő kedvezmény (%)</Label>
             <div className="flex items-center gap-3">
               <Input
                 type="number"
@@ -877,9 +883,25 @@ export function B2BEmailGenerator({
               <Label className="text-xs">Terhelésmenedzsment hozzáadása</Label>
             </div>
             {includeLoadManagement && (
-              <div className="text-xs text-muted-foreground bg-muted p-2 rounded">
-                <p className="font-medium">🔌 {detectLoadManager(selectedTemplates)?.name || "Terhelésmenedzser"}</p>
-                <p>{formatPrice(detectLoadManager(selectedTemplates)?.grossPrice || 0)}</p>
+              <div className="space-y-2 pl-6">
+                <div className="text-xs text-muted-foreground bg-muted p-2 rounded">
+                  <p className="font-medium">🔌 {detectLoadManager(selectedTemplates)?.name || "Terhelésmenedzser"}</p>
+                  <p>{formatPrice(detectLoadManager(selectedTemplates)?.grossPrice || 0)}</p>
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-xs">Terhelésmenedzsment kedvezmény (%)</Label>
+                  <div className="flex items-center gap-3">
+                    <Input
+                      type="number"
+                      min={0}
+                      max={50}
+                      value={loadManagementDiscount}
+                      onChange={e => setLoadManagementDiscount(Math.min(50, Math.max(0, parseInt(e.target.value) || 0)))}
+                      className="h-9 text-sm w-24"
+                    />
+                    <span className="text-xs text-muted-foreground">0-50%</span>
+                  </div>
+                </div>
               </div>
             )}
           </div>
