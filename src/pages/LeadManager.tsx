@@ -71,7 +71,10 @@ export default function LeadManager() {
   const [itemsPerPage, setItemsPerPage] = useQueryState("perPage", parseAsInteger.withDefault(15));
   const [allFalseLeads, setAllFalseLeads] = useState<QuestionnaireResponse[]>([]);
 
-  const totalPages = Math.ceil(totalCount / itemsPerPage);
+  const isFalseFilter = statusFilter === "false";
+  const totalPages = isFalseFilter
+    ? Math.ceil(allFalseLeads.length / itemsPerPage)
+    : Math.ceil(totalCount / itemsPerPage);
 
   // Load automatic processing setting on mount
   useEffect(() => {
