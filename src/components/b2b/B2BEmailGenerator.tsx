@@ -265,7 +265,12 @@ export function B2BEmailGenerator({
     }
     setIsGenerating(true);
 
-    const loadManager = includeLoadManagement ? detectLoadManager(selectedTemplates) : null;
+    const loadManagerRaw = includeLoadManagement ? detectLoadManager(selectedTemplates) : null;
+    const loadManager = loadManagerRaw ? {
+      ...loadManagerRaw,
+      netPrice: Math.round(loadManagerRaw.netPrice * (1 - loadManagementDiscount / 100)),
+      grossPrice: Math.round(loadManagerRaw.grossPrice * (1 - loadManagementDiscount / 100)),
+    } : null;
 
     // Generate PDFs
     const quoteUrls: Record<string, string> = {};
