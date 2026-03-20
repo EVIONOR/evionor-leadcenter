@@ -13,6 +13,16 @@ import { generateQuotePdf } from "@/lib/generateQuotePdf";
 import { Copy, Mail, X, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
+const LOCATION_TYPE_LABELS: Record<string, string> = {
+  family_house: "Családi ház",
+  parking_garage: "Parkolóház",
+  outdoor_parking: "Kültéri parkoló",
+  office: "Iroda",
+  factory: "Gyár/Üzem",
+  hotel: "Hotel/Szállás",
+  other: "Egyéb",
+};
+
 interface B2BEmailGeneratorProps {
   companyName: string;
   contactName: string;
@@ -25,6 +35,12 @@ interface B2BEmailGeneratorProps {
   mainFuse?: string;
   distanceFromPanel?: string;
   chargerCount?: number;
+  locationType?: string;
+  hasOwnElectrician?: boolean | null;
+  carTypes?: string;
+  needsLoadManagement?: boolean;
+  needsMid?: boolean;
+  notes?: string;
   onEmailSent?: () => void;
 }
 
