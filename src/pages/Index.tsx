@@ -3,6 +3,7 @@ import { QuestionnaireForm } from "@/components/questionnaire/QuestionnaireForm"
 import { Button } from "@/components/ui/button";
 import { Users, LogOut, Building2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { LeadStatsDialog } from "@/components/stats/LeadStatsDialog";
 
 const Index = () => {
   const navigate = useNavigate();
