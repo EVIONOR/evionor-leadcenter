@@ -362,8 +362,8 @@ function getAdditionalItems(input: ResidentialOfferInput): string[] {
   return (input.additionalItems || []).filter((item) => item in additionalItemPrices);
 }
 
-function getResidentialSubject(input: ResidentialOfferInput): string {
-  return `Elektromos autó töltő ajánlat telepítéssel - ${input.contactName} - Evionor`;
+function getResidentialSubject(_input: ResidentialOfferInput): string {
+  return `Elektromos autó töltő ajánlat`;
 }
 
 function getQuoteDescriptors(selectedTemplates: ChargerTemplate[]): ResidentialQuoteDescriptor[] {
