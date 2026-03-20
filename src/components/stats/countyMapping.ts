@@ -47,11 +47,42 @@ for (const [zip, city] of Object.entries(hungarianCities)) {
   }
 }
 
-export function getCountyByCity(location: string): string {
+export function getCountyByCity(location?: string): string {
   if (!location) return "Ismeretlen";
-  const lower = location.toLowerCase().trim();
-  if (lower.startsWith("budapest")) return "Budapest";
-  return cityToCountyMap.get(lower) || "Ismeretlen";
+  const raw = location.trim();
+  if (!raw) return "Ismeretlen";
+  const lower = raw.toLowerCase();
+
+  // 1. Budapest keyword anywhere
+  if (lower.includes("budapest")) return "Budapest";
+
+  // 2. Pure 4-digit zip code
+  const pureZip = raw.match(/^\d{4}$/);
+  if (pureZip) {
+    const prefix = raw.substring(0, 2);
+    return zipToCounty[prefix] || "Ismeretlen";
+  }
+
+  // 3. Extract 4-digit zip from mixed string (e.g. "2030 Érd")
+  const embeddedZip = raw.match(/\b(\d{4})\b/);
+  if (embeddedZip) {
+    const prefix = embeddedZip[1].substring(0, 2);
+    const county = zipToCounty[prefix];
+    if (county) return county;
+  }
+
+  // 4. Exact city match
+  const exact = cityToCountyMap.get(lower);
+  if (exact) return exact;
+
+  // 5. Partial match — location contains a known city or vice versa
+  for (const [city, county] of cityToCountyMap) {
+    if (city.length >= 3 && (lower.includes(city) || city.includes(lower))) {
+      return county;
+    }
+  }
+
+  return "Ismeretlen";
 }
 
 export function isBudapestOrPest(location: string): boolean {
