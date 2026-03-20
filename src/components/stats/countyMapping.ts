@@ -46,6 +46,8 @@ for (const [zip, city] of Object.entries(hungarianCities)) {
     cityToCountyMap.set(city.toLowerCase(), county);
   }
 }
+// Unique county names from zipToCounty for direct matching
+const COUNTY_NAMES = [...new Set(Object.values(zipToCounty))];
 
 export function getCountyByCity(location?: string): string {
   if (!location) return "Ismeretlen";
@@ -56,7 +58,14 @@ export function getCountyByCity(location?: string): string {
   // 1. Budapest keyword anywhere
   if (lower.includes("budapest")) return "Budapest";
 
-  // 2. Pure 4-digit zip code
+  // 2. Direct county name in location string (e.g. "Pest megye", "Győr-Moson-Sopron")
+  const cleaned = lower.replace(/\bmegye\b/g, "").trim();
+  for (const county of COUNTY_NAMES) {
+    if (county === "Budapest") continue;
+    if (cleaned.includes(county.toLowerCase())) return county;
+  }
+
+  // 3. Pure 4-digit zip code
   const pureZip = raw.match(/^\d{4}$/);
   if (pureZip) {
     const prefix = raw.substring(0, 2);
