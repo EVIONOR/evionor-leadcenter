@@ -63,12 +63,13 @@ export default function LeadManager() {
   const [statusFilter, setStatusFilter] = useQueryState(
     "status",
     parseAsStringLiteral([
-      "new", "contacted", "qualified", "converted", "rejected", "all", "auto contacted",
+      "new", "contacted", "qualified", "converted", "rejected", "all", "auto contacted", "false",
     ] as const).withDefault("new"),
   );
 
   const [currentPage, setCurrentPage] = useQueryState("page", parseAsInteger.withDefault(1));
   const [itemsPerPage, setItemsPerPage] = useQueryState("perPage", parseAsInteger.withDefault(15));
+  const [allFalseLeads, setAllFalseLeads] = useState<QuestionnaireResponse[]>([]);
 
   const totalPages = Math.ceil(totalCount / itemsPerPage);
 
