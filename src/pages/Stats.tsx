@@ -9,6 +9,7 @@ import type { QuestionnaireResponse, B2BQuestionnaireResponse } from "@/integrat
 import { DailyLeadsChart } from "@/components/stats/DailyLeadsChart";
 import { LeadKPIs } from "@/components/stats/LeadKPIs";
 import { useAuth } from "@/contexts/AuthContext";
+import { isFakeLead } from "@/components/stats/fakeLead";
 
 const RANGE_PRESETS = [
   { value: 7, label: "7 nap" },
@@ -20,6 +21,8 @@ const RANGE_PRESETS = [
   { value: 0, label: "Összes" },
 ];
 
+type LeadFilter = "real" | "false" | "all";
+
 export default function Stats() {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -28,6 +31,7 @@ export default function Stats() {
   const [loading, setLoading] = useState(true);
   const [range, setRange] = useState(30);
   const [customRange, setCustomRange] = useState("");
+  const [leadFilter, setLeadFilter] = useState<LeadFilter>("real");
 
   useEffect(() => {
     let cancelled = false;
@@ -56,12 +60,12 @@ export default function Stats() {
     Promise.all([
       fetchAllPages<QuestionnaireResponse>(
         "questionnaire_responses",
-        "id,created_at,location,timeline,status",
+        "id,created_at,location,timeline,status,name,email,phone",
         { column: "created_at", ascending: true },
       ),
       queryEvionorTable<B2BQuestionnaireResponse>("b2b_questionnaire_responses", {
         limit: 1000,
-        select: "id,created_at,location,timeline",
+        select: "id,created_at,location,timeline,name,email,phone",
         order: { column: "created_at", ascending: true },
       }),
     ])
@@ -85,13 +89,33 @@ export default function Stats() {
     return items.filter((l) => l.created_at >= cutoffStr);
   };
 
-  const filteredB2C = useMemo(() => filterByRange(b2cLeads), [b2cLeads, range]);
-  const filteredB2B = useMemo(() => filterByRange(b2bLeads), [b2bLeads, range]);
+  const applyFakeFilter = <T extends { name?: string; email?: string; phone?: string }>(items: T[]) => {
+    if (leadFilter === "all") return items;
+    return items.filter((l) => {
+      const fake = isFakeLead({ name: l.name, email: l.email, phone: l.phone });
+      return leadFilter === "false" ? fake : !fake;
+    });
+  };
+
+  const filteredB2C = useMemo(() => applyFakeFilter(filterByRange(b2cLeads)), [b2cLeads, range, leadFilter]);
+  const filteredB2B = useMemo(() => applyFakeFilter(filterByRange(b2bLeads)), [b2bLeads, range, leadFilter]);
+
+  // For KPI: count false leads in range (before fake filter)
+  const b2cInRange = useMemo(() => filterByRange(b2cLeads), [b2cLeads, range]);
+  const b2bInRange = useMemo(() => filterByRange(b2bLeads), [b2bLeads, range]);
+  const b2cFalseCount = useMemo(() => b2cInRange.filter((l) => isFakeLead({ name: l.name, email: l.email, phone: l.phone })).length, [b2cInRange]);
+  const b2bFalseCount = useMemo(() => b2bInRange.filter((l) => isFakeLead({ name: l.name, email: l.email, phone: l.phone })).length, [b2bInRange]);
 
   const handleCustomRange = () => {
     const n = parseInt(customRange, 10);
     if (n > 0) setRange(n);
   };
+
+  const FILTER_BUTTONS: { value: LeadFilter; label: string }[] = [
+    { value: "real", label: "Valós" },
+    { value: "false", label: "False" },
+    { value: "all", label: "Összes" },
+  ];
 
   return (
     <div className="min-h-screen bg-background">
@@ -132,6 +156,22 @@ export default function Stats() {
               OK
             </Button>
           </div>
+        </div>
+
+        {/* Lead filter */}
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-sm text-muted-foreground mr-1">Szűrő:</span>
+          {FILTER_BUTTONS.map((f) => (
+            <Button
+              key={f.value}
+              variant={leadFilter === f.value ? "default" : "outline"}
+              size="sm"
+              onClick={() => setLeadFilter(f.value)}
+              className="text-xs"
+            >
+              {f.label}
+            </Button>
+          ))}
           <span className="text-sm text-muted-foreground ml-auto tabular-nums">
             B2C: {filteredB2C.length} · B2B: {filteredB2B.length}
           </span>
@@ -148,12 +188,12 @@ export default function Stats() {
 
             <TabsContent value="b2c" className="space-y-6">
               <DailyLeadsChart leads={filteredB2C} />
-              <LeadKPIs leads={filteredB2C} showRejected />
+              <LeadKPIs leads={filteredB2C} showRejected falseCount={b2cFalseCount} totalInRange={b2cInRange.length} />
             </TabsContent>
 
             <TabsContent value="b2b" className="space-y-6">
               <DailyLeadsChart leads={filteredB2B} />
-              <LeadKPIs leads={filteredB2B} />
+              <LeadKPIs leads={filteredB2B} falseCount={b2bFalseCount} totalInRange={b2bInRange.length} />
             </TabsContent>
           </Tabs>
         )}

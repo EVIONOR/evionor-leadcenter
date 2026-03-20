@@ -14,6 +14,8 @@ interface Lead {
 interface LeadKPIsProps {
   leads: Lead[];
   showRejected?: boolean;
+  falseCount?: number;
+  totalInRange?: number;
 }
 
 const TIMELINE_LABELS: Record<string, string> = {
@@ -31,7 +33,7 @@ const PIE_COLORS = [
   "hsl(0 70% 55%)",
 ];
 
-export function LeadKPIs({ leads, showRejected }: LeadKPIsProps) {
+export function LeadKPIs({ leads, showRejected, falseCount, totalInRange }: LeadKPIsProps) {
   const total = leads.length;
 
   const rejectedRatio = useMemo(() => {
@@ -39,6 +41,12 @@ export function LeadKPIs({ leads, showRejected }: LeadKPIsProps) {
     const count = leads.filter((l) => l.status === "rejected").length;
     return { count, pct: Math.round((count / total) * 100) };
   }, [leads, total, showRejected]);
+
+  const falseRatio = useMemo(() => {
+    const t = totalInRange ?? total;
+    if (!t || falseCount == null) return null;
+    return { count: falseCount, pct: Math.round((falseCount / t) * 100) };
+  }, [falseCount, totalInRange, total]);
 
   const bpPestRatio = useMemo(() => {
     if (!total) return { count: 0, pct: 0 };
@@ -97,6 +105,23 @@ export function LeadKPIs({ leads, showRejected }: LeadKPIsProps) {
               <span className="text-3xl font-bold tabular-nums text-destructive">{rejectedRatio.pct}%</span>
               <span className="text-sm text-muted-foreground">
                 ({rejectedRatio.count} / {total} lead)
+              </span>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* False lead ratio */}
+      {falseRatio && (
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base">False leadek</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-baseline gap-2">
+              <span className="text-3xl font-bold tabular-nums text-muted-foreground">{falseRatio.pct}%</span>
+              <span className="text-sm text-muted-foreground">
+                ({falseRatio.count} / {totalInRange ?? total} lead)
               </span>
             </div>
           </CardContent>
