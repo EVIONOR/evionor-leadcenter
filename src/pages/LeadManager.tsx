@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useQueryState, parseAsInteger, parseAsStringLiteral } from "nuqs";
 import {
   getQuestionnaireResponses,
+  queryEvionorTable,
   updateQuestionnaireStatus,
   getAutomaticProcessingSetting,
   runResidentialAutomationDryRun,
@@ -10,6 +11,7 @@ import {
   setAutomaticProcessingSetting,
 } from "@/integrations/evionor/client";
 import type { QuestionnaireResponse, LeadStatus } from "@/integrations/evionor/types";
+import { isFakeLead } from "@/components/stats/fakeLead";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -61,14 +63,18 @@ export default function LeadManager() {
   const [statusFilter, setStatusFilter] = useQueryState(
     "status",
     parseAsStringLiteral([
-      "new", "contacted", "qualified", "converted", "rejected", "all", "auto contacted",
+      "new", "contacted", "qualified", "converted", "rejected", "all", "auto contacted", "false",
     ] as const).withDefault("new"),
   );
 
   const [currentPage, setCurrentPage] = useQueryState("page", parseAsInteger.withDefault(1));
   const [itemsPerPage, setItemsPerPage] = useQueryState("perPage", parseAsInteger.withDefault(15));
+  const [allFalseLeads, setAllFalseLeads] = useState<QuestionnaireResponse[]>([]);
 
-  const totalPages = Math.ceil(totalCount / itemsPerPage);
+  const isFalseFilter = statusFilter === "false";
+  const totalPages = isFalseFilter
+    ? Math.ceil(allFalseLeads.length / itemsPerPage)
+    : Math.ceil(totalCount / itemsPerPage);
 
   // Load automatic processing setting on mount
   useEffect(() => {
@@ -92,21 +98,46 @@ export default function LeadManager() {
     const fetchResponses = async () => {
       setLoading(true);
       try {
-        const offset = (currentPage - 1) * itemsPerPage;
-        const result = await getQuestionnaireResponses({
-          limit: itemsPerPage,
-          offset,
-          status: statusFilter !== "all" ? statusFilter : undefined,
-        });
+        if (isFalseFilter) {
+          // Fetch ALL leads in pages of 1000, then client-filter
+          const PAGE = 1000;
+          let offset = 0;
+          let all: QuestionnaireResponse[] = [];
+          while (true) {
+            const result = await queryEvionorTable<QuestionnaireResponse>("questionnaire_responses", {
+              limit: PAGE,
+              offset,
+              select: "id,name,email,phone,location,timeline,car_brand,car_model,phases,status,created_at",
+              order: { column: "created_at", ascending: false },
+            });
+            const rows = result?.data || [];
+            all = all.concat(rows);
+            if (rows.length < PAGE) break;
+            offset += PAGE;
+          }
+          if (!cancelled) {
+            const fakeLeads = all.filter((r) => isFakeLead({ name: r.name, email: r.email, phone: r.phone }));
+            setAllFalseLeads(fakeLeads);
+            const start = (currentPage - 1) * itemsPerPage;
+            setResponses(fakeLeads.slice(start, start + itemsPerPage));
+            setTotalCount(fakeLeads.length);
+          }
+        } else {
+          const offset = (currentPage - 1) * itemsPerPage;
+          const result = await getQuestionnaireResponses({
+            limit: itemsPerPage,
+            offset,
+            status: statusFilter !== "all" ? statusFilter : undefined,
+          });
 
-        if (!result?.data) {
-          throw new Error("No data received");
-        }
+          if (!result?.data) {
+            throw new Error("No data received");
+          }
 
-        // Only update state if this request hasn't been cancelled
-        if (!cancelled) {
-          setResponses(result.data);
-          setTotalCount(result.count || 0);
+          if (!cancelled) {
+            setResponses(result.data);
+            setTotalCount(result.count || 0);
+          }
         }
       } catch (error) {
         if (!cancelled) {
@@ -126,11 +157,10 @@ export default function LeadManager() {
 
     fetchResponses();
 
-    // Cleanup function to cancel the request if filter/page changes before completion
     return () => {
       cancelled = true;
     };
-  }, [statusFilter, currentPage, itemsPerPage, toast]);
+  }, [statusFilter, currentPage, itemsPerPage, toast, isFalseFilter]);
 
   const handleStatusChange = async (id: string, newStatus: LeadStatus) => {
     try {
@@ -173,7 +203,7 @@ export default function LeadManager() {
     }
   };
 
-  const handleStatusFilterChange = async (value: LeadStatus | "all") => {
+  const handleStatusFilterChange = async (value: LeadStatus | "all" | "false") => {
     await setStatusFilter(value);
     await setCurrentPage(1); // Reset to first page when filter changes
   };
@@ -385,6 +415,16 @@ export default function LeadManager() {
               {option.label}
             </button>
           ))}
+          <button
+            onClick={() => handleStatusFilterChange("false")}
+            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap ${
+              statusFilter === "false"
+                ? "bg-slate-700 text-white shadow-sm"
+                : "bg-white text-slate-500 hover:bg-slate-100 border border-slate-200"
+            }`}
+          >
+            False
+          </button>
         </div>
 
         {/* Lead cards */}
