@@ -193,6 +193,12 @@ export function B2BEmailGenerator({
   mainFuse,
   distanceFromPanel,
   chargerCount,
+  locationType,
+  hasOwnElectrician,
+  carTypes,
+  needsLoadManagement,
+  needsMid,
+  notes,
   onEmailSent,
 }: B2BEmailGeneratorProps) {
   const [selectedTemplates, setSelectedTemplates] = useState<ChargerTemplate[]>([]);
