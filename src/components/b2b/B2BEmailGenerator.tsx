@@ -13,6 +13,16 @@ import { generateQuotePdf } from "@/lib/generateQuotePdf";
 import { Copy, Mail, X, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
+const LOCATION_TYPE_LABELS: Record<string, string> = {
+  family_house: "Családi ház",
+  parking_garage: "Parkolóház",
+  outdoor_parking: "Kültéri parkoló",
+  office: "Iroda",
+  factory: "Gyár/Üzem",
+  hotel: "Hotel/Szállás",
+  other: "Egyéb",
+};
+
 interface B2BEmailGeneratorProps {
   companyName: string;
   contactName: string;
@@ -25,6 +35,12 @@ interface B2BEmailGeneratorProps {
   mainFuse?: string;
   distanceFromPanel?: string;
   chargerCount?: number;
+  locationType?: string;
+  hasOwnElectrician?: boolean | null;
+  carTypes?: string;
+  needsLoadManagement?: boolean;
+  needsMid?: boolean;
+  notes?: string;
   onEmailSent?: () => void;
 }
 
@@ -177,6 +193,12 @@ export function B2BEmailGenerator({
   mainFuse,
   distanceFromPanel,
   chargerCount,
+  locationType,
+  hasOwnElectrician,
+  carTypes,
+  needsLoadManagement,
+  needsMid,
+  notes,
   onEmailSent,
 }: B2BEmailGeneratorProps) {
   const [selectedTemplates, setSelectedTemplates] = useState<ChargerTemplate[]>([]);
@@ -419,7 +441,31 @@ export function B2BEmailGenerator({
                                             ` : ""}
                                             ${chargerCount ? `
                                             <tr><td style="color: #64748b; font-size: 11px; padding: 6px 0 2px 0; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Töltők száma</td></tr>
-                                            <tr><td style="color: #0a2540; font-size: 14px; font-weight: 500; padding: 0 0 4px 0;">${chargerCount} db</td></tr>
+                                            <tr><td style="color: #0a2540; font-size: 14px; font-weight: 500; padding: 0 0 12px 0;">${chargerCount} db</td></tr>
+                                            ` : ""}
+                                            ${locationType ? `
+                                            <tr><td style="color: #64748b; font-size: 11px; padding: 6px 0 2px 0; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Helyszín típusa</td></tr>
+                                            <tr><td style="color: #0a2540; font-size: 14px; font-weight: 500; padding: 0 0 12px 0;">${LOCATION_TYPE_LABELS[locationType] || locationType}</td></tr>
+                                            ` : ""}
+                                            ${hasOwnElectrician !== null && hasOwnElectrician !== undefined ? `
+                                            <tr><td style="color: #64748b; font-size: 11px; padding: 6px 0 2px 0; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Saját villanyszerelő</td></tr>
+                                            <tr><td style="color: #0a2540; font-size: 14px; font-weight: 500; padding: 0 0 12px 0;">${hasOwnElectrician ? "Igen" : "Nem"}</td></tr>
+                                            ` : ""}
+                                            ${carTypes ? `
+                                            <tr><td style="color: #64748b; font-size: 11px; padding: 6px 0 2px 0; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Autó</td></tr>
+                                            <tr><td style="color: #0a2540; font-size: 14px; font-weight: 500; padding: 0 0 12px 0;">${carTypes}</td></tr>
+                                            ` : ""}
+                                            ${needsLoadManagement ? `
+                                            <tr><td style="color: #64748b; font-size: 11px; padding: 6px 0 2px 0; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Terhelésmenedzsment</td></tr>
+                                            <tr><td style="color: #0a2540; font-size: 14px; font-weight: 500; padding: 0 0 12px 0;">Igen</td></tr>
+                                            ` : ""}
+                                            ${needsMid ? `
+                                            <tr><td style="color: #64748b; font-size: 11px; padding: 6px 0 2px 0; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">MID mérés</td></tr>
+                                            <tr><td style="color: #0a2540; font-size: 14px; font-weight: 500; padding: 0 0 12px 0;">Igen</td></tr>
+                                            ` : ""}
+                                            ${notes ? `
+                                            <tr><td style="color: #64748b; font-size: 11px; padding: 6px 0 2px 0; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Megjegyzés</td></tr>
+                                            <tr><td style="color: #0a2540; font-size: 14px; font-weight: 500; padding: 0 0 4px 0;">${notes}</td></tr>
                                             ` : ""}
                                         </table>
                                     </td>
