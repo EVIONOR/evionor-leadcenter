@@ -745,7 +745,7 @@ export function B2BEmailGenerator({
       const { data: emailData, error } = await supabase.functions.invoke("send-email", {
         body: {
           to: email,
-          subject: emailSubject || `B2B EV-töltő ajánlat – ${companyName || contactName}`,
+          subject: emailSubject || `EV-töltő ajánlat vállalati ügyfeleknek – ${companyName || contactName}`,
           html: generatedEmail,
           from: `${senderName} - EVIONOR <hello@notifications.evionor.hu>`,
         },
