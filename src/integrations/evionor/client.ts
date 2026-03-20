@@ -298,3 +298,55 @@ export async function getB2BQuestionnaireResponses(options?: {
     order: { column: 'created_at', ascending: false }
   });
 }
+
+/**
+ * B2B Automation settings
+ */
+interface B2BAutomationSettings {
+  automationEnabled: boolean;
+  autoGroupEnabled: boolean;
+  success: boolean;
+  error?: string;
+}
+
+export async function getB2BAutomationSettings(): Promise<{ automationEnabled: boolean; autoGroupEnabled: boolean }> {
+  const access_token = await getAccessToken();
+
+  const { data, error } = await supabase.functions.invoke<B2BAutomationSettings>("manage-b2b-automation", {
+    body: { access_token, action: "get" },
+  });
+
+  if (error) {
+    console.error("Error getting B2B automation settings:", error);
+    return { automationEnabled: false, autoGroupEnabled: false };
+  }
+
+  return {
+    automationEnabled: data?.automationEnabled ?? false,
+    autoGroupEnabled: data?.autoGroupEnabled ?? false,
+  };
+}
+
+export async function setB2BAutomationEnabled(enabled: boolean): Promise<void> {
+  const access_token = await getAccessToken();
+
+  const { data, error } = await supabase.functions.invoke<B2BAutomationSettings>("manage-b2b-automation", {
+    body: { access_token, action: "set_automation", enabled },
+  });
+
+  if (error || !data?.success) {
+    throw new Error(data?.error || "Failed to update B2B automation setting");
+  }
+}
+
+export async function setB2BAutoGroupEnabled(enabled: boolean): Promise<void> {
+  const access_token = await getAccessToken();
+
+  const { data, error } = await supabase.functions.invoke<B2BAutomationSettings>("manage-b2b-automation", {
+    body: { access_token, action: "set_auto_group", enabled },
+  });
+
+  if (error || !data?.success) {
+    throw new Error(data?.error || "Failed to update B2B auto group setting");
+  }
+}

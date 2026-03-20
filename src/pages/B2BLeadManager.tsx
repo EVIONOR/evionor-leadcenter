@@ -1,15 +1,17 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQueryState, parseAsInteger, parseAsStringLiteral } from "nuqs";
-import { getB2BQuestionnaireResponses } from "@/integrations/evionor/client";
+import { getB2BQuestionnaireResponses, getB2BAutomationSettings, setB2BAutomationEnabled, setB2BAutoGroupEnabled, queryEvionorTable } from "@/integrations/evionor/client";
 import { supabase } from "@/integrations/supabase/client";
 import { evionorAuth } from "@/integrations/evionor/auth-client";
 import type { B2BQuestionnaireResponse } from "@/integrations/evionor/types";
+import { isFakeLead } from "@/components/stats/fakeLead";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { B2BQualifyForm } from "@/components/b2b/B2BQualifyForm";
@@ -28,7 +30,7 @@ import {
   Plug,
 } from "lucide-react";
 
-type B2BLeadStatus = "new" | "contacted" | "qualified" | "converted" | "rejected";
+type B2BLeadStatus = "new" | "contacted" | "qualified" | "converted" | "rejected" | "auto_email" | "auto_contacted";
 
 const statusOptions: { value: B2BLeadStatus; label: string; color: string }[] = [
   { value: "new", label: "Új", color: "bg-blue-500/15 text-blue-700 border-blue-200" },
@@ -36,6 +38,8 @@ const statusOptions: { value: B2BLeadStatus; label: string; color: string }[] = 
   { value: "qualified", label: "Minősített", color: "bg-emerald-500/15 text-emerald-700 border-emerald-200" },
   { value: "converted", label: "Konvertált", color: "bg-green-500/15 text-green-700 border-green-200" },
   { value: "rejected", label: "Elutasított", color: "bg-red-500/15 text-red-700 border-red-200" },
+  { value: "auto_email", label: "Auto email", color: "bg-cyan-500/15 text-cyan-700 border-cyan-200" },
+  { value: "auto_contacted", label: "Auto contacted", color: "bg-violet-500/15 text-violet-700 border-violet-200" },
 ];
 
 const getStatusBadge = (status: string) => {
@@ -54,6 +58,9 @@ export default function B2BLeadManager() {
   const [loading, setLoading] = useState(true);
   const [totalCount, setTotalCount] = useState(0);
   const [selectedLead, setSelectedLead] = useState<B2BQuestionnaireResponse | null>(null);
+  const [automationEnabled, setAutomationEnabled] = useState(false);
+  const [autoGroupEnabled, setAutoGroupEnabled] = useState(false);
+  const [loadingSettings, setLoadingSettings] = useState(true);
   const navigate = useNavigate();
   const { toast } = useToast();
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -62,13 +69,52 @@ export default function B2BLeadManager() {
   const [statusFilter, setStatusFilter] = useQueryState(
     "status",
     parseAsStringLiteral([
-      "new", "contacted", "qualified", "converted", "rejected", "all",
+      "new", "contacted", "qualified", "converted", "rejected", "all", "auto_email", "auto_contacted", "false",
     ] as const).withDefault("new"),
   );
 
   const [currentPage, setCurrentPage] = useQueryState("page", parseAsInteger.withDefault(1));
   const [itemsPerPage, setItemsPerPage] = useQueryState("perPage", parseAsInteger.withDefault(15));
-  const totalPages = Math.ceil(totalCount / itemsPerPage);
+  const [allFalseLeads, setAllFalseLeads] = useState<B2BLeadWithStatus[]>([]);
+
+  const isFalseFilter = statusFilter === "false";
+  const totalPages = isFalseFilter
+    ? Math.ceil(allFalseLeads.length / itemsPerPage)
+    : Math.ceil(totalCount / itemsPerPage);
+
+  // Load automation settings
+  useEffect(() => {
+    (async () => {
+      try {
+        const settings = await getB2BAutomationSettings();
+        setAutomationEnabled(settings.automationEnabled);
+        setAutoGroupEnabled(settings.autoGroupEnabled);
+      } catch (e) {
+        console.error("Error loading B2B automation settings:", e);
+      } finally {
+        setLoadingSettings(false);
+      }
+    })();
+  }, []);
+
+  const fetchAllB2BLeads = async (): Promise<B2BQuestionnaireResponse[]> => {
+    const PAGE = 1000;
+    let offset = 0;
+    const all: B2BQuestionnaireResponse[] = [];
+    while (true) {
+      const result = await queryEvionorTable<B2BQuestionnaireResponse>("b2b_questionnaire_responses", {
+        limit: PAGE,
+        offset,
+        select: "id, company_name, name, email, phone, fleet_count, km_per_year, charging_stations, home_chargers, phases, location, timeline, usage_environment, data_consent, created_at",
+        order: { column: "created_at", ascending: false },
+      });
+      const rows = result?.data || [];
+      all.push(...rows);
+      if (rows.length < PAGE) break;
+      offset += PAGE;
+    }
+    return all;
+  };
 
   const fetchResponses = async () => {
     if (isInitialLoad.current) {
@@ -76,14 +122,6 @@ export default function B2BLeadManager() {
     }
     try {
       const offset = (currentPage - 1) * itemsPerPage;
-      
-      // Fetch B2B leads from EVIONOR
-      const result = await getB2BQuestionnaireResponses({
-        limit: 200, // fetch all to filter client-side by status
-        offset: 0,
-      });
-
-      if (!result?.data) throw new Error("No data received");
 
       // Fetch local qualifications to get statuses
       const { data: { session } } = await evionorAuth.auth.getSession();
@@ -99,33 +137,40 @@ export default function B2BLeadManager() {
         }
       });
 
-      // Merge status into leads
-      const leadsWithStatus: B2BLeadWithStatus[] = result.data.map((lead) => {
-        const qual = statusMap.get(lead.id);
-        return {
-          ...lead,
-          qualification_status: (qual?.status as B2BLeadStatus) || "new",
-          qualification_id: qual?.id || null,
-        };
-      });
+      if (isFalseFilter) {
+        // Fetch all leads for false filtering
+        const allLeads = await fetchAllB2BLeads();
+        const leadsWithStatus: B2BLeadWithStatus[] = allLeads.map((lead) => {
+          const qual = statusMap.get(lead.id);
+          return { ...lead, qualification_status: (qual?.status as B2BLeadStatus) || "new", qualification_id: qual?.id || null };
+        });
+        const fakeLeads = leadsWithStatus.filter((l) => isFakeLead({ name: l.name, email: l.email, phone: l.phone }));
+        setAllFalseLeads(fakeLeads);
+        setResponses(fakeLeads.slice(offset, offset + itemsPerPage));
+        setTotalCount(fakeLeads.length);
+      } else {
+        // Fetch B2B leads from EVIONOR
+        const result = await getB2BQuestionnaireResponses({ limit: 200, offset: 0 });
+        if (!result?.data) throw new Error("No data received");
 
-      // Filter by status
-      const filtered = statusFilter === "all"
-        ? leadsWithStatus
-        : leadsWithStatus.filter((l) => l.qualification_status === statusFilter);
+        // Merge status into leads
+        const leadsWithStatus: B2BLeadWithStatus[] = result.data.map((lead) => {
+          const qual = statusMap.get(lead.id);
+          return { ...lead, qualification_status: (qual?.status as B2BLeadStatus) || "new", qualification_id: qual?.id || null };
+        });
 
-      setTotalCount(filtered.length);
+        // Filter by status
+        const filtered = statusFilter === "all"
+          ? leadsWithStatus
+          : leadsWithStatus.filter((l) => l.qualification_status === statusFilter);
 
-      // Paginate
-      const paginated = filtered.slice(offset, offset + itemsPerPage);
-      setResponses(paginated);
+        setTotalCount(filtered.length);
+        const paginated = filtered.slice(offset, offset + itemsPerPage);
+        setResponses(paginated);
+      }
     } catch (error) {
       console.error("Error fetching B2B responses:", error);
-      toast({
-        title: "Hiba",
-        description: "Nem sikerült lekérni a B2B leadeket",
-        variant: "destructive",
-      });
+      toast({ title: "Hiba", description: "Nem sikerült lekérni a B2B leadeket", variant: "destructive" });
     } finally {
       setLoading(false);
       isInitialLoad.current = false;
@@ -142,13 +187,11 @@ export default function B2BLeadManager() {
       const access_token = session?.access_token;
 
       if (lead.qualification_id) {
-        // Update existing qualification
         const { error } = await supabase.functions.invoke("manage-qualifications", {
           body: { action: "update_status", access_token, id: lead.qualification_id, status: newStatus }
         });
         if (error) throw error;
       } else {
-        // Create new qualification with just the status
         const { error } = await supabase.functions.invoke("manage-qualifications", {
           body: {
             action: "insert",
@@ -167,35 +210,48 @@ export default function B2BLeadManager() {
       }
 
       // Optimistic update
-      if (statusFilter !== "all" && statusFilter !== newStatus) {
+      if (statusFilter !== "all" && statusFilter !== newStatus && !isFalseFilter) {
         setResponses((prev) => prev.filter((r) => r.id !== lead.id));
         setTotalCount((prev) => Math.max(0, prev - 1));
       } else {
         setResponses((prev) =>
-          prev.map((r) =>
-            r.id === lead.id ? { ...r, qualification_status: newStatus } : r
-          )
+          prev.map((r) => r.id === lead.id ? { ...r, qualification_status: newStatus } : r)
         );
       }
 
-      toast({
-        title: "Státusz frissítve",
-        description: `Státusz: ${getStatusBadge(newStatus).label}`,
-      });
+      toast({ title: "Státusz frissítve", description: `Státusz: ${getStatusBadge(newStatus).label}` });
     } catch (error) {
       console.error("Error updating B2B status:", error);
-      toast({
-        title: "Hiba",
-        description: "Nem sikerült frissíteni a státuszt",
-        variant: "destructive",
-      });
-      fetchResponses(); // Revert
+      toast({ title: "Hiba", description: "Nem sikerült frissíteni a státuszt", variant: "destructive" });
+      fetchResponses();
     }
   };
 
   const handleStatusFilterChange = async (value: string) => {
     await setStatusFilter(value as any);
     await setCurrentPage(1);
+  };
+
+  const handleToggleAutomation = async (enabled: boolean) => {
+    try {
+      await setB2BAutomationEnabled(enabled);
+      setAutomationEnabled(enabled);
+      toast({ title: enabled ? "B2B Auto email bekapcsolva" : "B2B Auto email kikapcsolva" });
+    } catch (error) {
+      console.error("Error toggling B2B automation:", error);
+      toast({ title: "Hiba", description: "Nem sikerült módosítani a beállítást", variant: "destructive" });
+    }
+  };
+
+  const handleToggleAutoGroup = async (enabled: boolean) => {
+    try {
+      await setB2BAutoGroupEnabled(enabled);
+      setAutoGroupEnabled(enabled);
+      toast({ title: enabled ? "Auto Group bekapcsolva" : "Auto Group kikapcsolva" });
+    } catch (error) {
+      console.error("Error toggling B2B auto group:", error);
+      toast({ title: "Hiba", description: "Nem sikerült módosítani a beállítást", variant: "destructive" });
+    }
   };
 
   if (selectedLead) {
@@ -205,10 +261,7 @@ export default function B2BLeadManager() {
           <B2BQualifyForm
             lead={selectedLead}
             onBack={() => { setSelectedLead(null); fetchResponses(); }}
-            onSaved={() => {
-              setSelectedLead(null);
-              fetchResponses();
-            }}
+            onSaved={() => { setSelectedLead(null); fetchResponses(); }}
           />
         </div>
       </div>
@@ -237,7 +290,7 @@ export default function B2BLeadManager() {
             </Button>
             <div>
               <h1 className="text-lg font-semibold text-foreground tracking-tight">B2B Lead Manager</h1>
-              <p className="text-xs text-muted-foreground">{totalCount} B2B lead</p>
+              <p className="text-xs text-muted-foreground">{isFalseFilter ? allFalseLeads.length : totalCount} B2B lead</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -266,7 +319,7 @@ export default function B2BLeadManager() {
 
       <div className="max-w-7xl mx-auto px-4 md:px-8 py-6">
         {/* Filter tabs */}
-        <div className="flex items-center gap-2 mb-6 overflow-x-auto pb-1">
+        <div className="flex items-center gap-2 mb-4 overflow-x-auto pb-1">
           <button
             onClick={() => handleStatusFilterChange("all")}
             className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap ${
@@ -290,7 +343,43 @@ export default function B2BLeadManager() {
               {option.label}
             </button>
           ))}
+          <button
+            onClick={() => handleStatusFilterChange("false")}
+            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap ${
+              statusFilter === "false"
+                ? "bg-zinc-800 text-white shadow-sm"
+                : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200 border border-zinc-300"
+            }`}
+          >
+            False
+          </button>
         </div>
+
+        {/* Auto email controls */}
+        {statusFilter === "auto_email" && !loadingSettings && (
+          <div className="flex items-center gap-6 mb-4 p-3 bg-card rounded-lg border">
+            <div className="flex items-center gap-2">
+              <Switch
+                id="b2b-auto-email"
+                checked={automationEnabled}
+                onCheckedChange={handleToggleAutomation}
+              />
+              <Label htmlFor="b2b-auto-email" className="text-xs font-medium cursor-pointer">
+                Auto email küldés
+              </Label>
+            </div>
+            <div className="flex items-center gap-2">
+              <Switch
+                id="b2b-auto-group"
+                checked={autoGroupEnabled}
+                onCheckedChange={handleToggleAutoGroup}
+              />
+              <Label htmlFor="b2b-auto-group" className="text-xs font-medium cursor-pointer">
+                Auto Group (új → auto email)
+              </Label>
+            </div>
+          </div>
+        )}
 
         {/* Lead cards */}
         <div className="space-y-3">
@@ -303,7 +392,9 @@ export default function B2BLeadManager() {
               <p className="text-xs text-muted-foreground mt-1">
                 {statusFilter === "all"
                   ? "Még nincsenek B2B leadek."
-                  : `Nincs "${getStatusBadge(statusFilter).label}" státuszú B2B lead.`}
+                  : isFalseFilter
+                    ? "Nincs false B2B lead."
+                    : `Nincs "${getStatusBadge(statusFilter).label}" státuszú B2B lead.`}
               </p>
             </div>
           ) : (
@@ -374,7 +465,7 @@ export default function B2BLeadManager() {
                           value={response.qualification_status}
                           onValueChange={(value) => handleStatusChange(response, value as B2BLeadStatus)}
                         >
-                          <SelectTrigger className="w-[110px] h-8 text-xs">
+                          <SelectTrigger className="w-[130px] h-8 text-xs">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
