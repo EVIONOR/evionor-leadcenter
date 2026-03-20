@@ -34,10 +34,6 @@ export function auditResidentialLead(lead: EvionorQuestionnaireLead): Residentia
     return typeof value !== "string" || value.trim().length === 0;
   }).map(({ label }) => label);
 
-  if (!missingFields.includes("phases") && !isSupportedPhase(lead.phases)) {
-    missingFields.push("phases");
-  }
-
   return {
     email: lead.email,
     leadId: lead.id,
