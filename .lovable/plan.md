@@ -1,23 +1,28 @@
 
 
-## Plan: Update Phase 3 Template Selection for Automated Offers
+## Plan: Default phases to "3" when missing
 
-### Context
-- Phase 1 already returns AMINA 1 + Charge Amps Halo — no change needed.
-- Phase 3 (non-solar) currently returns only Zaptec Go — needs to also include Easee Charge Up.
-- Solar integration cannot be derived from lead data (no field exists), so `solarIntegration` is hardcoded to `"nem"` in `normalizeResidentialLead`. The solar branch is unreachable for automated sends.
+### Problem
+The `manage-residential-automation` endpoint blocks enabling automation if any "new" lead has missing `phases`. The lead `orso@freemail.hu` has no phases value, blocking the toggle.
 
-### Changes
+### Change
+In `normalizeResidentialLead` (both files), phases already defaults to `"1"` when invalid. But the blocker is in `auditResidentialLead` — it flags `phases` as missing before normalization ever runs.
 
-**1. Update `getAutomaticResidentialTemplateIds` in both locations:**
-- `src/shared/residentialOffer.ts`
-- `supabase/functions/_shared/residentialOffer.ts`
+**Fix**: Remove `phases` from `AUTOMATION_REQUIRED_FIELDS` in the audit function, and instead let `normalizeResidentialLead` default missing/invalid phases to `"3"`.
 
-Change phase 3 non-solar return from `["template3b"]` to `["template3b", "template3a"]` (Zaptec Go + Easee Charge Up).
+### Files to edit
 
-**2. Redeploy edge functions:**
-- `process-residential-offers`
-- `render-residential-offer`
+**1. `supabase/functions/_shared/residentialOfferServer.ts`**
+- Remove `{ key: "phases", label: "phases" }` from `AUTOMATION_REQUIRED_FIELDS`
+- Remove the `isSupportedPhase` check in `auditResidentialLead` (lines 38-40)
+- Change default in `normalizeResidentialLead`: when phases is missing/invalid, default to `"3"` instead of `"1"`
 
-That's it — two file edits, two deploys.
+**2. `src/shared/residentialOffer.ts`** (if it has the same logic — sync)
+
+**3. Redeploy edge functions**: `process-residential-offers`, `manage-residential-automation`, `render-residential-offer`
+
+### Result
+- Leads with missing phases will no longer block automation
+- They'll default to 3-phase and get Zaptec Go + Easee Charge Up templates
+- Leads with explicit "1" or "3" continue working as before
 
