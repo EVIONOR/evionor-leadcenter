@@ -100,11 +100,9 @@ export default function Stats() {
   const filteredB2C = useMemo(() => applyFakeFilter(filterByRange(b2cLeads)), [b2cLeads, range, leadFilter]);
   const filteredB2B = useMemo(() => applyFakeFilter(filterByRange(b2bLeads)), [b2bLeads, range, leadFilter]);
 
-  // For KPI: count false leads in range (before fake filter)
-  const b2cInRange = useMemo(() => filterByRange(b2cLeads), [b2cLeads, range]);
-  const b2bInRange = useMemo(() => filterByRange(b2bLeads), [b2bLeads, range]);
-  const b2cFalseCount = useMemo(() => b2cInRange.filter((l) => isFakeLead({ name: l.name, email: l.email, phone: l.phone })).length, [b2cInRange]);
-  const b2bFalseCount = useMemo(() => b2bInRange.filter((l) => isFakeLead({ name: l.name, email: l.email, phone: l.phone })).length, [b2bInRange]);
+  // For KPIs: always use only real (non-false) leads in range
+  const realB2C = useMemo(() => filterByRange(b2cLeads).filter((l) => !isFakeLead({ name: l.name, email: l.email, phone: l.phone })), [b2cLeads, range]);
+  const realB2B = useMemo(() => filterByRange(b2bLeads).filter((l) => !isFakeLead({ name: l.name, email: l.email, phone: l.phone })), [b2bLeads, range]);
 
   const handleCustomRange = () => {
     const n = parseInt(customRange, 10);
