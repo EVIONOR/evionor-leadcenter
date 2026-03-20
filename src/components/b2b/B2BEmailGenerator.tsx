@@ -188,7 +188,7 @@ export function B2BEmailGenerator({
   const [generatedEmail, setGeneratedEmail] = useState("");
   const [emailSubject, setEmailSubject] = useState("");
   const [isSending, setIsSending] = useState(false);
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [loadManagementDiscount, setLoadManagementDiscount] = useState(0);
 
   // Reset generated email when settings change so user always gets fresh output
   useEffect(() => {
