@@ -111,6 +111,23 @@ export function LeadKPIs({ leads, showRejected, falseCount, totalInRange }: Lead
         </Card>
       )}
 
+      {/* False lead ratio */}
+      {falseRatio && (
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base">False leadek</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-baseline gap-2">
+              <span className="text-3xl font-bold tabular-nums text-muted-foreground">{falseRatio.pct}%</span>
+              <span className="text-sm text-muted-foreground">
+                ({falseRatio.count} / {totalInRange ?? total} lead)
+              </span>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* BP + Pest ratio */}
       <Card>
         <CardHeader className="pb-2">
