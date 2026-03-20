@@ -22,7 +22,6 @@ const AUTOMATION_REQUIRED_FIELDS = [
   { key: "phone", label: "phone" },
   { key: "car_brand", label: "car_brand" },
   { key: "car_model", label: "car_model" },
-  { key: "phases", label: "phases" },
 ] as const;
 
 function isSupportedPhase(value: string): value is "1" | "3" {
@@ -35,10 +34,6 @@ export function auditResidentialLead(lead: EvionorQuestionnaireLead): Residentia
     return typeof value !== "string" || value.trim().length === 0;
   }).map(({ label }) => label);
 
-  if (!missingFields.includes("phases") && !isSupportedPhase(lead.phases)) {
-    missingFields.push("phases");
-  }
-
   return {
     email: lead.email,
     leadId: lead.id,
@@ -47,7 +42,7 @@ export function auditResidentialLead(lead: EvionorQuestionnaireLead): Residentia
 }
 
 export function normalizeResidentialLead(lead: EvionorQuestionnaireLead): ResidentialOfferInput {
-  const phases: "1" | "3" = isSupportedPhase(lead.phases) ? lead.phases : "1";
+  const phases: "1" | "3" = isSupportedPhase(lead.phases) ? lead.phases : "3";
   const normalizedInput: ResidentialOfferInput = {
     additionalItems: [],
     amperage: "32",
