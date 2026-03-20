@@ -3324,7 +3324,19 @@ export const hungarianCities = {
   "9983": "Szakonyfalu",
   "9985": "Felsőszölnök",
 };
+const uniqueHungarianCities = Object.fromEntries(
+  Object.entries(
+    [...source.matchAll(/"(\d+)"\s*:\s*"([^"]*)"/g)].reduce<Record<string, string[]>>((acc, [, zip, city]) => {
+      const cleanCity = city.trim();
+
+      if (!acc[zip]) acc[zip] = [];
+      if (!acc[zip].includes(cleanCity)) acc[zip].push(cleanCity);
+
+      return acc;
+    }, {}),
+  ).map(([zip, cities]) => [zip, cities.join(", ")]),
+);
 
 export const getCityByZip = (zip: string): string => {
-  return hungarianCities[zip] || "";
+  return uniqueHungarianCities[zip] || "";
 };
