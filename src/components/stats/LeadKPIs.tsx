@@ -14,6 +14,8 @@ interface Lead {
 interface LeadKPIsProps {
   leads: Lead[];
   showRejected?: boolean;
+  falseCount?: number;
+  totalInRange?: number;
 }
 
 const TIMELINE_LABELS: Record<string, string> = {
