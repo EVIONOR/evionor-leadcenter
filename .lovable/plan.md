@@ -1,41 +1,27 @@
 
 
-## Plan: "False" lead szűrő — bővített heurisztikával
+## Plan: "False" lead szűrő a Lead Managerben
 
-### `isFakeLead()` vizsgálati szempontok
+### Probléma
+A jelenlegi szűrők (Mind, Új, Kontaktált, stb.) szerver-oldali státusz alapúak. A "False" lead egy kliens-oldali heurisztika (`isFakeLead`), nem DB mező, ezért más megközelítés kell.
 
-**Név ellenőrzés:**
-- Túl rövid (< 3 karakter)
-- Csak azonos betűk ismétlése ("aaa", "bbb")
-- Tartalmaz számokat
-- Ismert teszt nevek: "test", "teszt", "próba", "asd", "asdf", "xxx", "abc", "qwer", "fake"
-- Csak mássalhangzók vagy csak magánhangzók (nem valós név)
-- Nincs benne szóköz (magyar neveknél elvárás a vezetéknév + keresztnév)
+### Megoldás
 
-**Email ellenőrzés:**
-- Ismert temp/teszt domainok: mailinator, yopmail, guerrillamail, tempmail, throwaway, sharklasers, grr.la, dispostable, maildrop, 10minutemail, trashmail
-- Lokális rész csak azonos karakterek ("aaaa@")
-- Lokális rész ismert teszt minta ("test", "asdf", "fake", "xxx", "aaa")
-- Email és név teljesen megegyezik (pl. név: "test", email: "test@...")
-- Túl rövid lokális rész (< 3 karakter a @ előtt)
+**Fájl: `src/pages/LeadManager.tsx`**
 
-**Telefon ellenőrzés:**
-- Túl kevés számjegy (< 7 szám a formázás eltávolítása után)
-- Csak azonos számok ("1111111", "0000000")
-- Szekvenciális számok ("1234567", "7654321")
-- Ismert fake számok ("0612345678", "06301234567")
-- Tartalmaz betűket
+1. **Új "False" gomb** a filter sorba az "Auto kontaktált" után
+2. Amikor a "False" filter aktív:
+   - Az összes leadet lekérjük (status filter nélkül, lapozva mint a Stats oldalon)
+   - Kliens-oldalon szűrjük az `isFakeLead()` függvénnyel
+   - Kliens-oldali lapozás az eredményen
+3. A többi filter változatlanul szerver-oldali marad
 
-**Kombinált szabályok:**
-- Ha 2+ mező is gyanús → biztosan fake (egyenként lehetne véletlen, együtt nem)
-- Név + email + telefon mind "minimális erőfeszítés" (pl. rövid név + rövid email + szekvenciális szám)
+### Változások
+- `statusFilter` lehetséges értékei közé felvenni a `"false"` értéket
+- Ha `statusFilter === "false"`: összes lead lekérése → `isFakeLead` szűrés → kliens-oldali slice a megjelenítéshez
+- Új gomb a filter sorban: "False" — szürke/sötét stílussal a többi mellé
+- Import: `isFakeLead` from `@/components/stats/fakeLead`
 
-### Fájlok
-
-| Fájl | Művelet |
-|------|---------|
-| `src/components/stats/fakeLead.ts` | Létrehozás — `isFakeLead()` a fenti szabályokkal |
-| `src/pages/Stats.tsx` | Módosítás — select bővítés (name, email, phone), false szűrő toggle |
-| `src/components/stats/LeadKPIs.tsx` | Módosítás — "False leadek" KPI kártya |
-| `src/components/stats/DailyLeadsChart.tsx` | Módosítás — false lead megkülönböztetés (stacked bar, szürke szín) |
+### Scope
+- 1 fájl módosítás: `src/pages/LeadManager.tsx`
 
