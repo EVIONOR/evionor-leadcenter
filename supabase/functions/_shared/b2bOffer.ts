@@ -132,7 +132,7 @@ export function buildB2BAutoEmail(input: B2BAutoEmailInput): { html: string; sub
                                                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                                         <tr><td style="padding-bottom: 8px;"><a href="https://evionor.hu/collections/all/products/zaptec-go-evtlt" style="color: #0a2540; font-size: 15px; font-weight: 700; text-decoration: none; border-bottom: 2px solid #0071e3;">Zaptec Go 22kW</a></td></tr>
                                                         <tr><td>
-                                                            <span style="color: #94a3b8; text-decoration: line-through; font-size: 13px; font-weight: 400; margin-right: 8px;">${fmtPrice(ZAPTEC_GO_ORIGINAL_NET)} + áfa</span>
+                                                            <span style="color: #0071e3; font-size: 22px; font-weight: 800;">${fmtPrice(ZAPTEC_GO_NET)}</span>
                                                             <span style="color: #0071e3; font-size: 22px; font-weight: 800;">${fmtPrice(ZAPTEC_GO_NET)}</span>
                                                             <span style="color: #64748b; font-size: 13px; font-weight: 500;"> + áfa</span>
                                                             <br/>
