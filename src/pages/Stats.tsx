@@ -33,21 +33,41 @@ export default function Stats() {
     let cancelled = false;
     setLoading(true);
 
+    async function fetchAllPages<T>(
+      table: Parameters<typeof queryEvionorTable>[0],
+      select: string,
+      order: { column: string; ascending?: boolean },
+    ): Promise<T[]> {
+      const PAGE = 1000;
+      let offset = 0;
+      const all: T[] = [];
+      while (true) {
+        const result = await queryEvionorTable<T>(table, {
+          limit: PAGE, offset, select, order,
+        });
+        const rows = result?.data || [];
+        all.push(...rows);
+        if (rows.length < PAGE) break;
+        offset += PAGE;
+      }
+      return all;
+    }
+
     Promise.all([
-      queryEvionorTable<QuestionnaireResponse>("questionnaire_responses", {
-        limit: 5000,
-        select: "id,created_at,location,timeline,status",
-        order: { column: "created_at", ascending: true },
-      }),
+      fetchAllPages<QuestionnaireResponse>(
+        "questionnaire_responses",
+        "id,created_at,location,timeline,status",
+        { column: "created_at", ascending: true },
+      ),
       queryEvionorTable<B2BQuestionnaireResponse>("b2b_questionnaire_responses", {
-        limit: 5000,
+        limit: 1000,
         select: "id,created_at,location,timeline",
         order: { column: "created_at", ascending: true },
       }),
     ])
-      .then(([b2cResult, b2bResult]) => {
+      .then(([b2cAll, b2bResult]) => {
         if (!cancelled) {
-          setB2cLeads(b2cResult?.data || []);
+          setB2cLeads(b2cAll);
           setB2bLeads(b2bResult?.data || []);
         }
       })
