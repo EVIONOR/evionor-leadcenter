@@ -92,52 +92,82 @@ export default function LeadManager() {
     loadAutoProcessingSetting();
   }, []);
 
+  const isInitialLoad = useRef(true);
+
+  // Fetch all false leads only when entering false filter
   useEffect(() => {
+    if (!isFalseFilter) {
+      setAllFalseLeads([]);
+      return;
+    }
+
     let cancelled = false;
-
-    const fetchResponses = async () => {
-      setLoading(true);
+    const fetchAllForFalse = async () => {
+      if (isInitialLoad.current) setLoading(true);
       try {
-        if (isFalseFilter) {
-          // Fetch ALL leads in pages of 1000, then client-filter
-          const PAGE = 1000;
-          let offset = 0;
-          let all: QuestionnaireResponse[] = [];
-          while (true) {
-            const result = await queryEvionorTable<QuestionnaireResponse>("questionnaire_responses", {
-              limit: PAGE,
-              offset,
-              select: "id,name,email,phone,location,timeline,car_brand,car_model,phases,status,created_at",
-              order: { column: "created_at", ascending: false },
-            });
-            const rows = result?.data || [];
-            all = all.concat(rows);
-            if (rows.length < PAGE) break;
-            offset += PAGE;
-          }
-          if (!cancelled) {
-            const fakeLeads = all.filter((r) => isFakeLead({ name: r.name, email: r.email, phone: r.phone }));
-            setAllFalseLeads(fakeLeads);
-            const start = (currentPage - 1) * itemsPerPage;
-            setResponses(fakeLeads.slice(start, start + itemsPerPage));
-            setTotalCount(fakeLeads.length);
-          }
-        } else {
-          const offset = (currentPage - 1) * itemsPerPage;
-          const result = await getQuestionnaireResponses({
-            limit: itemsPerPage,
+        const PAGE = 1000;
+        let offset = 0;
+        let all: QuestionnaireResponse[] = [];
+        while (true) {
+          const result = await queryEvionorTable<QuestionnaireResponse>("questionnaire_responses", {
+            limit: PAGE,
             offset,
-            status: statusFilter !== "all" ? statusFilter : undefined,
+            select: "id,name,email,phone,location,timeline,car_brand,car_model,phases,status,created_at",
+            order: { column: "created_at", ascending: false },
           });
+          const rows = result?.data || [];
+          all = all.concat(rows);
+          if (rows.length < PAGE) break;
+          offset += PAGE;
+        }
+        if (!cancelled) {
+          const fakeLeads = all.filter((r) => isFakeLead({ name: r.name, email: r.email, phone: r.phone }));
+          setAllFalseLeads(fakeLeads);
+          setTotalCount(fakeLeads.length);
+        }
+      } catch (error) {
+        if (!cancelled) {
+          console.error("Error fetching false leads:", error);
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+          isInitialLoad.current = false;
+        }
+      }
+    };
 
-          if (!result?.data) {
-            throw new Error("No data received");
-          }
+    fetchAllForFalse();
+    return () => { cancelled = true; };
+  }, [statusFilter]);
 
-          if (!cancelled) {
-            setResponses(result.data);
-            setTotalCount(result.count || 0);
-          }
+  // Paginate false leads from cache
+  useEffect(() => {
+    if (!isFalseFilter || allFalseLeads.length === 0) return;
+    const start = (currentPage - 1) * itemsPerPage;
+    setResponses(allFalseLeads.slice(start, start + itemsPerPage));
+  }, [isFalseFilter, allFalseLeads, currentPage, itemsPerPage]);
+
+  // Fetch normal (non-false) leads
+  useEffect(() => {
+    if (isFalseFilter) return;
+
+    let cancelled = false;
+    const fetchResponses = async () => {
+      if (isInitialLoad.current) setLoading(true);
+      try {
+        const offset = (currentPage - 1) * itemsPerPage;
+        const result = await getQuestionnaireResponses({
+          limit: itemsPerPage,
+          offset,
+          status: statusFilter !== "all" ? statusFilter : undefined,
+        });
+
+        if (!result?.data) throw new Error("No data received");
+
+        if (!cancelled) {
+          setResponses(result.data);
+          setTotalCount(result.count || 0);
         }
       } catch (error) {
         if (!cancelled) {
@@ -151,16 +181,14 @@ export default function LeadManager() {
       } finally {
         if (!cancelled) {
           setLoading(false);
+          isInitialLoad.current = false;
         }
       }
     };
 
     fetchResponses();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [statusFilter, currentPage, itemsPerPage, toast, isFalseFilter]);
+    return () => { cancelled = true; };
+  }, [statusFilter, currentPage, itemsPerPage]);
 
   const handleStatusChange = async (id: string, newStatus: LeadStatus) => {
     try {
