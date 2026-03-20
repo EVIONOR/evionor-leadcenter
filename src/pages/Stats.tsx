@@ -147,7 +147,7 @@ export default function Stats() {
             </TabsList>
 
             <TabsContent value="b2c" className="space-y-6">
-              <DailyLeadsChart leads={filteredB2C} showRejected />
+              <DailyLeadsChart leads={filteredB2C} />
               <LeadKPIs leads={filteredB2C} showRejected />
             </TabsContent>
 
