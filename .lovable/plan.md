@@ -1,48 +1,42 @@
 
 
-## Plan: Stats Dashboard a főoldalon
+## Problem
 
-### Áttekintés
-Új "Stats" gomb a főoldal fejlécébe, amely egy modális/dialog ablakot nyit meg lead statisztikákkal: napi beérkezés oszlopdiagram + KPI mutatók dátumszűréssel.
+The Stats page fetches B2C leads with `limit: 5000, order: ascending`, but the EVIONOR PostgREST server caps responses at 1000 rows. Since the order is ascending (oldest first), only the oldest 1000 leads are returned. The most recent ~300+ leads are cut off, so the 30-day filter shows 0 results.
 
-### Komponensek
+B2B is unaffected because it only has ~59 leads total.
 
-**1. `src/components/stats/LeadStatsDialog.tsx`** — Fő dialog komponens
-- Gomb a fejlécben (BarChart3 ikon + "Stats" felirat)
-- Dialog/Sheet megnyitáskor az összes lead lekérése az EVIONOR-ból (`queryEvionorTable("questionnaire_responses")`)
-- Dátumszűrő (preset: 7 nap, 30 nap, 90 nap, összes + egyéni dátumválasztó)
-- Kliens-oldali szűrés és aggregálás a lekért adatokon
+## Fix
 
-**2. `src/components/stats/DailyLeadsChart.tsx`** — Napi beérkezés oszlopdiagram
-- Recharts BarChart a meglévő chart komponensekkel (`ChartContainer`, `ChartTooltip`)
-- X tengely: napok, Y tengely: lead szám
-- Időtáv változtatható a szűrővel
+Implement pagination in `Stats.tsx` to fetch all rows in batches of 1000.
 
-**3. `src/components/stats/LeadKPIs.tsx`** — KPI kártyák
-- **Budapest + Pest megye arány**: `location` mező alapján szűrés (Budapest, Pest megye városai) vs. összes
-- **Egyedi megyék %**: `location` mezőből megye meghatározás → oszlopdiagram vagy táblázat az arányokkal
-- **Timeline arány**: `timeline` mező szerinti megoszlás (ASAP, 1-month, 3-month, 3month+) — kör- vagy oszlopdiagram
+### File: `src/pages/Stats.tsx`
 
-### Adatforrás
-- A `queryEvionorTable` hívást használjuk limit nélkül (vagy nagy limittel) hogy az összes leadet megkapjuk
-- A `location` mező tartalmazza a város nevet — a `hungarianCitiesComplete.ts` fájlból megállapítható melyik városhoz melyik megye tartozik
-- A `timeline` mező közvetlenül tartalmazza az értékeket
+Replace the single `queryEvionorTable` call for B2C with a loop:
 
-### Megye meghatározás
-- A `hungarianCitiesComplete.ts` adatbázist használjuk a város → megye leképezéshez
-- Budapest + Pest megye: ahol a megye "Pest" vagy a város "Budapest"
+```text
+async function fetchAllPages(table, select, order) {
+  const PAGE = 1000
+  let offset = 0
+  let all = []
+  while (true) {
+    const result = await queryEvionorTable(table, {
+      limit: PAGE, offset, select, order
+    })
+    const rows = result?.data || []
+    all.push(...rows)
+    if (rows.length < PAGE) break
+    offset += PAGE
+  }
+  return all
+}
+```
 
-### Fájlok
-| Fájl | Művelet |
-|------|---------|
-| `src/components/stats/LeadStatsDialog.tsx` | Létrehozás |
-| `src/components/stats/DailyLeadsChart.tsx` | Létrehozás |
-| `src/components/stats/LeadKPIs.tsx` | Létrehozás |
-| `src/pages/Index.tsx` | Stats gomb hozzáadás a fejlécbe |
+- Call this for B2C (`questionnaire_responses`) instead of the single query
+- B2B can stay as a single call (only ~59 rows)
+- No other changes needed
 
-### Technikai részletek
-- Recharts (már telepítve) a diagramokhoz
-- shadcn Dialog + Tabs a megjelenítéshez
-- A `hungarianCitiesComplete.ts`-ből city→county mapping kinyerése
-- Dátumszűrő: Select komponens preset értékekkel
+### Scope
+- 1 file edited: `src/pages/Stats.tsx`
+- Add a `fetchAllPages` helper and use it in the `useEffect`
 
