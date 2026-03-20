@@ -8,6 +8,7 @@ import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import Index from "./pages/Index";
 import LeadManager from "./pages/LeadManager";
 import B2BLeadManager from "./pages/B2BLeadManager";
+import Stats from "./pages/Stats";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 
@@ -80,6 +81,14 @@ const App = () => (
                 element={
                   <ProtectedRoute>
                     <B2BLeadManager />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/stats"
+                element={
+                  <ProtectedRoute>
+                    <Stats />
                   </ProtectedRoute>
                 }
               />
