@@ -1,53 +1,47 @@
 import { useMemo } from "react";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 
 interface Lead {
   created_at: string;
-  status?: string;
 }
 
 interface DailyLeadsChartProps {
   leads: Lead[];
-  showRejected?: boolean;
 }
 
 const chartConfig = {
-  active: {
-    label: "Aktív",
-    color: "hsl(var(--primary))",
-  },
-  rejected: {
-    label: "Elutasított",
-    color: "hsl(0 70% 55%)",
-  },
   count: {
     label: "Leadek",
     color: "hsl(var(--primary))",
   },
 };
 
-export function DailyLeadsChart({ leads, showRejected }: DailyLeadsChartProps) {
+export function DailyLeadsChart({ leads }: DailyLeadsChartProps) {
   const data = useMemo(() => {
-    const buckets: Record<string, { active: number; rejected: number }> = {};
+    if (!leads.length) return [];
+
+    const buckets: Record<string, number> = {};
     for (const lead of leads) {
       const day = lead.created_at.substring(0, 10);
-      if (!buckets[day]) buckets[day] = { active: 0, rejected: 0 };
-      if (showRejected && lead.status === "rejected") {
-        buckets[day].rejected++;
-      } else {
-        buckets[day].active++;
-      }
+      buckets[day] = (buckets[day] || 0) + 1;
     }
-    return Object.entries(buckets)
-      .sort(([a], [b]) => a.localeCompare(b))
-      .map(([date, counts]) => ({
-        date: date.substring(5),
-        fullDate: date,
-        ...counts,
-        count: counts.active + counts.rejected,
-      }));
-  }, [leads, showRejected]);
+
+    const days = Object.keys(buckets).sort();
+    const start = new Date(days[0]);
+    const end = new Date(days[days.length - 1]);
+
+    const result: { date: string; fullDate: string; count: number }[] = [];
+    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+      const iso = d.toISOString().substring(0, 10);
+      result.push({
+        date: iso.substring(5),
+        fullDate: iso,
+        count: buckets[iso] || 0,
+      });
+    }
+    return result;
+  }, [leads]);
 
   if (!data.length) {
     return <p className="text-sm text-muted-foreground text-center py-8">Nincs adat a kiválasztott időszakban.</p>;
@@ -75,15 +69,7 @@ export function DailyLeadsChart({ leads, showRejected }: DailyLeadsChartProps) {
             />
           }
         />
-        {showRejected ? (
-          <>
-            <Bar dataKey="active" stackId="a" fill="var(--color-active)" radius={[0, 0, 0, 0]} />
-            <Bar dataKey="rejected" stackId="a" fill="var(--color-rejected)" radius={[4, 4, 0, 0]} />
-            <Legend />
-          </>
-        ) : (
-          <Bar dataKey="count" fill="var(--color-count)" radius={[4, 4, 0, 0]} />
-        )}
+        <Bar dataKey="count" fill="var(--color-count)" radius={[4, 4, 0, 0]} />
       </BarChart>
     </ChartContainer>
   );
