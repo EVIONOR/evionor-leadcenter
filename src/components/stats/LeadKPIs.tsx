@@ -33,7 +33,7 @@ const PIE_COLORS = [
   "hsl(0 70% 55%)",
 ];
 
-export function LeadKPIs({ leads, showRejected }: LeadKPIsProps) {
+export function LeadKPIs({ leads, showRejected, falseCount, totalInRange }: LeadKPIsProps) {
   const total = leads.length;
 
   const rejectedRatio = useMemo(() => {
@@ -41,6 +41,12 @@ export function LeadKPIs({ leads, showRejected }: LeadKPIsProps) {
     const count = leads.filter((l) => l.status === "rejected").length;
     return { count, pct: Math.round((count / total) * 100) };
   }, [leads, total, showRejected]);
+
+  const falseRatio = useMemo(() => {
+    const t = totalInRange ?? total;
+    if (!t || falseCount == null) return null;
+    return { count: falseCount, pct: Math.round((falseCount / t) * 100) };
+  }, [falseCount, totalInRange, total]);
 
   const bpPestRatio = useMemo(() => {
     if (!total) return { count: 0, pct: 0 };
