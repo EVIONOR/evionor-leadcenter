@@ -203,7 +203,7 @@ export default function LeadManager() {
     }
   };
 
-  const handleStatusFilterChange = async (value: LeadStatus | "all") => {
+  const handleStatusFilterChange = async (value: LeadStatus | "all" | "false") => {
     await setStatusFilter(value);
     await setCurrentPage(1); // Reset to first page when filter changes
   };
