@@ -733,7 +733,7 @@ export function B2BEmailGenerator({
 </html>`.trim();
 
     setGeneratedEmail(htmlEmail);
-    setEmailSubject(`B2B EV-töltő ajánlat – ${displayName} – Evionor`);
+    setEmailSubject(`EV-töltő ajánlat vállalati ügyfeleknek – ${displayName} – Evionor`);
     setIsGenerating(false);
     toast.success("Email sikeresen generálva!");
   };
