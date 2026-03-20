@@ -733,7 +733,7 @@ export function B2BEmailGenerator({
 </html>`.trim();
 
     setGeneratedEmail(htmlEmail);
-    setEmailSubject(`B2B EV-töltő ajánlat – ${displayName} – Evionor`);
+    setEmailSubject(`EV-töltő ajánlat vállalati ügyfeleknek – ${displayName} – Evionor`);
     setIsGenerating(false);
     toast.success("Email sikeresen generálva!");
   };
@@ -745,7 +745,7 @@ export function B2BEmailGenerator({
       const { data: emailData, error } = await supabase.functions.invoke("send-email", {
         body: {
           to: email,
-          subject: emailSubject || `B2B EV-töltő ajánlat – ${companyName || contactName}`,
+          subject: emailSubject || `EV-töltő ajánlat vállalati ügyfeleknek – ${companyName || contactName}`,
           html: generatedEmail,
           from: `${senderName} - EVIONOR <hello@notifications.evionor.hu>`,
         },

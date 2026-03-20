@@ -339,6 +339,6 @@ export function buildB2BAutoEmail(input: B2BAutoEmailInput): { html: string; sub
 
   return {
     html,
-    subject: `Elektromos autó töltő ajánlat – ${displayName} – Evionor`,
+    subject: `EV-töltő ajánlat vállalati ügyfeleknek – ${displayName} – Evionor`,
   };
 }
