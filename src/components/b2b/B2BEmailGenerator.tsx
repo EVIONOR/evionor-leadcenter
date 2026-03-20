@@ -196,7 +196,7 @@ export function B2BEmailGenerator({
       setGeneratedEmail("");
       setEmailSubject("");
     }
-  }, [includeLoadManagement, includeInstallation, discountPercent, installationTier, selectedTemplates]);
+  }, [includeLoadManagement, includeInstallation, discountPercent, installationTier, selectedTemplates, loadManagementDiscount]);
 
   const findProductPrice = (productName: string): number => {
     const normalized = productName.toLowerCase().replace(/\s+/g, " ").trim();
