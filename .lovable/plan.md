@@ -1,28 +1,48 @@
 
 
-## Plan: Default phases to "3" when missing
+## Plan: Stats Dashboard a főoldalon
 
-### Problem
-The `manage-residential-automation` endpoint blocks enabling automation if any "new" lead has missing `phases`. The lead `orso@freemail.hu` has no phases value, blocking the toggle.
+### Áttekintés
+Új "Stats" gomb a főoldal fejlécébe, amely egy modális/dialog ablakot nyit meg lead statisztikákkal: napi beérkezés oszlopdiagram + KPI mutatók dátumszűréssel.
 
-### Change
-In `normalizeResidentialLead` (both files), phases already defaults to `"1"` when invalid. But the blocker is in `auditResidentialLead` — it flags `phases` as missing before normalization ever runs.
+### Komponensek
 
-**Fix**: Remove `phases` from `AUTOMATION_REQUIRED_FIELDS` in the audit function, and instead let `normalizeResidentialLead` default missing/invalid phases to `"3"`.
+**1. `src/components/stats/LeadStatsDialog.tsx`** — Fő dialog komponens
+- Gomb a fejlécben (BarChart3 ikon + "Stats" felirat)
+- Dialog/Sheet megnyitáskor az összes lead lekérése az EVIONOR-ból (`queryEvionorTable("questionnaire_responses")`)
+- Dátumszűrő (preset: 7 nap, 30 nap, 90 nap, összes + egyéni dátumválasztó)
+- Kliens-oldali szűrés és aggregálás a lekért adatokon
 
-### Files to edit
+**2. `src/components/stats/DailyLeadsChart.tsx`** — Napi beérkezés oszlopdiagram
+- Recharts BarChart a meglévő chart komponensekkel (`ChartContainer`, `ChartTooltip`)
+- X tengely: napok, Y tengely: lead szám
+- Időtáv változtatható a szűrővel
 
-**1. `supabase/functions/_shared/residentialOfferServer.ts`**
-- Remove `{ key: "phases", label: "phases" }` from `AUTOMATION_REQUIRED_FIELDS`
-- Remove the `isSupportedPhase` check in `auditResidentialLead` (lines 38-40)
-- Change default in `normalizeResidentialLead`: when phases is missing/invalid, default to `"3"` instead of `"1"`
+**3. `src/components/stats/LeadKPIs.tsx`** — KPI kártyák
+- **Budapest + Pest megye arány**: `location` mező alapján szűrés (Budapest, Pest megye városai) vs. összes
+- **Egyedi megyék %**: `location` mezőből megye meghatározás → oszlopdiagram vagy táblázat az arányokkal
+- **Timeline arány**: `timeline` mező szerinti megoszlás (ASAP, 1-month, 3-month, 3month+) — kör- vagy oszlopdiagram
 
-**2. `src/shared/residentialOffer.ts`** (if it has the same logic — sync)
+### Adatforrás
+- A `queryEvionorTable` hívást használjuk limit nélkül (vagy nagy limittel) hogy az összes leadet megkapjuk
+- A `location` mező tartalmazza a város nevet — a `hungarianCitiesComplete.ts` fájlból megállapítható melyik városhoz melyik megye tartozik
+- A `timeline` mező közvetlenül tartalmazza az értékeket
 
-**3. Redeploy edge functions**: `process-residential-offers`, `manage-residential-automation`, `render-residential-offer`
+### Megye meghatározás
+- A `hungarianCitiesComplete.ts` adatbázist használjuk a város → megye leképezéshez
+- Budapest + Pest megye: ahol a megye "Pest" vagy a város "Budapest"
 
-### Result
-- Leads with missing phases will no longer block automation
-- They'll default to 3-phase and get Zaptec Go + Easee Charge Up templates
-- Leads with explicit "1" or "3" continue working as before
+### Fájlok
+| Fájl | Művelet |
+|------|---------|
+| `src/components/stats/LeadStatsDialog.tsx` | Létrehozás |
+| `src/components/stats/DailyLeadsChart.tsx` | Létrehozás |
+| `src/components/stats/LeadKPIs.tsx` | Létrehozás |
+| `src/pages/Index.tsx` | Stats gomb hozzáadás a fejlécbe |
+
+### Technikai részletek
+- Recharts (már telepítve) a diagramokhoz
+- shadcn Dialog + Tabs a megjelenítéshez
+- A `hungarianCitiesComplete.ts`-ből city→county mapping kinyerése
+- Dátumszűrő: Select komponens preset értékekkel
 
