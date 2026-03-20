@@ -98,21 +98,46 @@ export default function LeadManager() {
     const fetchResponses = async () => {
       setLoading(true);
       try {
-        const offset = (currentPage - 1) * itemsPerPage;
-        const result = await getQuestionnaireResponses({
-          limit: itemsPerPage,
-          offset,
-          status: statusFilter !== "all" ? statusFilter : undefined,
-        });
+        if (isFalseFilter) {
+          // Fetch ALL leads in pages of 1000, then client-filter
+          const PAGE = 1000;
+          let offset = 0;
+          let all: QuestionnaireResponse[] = [];
+          while (true) {
+            const result = await queryEvionorTable<QuestionnaireResponse>("questionnaire_responses", {
+              limit: PAGE,
+              offset,
+              select: "id,name,email,phone,location,timeline,car_brand,car_model,phases,status,created_at",
+              order: { column: "created_at", ascending: false },
+            });
+            const rows = result?.data || [];
+            all = all.concat(rows);
+            if (rows.length < PAGE) break;
+            offset += PAGE;
+          }
+          if (!cancelled) {
+            const fakeLeads = all.filter((r) => isFakeLead({ name: r.name, email: r.email, phone: r.phone }));
+            setAllFalseLeads(fakeLeads);
+            const start = (currentPage - 1) * itemsPerPage;
+            setResponses(fakeLeads.slice(start, start + itemsPerPage));
+            setTotalCount(fakeLeads.length);
+          }
+        } else {
+          const offset = (currentPage - 1) * itemsPerPage;
+          const result = await getQuestionnaireResponses({
+            limit: itemsPerPage,
+            offset,
+            status: statusFilter !== "all" ? statusFilter : undefined,
+          });
 
-        if (!result?.data) {
-          throw new Error("No data received");
-        }
+          if (!result?.data) {
+            throw new Error("No data received");
+          }
 
-        // Only update state if this request hasn't been cancelled
-        if (!cancelled) {
-          setResponses(result.data);
-          setTotalCount(result.count || 0);
+          if (!cancelled) {
+            setResponses(result.data);
+            setTotalCount(result.count || 0);
+          }
         }
       } catch (error) {
         if (!cancelled) {
@@ -132,11 +157,10 @@ export default function LeadManager() {
 
     fetchResponses();
 
-    // Cleanup function to cancel the request if filter/page changes before completion
     return () => {
       cancelled = true;
     };
-  }, [statusFilter, currentPage, itemsPerPage, toast]);
+  }, [statusFilter, currentPage, itemsPerPage, toast, isFalseFilter]);
 
   const handleStatusChange = async (id: string, newStatus: LeadStatus) => {
     try {
