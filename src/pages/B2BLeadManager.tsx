@@ -116,70 +116,137 @@ export default function B2BLeadManager() {
     return all;
   };
 
-  const fetchResponses = async () => {
-    if (isInitialLoad.current) {
-      setLoading(true);
+  const qualificationsCache = useRef<Map<string, { status: string; id: string }> | null>(null);
+
+  const fetchQualifications = async (force = false) => {
+    if (qualificationsCache.current && !force) return qualificationsCache.current;
+    const { data: { session } } = await evionorAuth.auth.getSession();
+    const { data: qualResult } = await supabase.functions.invoke("manage-qualifications", {
+      body: { action: "list", access_token: session?.access_token }
+    });
+    const qualifications = qualResult?.data || [];
+    const statusMap = new Map<string, { status: string; id: string }>();
+    qualifications.forEach((q: any) => {
+      if (q.source_b2b_id) {
+        statusMap.set(q.source_b2b_id, { status: q.status || "new", id: q.id });
+      }
+    });
+    qualificationsCache.current = statusMap;
+    return statusMap;
+  };
+
+  // Fetch all false leads only when entering false filter
+  useEffect(() => {
+    if (!isFalseFilter) {
+      setAllFalseLeads([]);
+      return;
     }
-    try {
-      const offset = (currentPage - 1) * itemsPerPage;
 
-      // Fetch local qualifications to get statuses
-      const { data: { session } } = await evionorAuth.auth.getSession();
-      const { data: qualResult } = await supabase.functions.invoke("manage-qualifications", {
-        body: { action: "list", access_token: session?.access_token }
-      });
-      const qualifications = qualResult?.data || [];
-
-      const statusMap = new Map<string, { status: string; id: string }>();
-      (qualifications || []).forEach((q: any) => {
-        if (q.source_b2b_id) {
-          statusMap.set(q.source_b2b_id, { status: q.status || "new", id: q.id });
-        }
-      });
-
-      if (isFalseFilter) {
-        // Fetch all leads for false filtering
+    let cancelled = false;
+    const fetchFalse = async () => {
+      if (isInitialLoad.current) setLoading(true);
+      try {
+        const statusMap = await fetchQualifications();
         const allLeads = await fetchAllB2BLeads();
         const leadsWithStatus: B2BLeadWithStatus[] = allLeads.map((lead) => {
           const qual = statusMap.get(lead.id);
           return { ...lead, qualification_status: (qual?.status as B2BLeadStatus) || "new", qualification_id: qual?.id || null };
         });
         const fakeLeads = leadsWithStatus.filter((l) => isFakeLead({ name: l.name, email: l.email, phone: l.phone }));
-        setAllFalseLeads(fakeLeads);
-        setResponses(fakeLeads.slice(offset, offset + itemsPerPage));
-        setTotalCount(fakeLeads.length);
-      } else {
-        // Fetch B2B leads from EVIONOR
+        if (!cancelled) {
+          setAllFalseLeads(fakeLeads);
+          setTotalCount(fakeLeads.length);
+        }
+      } catch (error) {
+        if (!cancelled) {
+          console.error("Error fetching false B2B leads:", error);
+        }
+      } finally {
+        if (!cancelled) { setLoading(false); isInitialLoad.current = false; }
+      }
+    };
+    fetchFalse();
+    return () => { cancelled = true; };
+  }, [statusFilter]);
+
+  // Paginate false leads from cache
+  useEffect(() => {
+    if (!isFalseFilter || allFalseLeads.length === 0) return;
+    const start = (currentPage - 1) * itemsPerPage;
+    setResponses(allFalseLeads.slice(start, start + itemsPerPage));
+  }, [isFalseFilter, allFalseLeads, currentPage, itemsPerPage]);
+
+  // Fetch normal (non-false) leads
+  useEffect(() => {
+    if (isFalseFilter) return;
+
+    let cancelled = false;
+    const fetchNormal = async () => {
+      if (isInitialLoad.current) setLoading(true);
+      try {
+        const offset = (currentPage - 1) * itemsPerPage;
+        const statusMap = await fetchQualifications();
+
         const result = await getB2BQuestionnaireResponses({ limit: 200, offset: 0 });
         if (!result?.data) throw new Error("No data received");
 
-        // Merge status into leads
         const leadsWithStatus: B2BLeadWithStatus[] = result.data.map((lead) => {
           const qual = statusMap.get(lead.id);
           return { ...lead, qualification_status: (qual?.status as B2BLeadStatus) || "new", qualification_id: qual?.id || null };
         });
 
-        // Filter by status
         const filtered = statusFilter === "all"
           ? leadsWithStatus
           : leadsWithStatus.filter((l) => l.qualification_status === statusFilter);
 
-        setTotalCount(filtered.length);
-        const paginated = filtered.slice(offset, offset + itemsPerPage);
-        setResponses(paginated);
+        if (!cancelled) {
+          setTotalCount(filtered.length);
+          setResponses(filtered.slice(offset, offset + itemsPerPage));
+        }
+      } catch (error) {
+        if (!cancelled) {
+          console.error("Error fetching B2B responses:", error);
+          toast({ title: "Hiba", description: "Nem sikerült lekérni a B2B leadeket", variant: "destructive" });
+        }
+      } finally {
+        if (!cancelled) { setLoading(false); isInitialLoad.current = false; }
       }
-    } catch (error) {
-      console.error("Error fetching B2B responses:", error);
-      toast({ title: "Hiba", description: "Nem sikerült lekérni a B2B leadeket", variant: "destructive" });
-    } finally {
-      setLoading(false);
-      isInitialLoad.current = false;
+    };
+    fetchNormal();
+    return () => { cancelled = true; };
+  }, [currentPage, statusFilter, itemsPerPage]);
+
+  const fetchResponses = async () => {
+    qualificationsCache.current = null; // force refresh
+    if (isFalseFilter) {
+      // re-trigger by toggling a dummy state - just refetch
+      const statusMap = await fetchQualifications(true);
+      const allLeads = await fetchAllB2BLeads();
+      const leadsWithStatus: B2BLeadWithStatus[] = allLeads.map((lead) => {
+        const qual = statusMap.get(lead.id);
+        return { ...lead, qualification_status: (qual?.status as B2BLeadStatus) || "new", qualification_id: qual?.id || null };
+      });
+      const fakeLeads = leadsWithStatus.filter((l) => isFakeLead({ name: l.name, email: l.email, phone: l.phone }));
+      setAllFalseLeads(fakeLeads);
+      setTotalCount(fakeLeads.length);
+      const offset = (currentPage - 1) * itemsPerPage;
+      setResponses(fakeLeads.slice(offset, offset + itemsPerPage));
+    } else {
+      const offset = (currentPage - 1) * itemsPerPage;
+      const statusMap = await fetchQualifications(true);
+      const result = await getB2BQuestionnaireResponses({ limit: 200, offset: 0 });
+      if (!result?.data) return;
+      const leadsWithStatus: B2BLeadWithStatus[] = result.data.map((lead) => {
+        const qual = statusMap.get(lead.id);
+        return { ...lead, qualification_status: (qual?.status as B2BLeadStatus) || "new", qualification_id: qual?.id || null };
+      });
+      const filtered = statusFilter === "all"
+        ? leadsWithStatus
+        : leadsWithStatus.filter((l) => l.qualification_status === statusFilter);
+      setTotalCount(filtered.length);
+      setResponses(filtered.slice(offset, offset + itemsPerPage));
     }
   };
-
-  useEffect(() => {
-    fetchResponses();
-  }, [currentPage, statusFilter, itemsPerPage]);
 
   const handleStatusChange = async (lead: B2BLeadWithStatus, newStatus: B2BLeadStatus) => {
     try {
