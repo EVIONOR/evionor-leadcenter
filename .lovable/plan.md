@@ -1,40 +1,31 @@
 
 
-## Problémák a `quotePdf.ts` fájlban (szerver-oldali PDF generátor)
+## Plan: ROI szekció szövegmódosítások — mindkét projektben
 
-### 1. Angol szöveg — miért?
+### Probléma
+A képernyőképen látható "Otthoni töltőd megtérülése" szekció szövegeinek módosítása szükséges:
+- Új mondat beszúrása a DC/otthoni költség összehasonlítás és a megtakarítás/megtérülés dobozok közé: **"Ha otthon töltesz nyilvános gyorstöltő helyett akkor:"**
+- "Éves megtakarítás" → **"Éves megtakarításod:"**
+- "Megtérülési idő" → **"Töltőd megtérülési ideje:"**
 
-A `supabase/functions/_shared/quotePdf.ts` fájlt valaki (vagy az AI) angol nyelven írta meg, míg a kliens-oldali verzió (`src/lib/generateQuotePdf.ts`) teljesen magyar. Összehasonlítás:
+### Hol találhatók ezek?
 
-| Szerver-oldali (quotePdf.ts) | Kliens-oldali (generateQuotePdf.ts) |
-|-----|-----|
-| "Residential EV charger quote" | "Árajánlat" |
-| "Quote" | "Árajánlat" |
-| "Date:" / "Valid until:" | "Árajánlat dátuma:" / "Érvényesség:" |
-| "Issuer" | "ÁRAJÁNLAT KIBOCSÁTÓ" |
-| "Customer" | "ÜGYFÉL ADATAI" |
-| "Offer details" | Táblázat fejléc |
-| "Item" / "Gross price" | "MEGNEVEZÉS" / "BRUTTÓ ÁR" |
-| "Product link" | "Termék megtekintése:" |
+A képernyőképen lévő pontos szövegek ("Nyilvános gyorstöltő költség", "Otthoni töltési költség", "Éves megtakarítás", "Megtérülési idő") **egyetlen elérhető Lovable projektben sem találhatók**. Valószínűleg a Shopify-on hosztolt evionor.hu weboldal kódjában vannak, amihez itt nincs hozzáférésem.
 
-A szerver-oldali fájl egy korábbi, egyszerűsített verzió, ami nem követi a kliens-oldali magyar sablont.
+A legközelebbi egyezés a [B2B charger offer calc](/projects/2ce23b2f-f5ab-45fb-bc9a-639ff1703e92) projektben van, de ott a címkék eltérnek:
+- "Nyilvános gyorstöltő" (nem "Nyilvános gyorstöltő költség")
+- "Megtakarítás velünk" (nem "Éves megtakarítás")
+- "Megtérülési idő" (ez egyezik)
 
-### 2. Elcsúszott téglalap — miért?
+### Amit meg tudok csinálni
 
-A díszítő doboz (`drawRectangle`, sor 173) koordinátái (`y: PDF_PAGE_HEIGHT - 500`, `height: 174`) nem egyeznek a benne lévő tartalom koordinátáival (528-638 tartomány). A doboz y=342-516 között van, a tartalom y=204-314 között → üres doboz fent, tartalom lent alatta.
+**1. B2B charger offer calc projekt** — hasonló módosítások:
+- `src/lib/translations.ts`: `annualSavings` → "Éves megtakarításod:"
+- `src/lib/translations.ts`: `roiPeriod` → "Töltőd megtérülési ideje:"
+- `src/components/EVQuestionnaire.tsx`: Új sor beszúrása a DC/AC összehasonlító grid és a megtakarítás/megtérülés blokk közé
 
-### Javítás
+**2. Ez a projekt (lead management)** — a residential email sablonba nem releváns, mert az email nem tartalmaz ROI szekciót. Ha szeretnéd hozzáadni, azt külön kérésként tudom megcsinálni.
 
-**Fájl: `supabase/functions/_shared/quotePdf.ts`**
-
-A teljes PDF-et újraírni a kliens-oldali `generateQuotePdf.ts` mintájára:
-- Minden szöveg magyarra (Árajánlat, Kibocsátó, Ügyfél adatai, Megnevezés, Bruttó ár, stb.)
-- Cégadatok bővítése (adószám, cégjegyzékszám, bankszámlaszám)
-- Nettó/ÁFA/Bruttó összesítő sor
-- Helyes pozícionálás a doboznak
-- Lábléc: "Ez az árajánlat elektronikusan készült és aláírás nélkül érvényes."
-- Megtartani a `sanitizePdfText` megoldást (pdf-lib nem támogatja az ékezeteket StandardFonts-szal)
-
-### Scope
-- 1 fájl: `supabase/functions/_shared/quotePdf.ts`
+### Kérdés
+Melyik projekt kódját módosítsam? A B2B charger offer calc-ot tudom módosítani, de a Shopify oldalt nem. Ha a Shopify-on van az eredeti, azt manuálisan kell frissíteni.
 
