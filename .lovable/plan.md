@@ -1,31 +1,78 @@
 
 
-## Plan: ROI szekció szövegmódosítások — mindkét projektben
+## Plan: Kalkuláció eredménye a visszaigazoló emailben
 
-### Probléma
-A képernyőképen látható "Otthoni töltőd megtérülése" szekció szövegeinek módosítása szükséges:
-- Új mondat beszúrása a DC/otthoni költség összehasonlítás és a megtakarítás/megtérülés dobozok közé: **"Ha otthon töltesz nyilvános gyorstöltő helyett akkor:"**
-- "Éves megtakarítás" → **"Éves megtakarításod:"**
-- "Megtérülési idő" → **"Töltőd megtérülési ideje:"**
+### Hol van a kód?
+A visszaigazoló email a **B2B charger offer calc** (`charge-wizard-ai`) projektben van:
+- `supabase/functions/send-welcome-email/index.ts` — email sablon + küldés
+- `src/components/EVQuestionnaire.tsx` — itt hívja meg a `send-welcome-email` Edge Function-t
 
-### Hol találhatók ezek?
+### Mi a teendő?
+A `calculateROI()` eredményeit átadni a `send-welcome-email` Edge Function-nek, és az email HTML-be beépíteni a költség összehasonlítást és megtérülést (ajánlott töltők nélkül).
 
-A képernyőképen lévő pontos szövegek ("Nyilvános gyorstöltő költség", "Otthoni töltési költség", "Éves megtakarítás", "Megtérülési idő") **egyetlen elérhető Lovable projektben sem találhatók**. Valószínűleg a Shopify-on hosztolt evionor.hu weboldal kódjában vannak, amihez itt nincs hozzáférésem.
+### Módosítások
 
-A legközelebbi egyezés a [B2B charger offer calc](/projects/2ce23b2f-f5ab-45fb-bc9a-639ff1703e92) projektben van, de ott a címkék eltérnek:
-- "Nyilvános gyorstöltő" (nem "Nyilvános gyorstöltő költség")
-- "Megtakarítás velünk" (nem "Éves megtakarítás")
-- "Megtérülési idő" (ez egyezik)
+**1. `src/components/EVQuestionnaire.tsx` (~340. sor)**
+A `send-welcome-email` híváshoz hozzáadni a ROI adatokat:
+```typescript
+const roi = calculateROI();
+await supabase.functions.invoke("send-welcome-email", {
+  body: {
+    email: data.email,
+    name: data.name,
+    roi: {
+      fleetCount: roi.fleetCount,
+      totalAnnualKm: roi.totalAnnualKm,
+      annualConsumptionKwh: roi.annualConsumptionKwh,
+      dcChargingCostPerYear: roi.dcChargingCostPerYear,
+      acChargingCostPerYear: roi.acChargingCostPerYear,
+      annualSavings: roi.annualSavings,
+      netInvestment: roi.netInvestment,
+      monthsToROI: roi.monthsToROI,
+      chargingStations: roi.chargingStations,
+      homeChargers: roi.homeChargers,
+    },
+  },
+});
+```
 
-### Amit meg tudok csinálni
+**2. `supabase/functions/send-welcome-email/index.ts`**
+- Bővíteni az interfészt a `roi` objektummal
+- Az email HTML-be beépíteni egy kalkuláció szekciót:
+  - Nyilvános gyorstöltő éves költsége (piros doboz)
+  - Otthoni/céges töltés éves költsége (kék doboz)
+  - "Ha otthon töltesz nyilvános gyorstöltő helyett akkor:"
+  - Éves megtakarításod (zöld doboz)
+  - Töltőd megtérülési ideje (gradient doboz)
+- Ajánlott töltők NEM kerülnek be
+- Ha nincs `roi` adat (régi hívás), az email a jelenlegi formában jelenik meg (visszafelé kompatibilis)
 
-**1. B2B charger offer calc projekt** — hasonló módosítások:
-- `src/lib/translations.ts`: `annualSavings` → "Éves megtakarításod:"
-- `src/lib/translations.ts`: `roiPeriod` → "Töltőd megtérülési ideje:"
-- `src/components/EVQuestionnaire.tsx`: Új sor beszúrása a DC/AC összehasonlító grid és a megtakarítás/megtérülés blokk közé
+### Vizuális felépítés az emailben
 
-**2. Ez a projekt (lead management)** — a residential email sablonba nem releváns, mert az email nem tartalmaz ROI szekciót. Ha szeretnéd hozzáadni, azt külön kérésként tudom megcsinálni.
+```text
+┌─────────────────────────────────┐
+│  Kedves [név]!                  │
+│  Köszönjük, hogy kitöltötted... │
+├─────────────────────────────────┤
+│  Az Ön kalkulációjának eredménye│
+│  ┌──────────┐ ┌──────────┐     │
+│  │ DC költség│ │AC költség │     │
+│  │ (piros)   │ │(kék)     │     │
+│  └──────────┘ └──────────┘     │
+│  Ha otthon töltesz...          │
+│  ┌──────────┐ ┌──────────┐     │
+│  │ Éves     │ │Megtérülés│     │
+│  │megtakarít│ │  ideje   │     │
+│  │ (zöld)   │ │(gradient)│     │
+│  └──────────┘ └──────────┘     │
+├─────────────────────────────────┤
+│  EVIONOR.HU megtekintése       │
+└─────────────────────────────────┘
+```
 
-### Kérdés
-Melyik projekt kódját módosítsam? A B2B charger offer calc-ot tudom módosítani, de a Shopify oldalt nem. Ha a Shopify-on van az eredeti, azt manuálisan kell frissíteni.
+### Fontos
+Ez a módosítás a **charge-wizard-ai** projektben történik, nem ebben a projektben. Át kell váltani arra a projektre a módosításhoz.
+
+### Scope
+- 2 fájl a charge-wizard-ai projektben
 
