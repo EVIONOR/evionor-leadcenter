@@ -1,35 +1,40 @@
 
 
-## Plan: Megyenév felismerés a location mezőben
+## Problémák a `quotePdf.ts` fájlban (szerver-oldali PDF generátor)
 
-### Probléma
-A `getCountyByCity` nem keresi a megyeneveket közvetlenül a `location` stringben. Ha a location "Pest megye", "Győr-Moson-Sopron" vagy hasonló formátumú, egyik lépés sem találja meg → "Ismeretlen".
+### 1. Angol szöveg — miért?
 
-### Megoldás
+A `supabase/functions/_shared/quotePdf.ts` fájlt valaki (vagy az AI) angol nyelven írta meg, míg a kliens-oldali verzió (`src/lib/generateQuotePdf.ts`) teljesen magyar. Összehasonlítás:
 
-**Fájl: `src/components/stats/countyMapping.ts`**
+| Szerver-oldali (quotePdf.ts) | Kliens-oldali (generateQuotePdf.ts) |
+|-----|-----|
+| "Residential EV charger quote" | "Árajánlat" |
+| "Quote" | "Árajánlat" |
+| "Date:" / "Valid until:" | "Árajánlat dátuma:" / "Érvényesség:" |
+| "Issuer" | "ÁRAJÁNLAT KIBOCSÁTÓ" |
+| "Customer" | "ÜGYFÉL ADATAI" |
+| "Offer details" | Táblázat fejléc |
+| "Item" / "Gross price" | "MEGNEVEZÉS" / "BRUTTÓ ÁR" |
+| "Product link" | "Termék megtekintése:" |
 
-Új lépés hozzáadása a Budapest-ellenőrzés után (2. lépésként): közvetlen megyenév keresés a location stringben.
+A szerver-oldali fájl egy korábbi, egyszerűsített verzió, ami nem követi a kliens-oldali magyar sablont.
 
-- Létrehozni egy `COUNTY_NAMES` listát az összes magyar megyével (19 megye + Budapest)
-- A location stringben keresni, hogy tartalmaz-e bármelyik megyenevet (case-insensitive)
-- A "megye" szó eltávolítása a keresés előtt (pl. "Pest megye" → "Pest")
-- Ez a lépés a Budapest-ellenőrzés után és a zip-kód keresés előtt fut
+### 2. Elcsúszott téglalap — miért?
 
-### Módosítás részletei
+A díszítő doboz (`drawRectangle`, sor 173) koordinátái (`y: PDF_PAGE_HEIGHT - 500`, `height: 174`) nem egyeznek a benne lévő tartalom koordinátáival (528-638 tartomány). A doboz y=342-516 között van, a tartalom y=204-314 között → üres doboz fent, tartalom lent alatta.
 
-```text
-Jelenlegi sorrend:          Új sorrend:
-1. Budapest keyword         1. Budapest keyword
-2. Pure zip                 2. ÚJ: Közvetlen megyenév keresés
-3. Embedded zip             3. Pure zip
-4. Exact city match         4. Embedded zip
-5. Partial city match       5. Exact city match
-                            6. Partial city match
-```
+### Javítás
 
-A `COUNTY_NAMES` tömb tartalmazza az összes egyedi megyenevet a már meglévő `zipToCounty` map értékeiből — így nem kell karbantartani egy külön listát.
+**Fájl: `supabase/functions/_shared/quotePdf.ts`**
+
+A teljes PDF-et újraírni a kliens-oldali `generateQuotePdf.ts` mintájára:
+- Minden szöveg magyarra (Árajánlat, Kibocsátó, Ügyfél adatai, Megnevezés, Bruttó ár, stb.)
+- Cégadatok bővítése (adószám, cégjegyzékszám, bankszámlaszám)
+- Nettó/ÁFA/Bruttó összesítő sor
+- Helyes pozícionálás a doboznak
+- Lábléc: "Ez az árajánlat elektronikusan készült és aláírás nélkül érvényes."
+- Megtartani a `sanitizePdfText` megoldást (pdf-lib nem támogatja az ékezeteket StandardFonts-szal)
 
 ### Scope
-- 1 fájl: `src/components/stats/countyMapping.ts`
+- 1 fájl: `supabase/functions/_shared/quotePdf.ts`
 
