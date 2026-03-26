@@ -751,11 +751,11 @@ export function B2BEmailGenerator({
         },
       });
       if (error) throw error;
-      if (emailData?.success) {
-        toast.success(`Email elküldve: ${email}`);
-        onEmailSent?.();
+      if (!emailData?.success) {
         throw new Error(emailData?.error || "Ismeretlen hiba");
       }
+      toast.success(`Email elküldve: ${email}`);
+      onEmailSent?.();
     } catch (error) {
       console.error("Email send error:", error);
       toast.error("Email küldési hiba");
