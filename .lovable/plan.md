@@ -1,78 +1,60 @@
 
 
-## Plan: Kalkuláció eredménye a visszaigazoló emailben
+## Terv: B2B lead automatikus "Minősített" státusz email küldés után
 
-### Hol van a kód?
-A visszaigazoló email a **B2B charger offer calc** (`charge-wizard-ai`) projektben van:
-- `supabase/functions/send-welcome-email/index.ts` — email sablon + küldés
-- `src/components/EVQuestionnaire.tsx` — itt hívja meg a `send-welcome-email` Edge Function-t
+### Jelenlegi állapot
 
-### Mi a teendő?
-A `calculateROI()` eredményeit átadni a `send-welcome-email` Edge Function-nek, és az email HTML-be beépíteni a költség összehasonlítást és megtérülést (ajánlott töltők nélkül).
+A kód **elvileg már megcsinálja** ezt — a `B2BQualifyForm.tsx` (450. sor) az `onEmailSent` callback-ben beállítja a státuszt "qualified"-ra és elmenti. **De van egy kritikus bug**, ami megakadályozza a helyes működést:
 
-### Módosítások
+### Bug a `B2BEmailGenerator.tsx` 754-757. sorban
 
-**1. `src/components/EVQuestionnaire.tsx` (~340. sor)**
-A `send-welcome-email` híváshoz hozzáadni a ROI adatokat:
 ```typescript
-const roi = calculateROI();
-await supabase.functions.invoke("send-welcome-email", {
-  body: {
-    email: data.email,
-    name: data.name,
-    roi: {
-      fleetCount: roi.fleetCount,
-      totalAnnualKm: roi.totalAnnualKm,
-      annualConsumptionKwh: roi.annualConsumptionKwh,
-      dcChargingCostPerYear: roi.dcChargingCostPerYear,
-      acChargingCostPerYear: roi.acChargingCostPerYear,
-      annualSavings: roi.annualSavings,
-      netInvestment: roi.netInvestment,
-      monthsToROI: roi.monthsToROI,
-      chargingStations: roi.chargingStations,
-      homeChargers: roi.homeChargers,
-    },
-  },
-});
+if (emailData?.success) {
+  toast.success(`Email elküldve: ${email}`);
+  onEmailSent?.();                    // ← meghívja
+  throw new Error(emailData?.error || "Ismeretlen hiba");  // ← DE UTÁNA HIBÁT DOB!
+}
 ```
 
-**2. `supabase/functions/send-welcome-email/index.ts`**
-- Bővíteni az interfészt a `roi` objektummal
-- Az email HTML-be beépíteni egy kalkuláció szekciót:
-  - Nyilvános gyorstöltő éves költsége (piros doboz)
-  - Otthoni/céges töltés éves költsége (kék doboz)
-  - "Ha otthon töltesz nyilvános gyorstöltő helyett akkor:"
-  - Éves megtakarításod (zöld doboz)
-  - Töltőd megtérülési ideje (gradient doboz)
-- Ajánlott töltők NEM kerülnek be
-- Ha nincs `roi` adat (régi hívás), az email a jelenlegi formában jelenik meg (visszafelé kompatibilis)
+A sikeres email küldés után azonnal `throw`-ol, ami a `catch` blokkba esik és "Email küldési hiba" toast-ot mutat. Az `onEmailSent` ugyan meghívódik, de a hibakezelés összezavarja a flow-t.
 
-### Vizuális felépítés az emailben
+### Javítás
 
-```text
-┌─────────────────────────────────┐
-│  Kedves [név]!                  │
-│  Köszönjük, hogy kitöltötted... │
-├─────────────────────────────────┤
-│  Az Ön kalkulációjának eredménye│
-│  ┌──────────┐ ┌──────────┐     │
-│  │ DC költség│ │AC költség │     │
-│  │ (piros)   │ │(kék)     │     │
-│  └──────────┘ └──────────┘     │
-│  Ha otthon töltesz...          │
-│  ┌──────────┐ ┌──────────┐     │
-│  │ Éves     │ │Megtérülés│     │
-│  │megtakarít│ │  ideje   │     │
-│  │ (zöld)   │ │(gradient)│     │
-│  └──────────┘ └──────────┘     │
-├─────────────────────────────────┤
-│  EVIONOR.HU megtekintése       │
-└─────────────────────────────────┘
+**1 fájl: `src/components/b2b/B2BEmailGenerator.tsx`**
+
+A `sendEmail` függvényben (741-765. sor) javítani a logikát:
+
+```typescript
+const sendEmail = async () => {
+  if (!generatedEmail || !email) return;
+  setIsSending(true);
+  try {
+    const { data: emailData, error } = await supabase.functions.invoke("send-email", {
+      body: {
+        to: email,
+        subject: emailSubject || `EV-töltő ajánlat vállalati ügyfeleknek – ${companyName || contactName}`,
+        html: generatedEmail,
+        from: `${senderName} - EVIONOR <hello@notifications.evionor.hu>`,
+      },
+    });
+    if (error) throw error;
+    if (!emailData?.success) {
+      throw new Error(emailData?.error || "Ismeretlen hiba");
+    }
+    toast.success(`Email elküldve: ${email}`);
+    onEmailSent?.();
+  } catch (error) {
+    console.error("Email send error:", error);
+    toast.error("Email küldési hiba");
+  } finally {
+    setIsSending(false);
+  }
+};
 ```
 
-### Fontos
-Ez a módosítás a **charge-wizard-ai** projektben történik, nem ebben a projektben. Át kell váltani arra a projektre a módosításhoz.
+A lényeg: a `throw` csak `!success` esetén hívódik, a siker ág pedig rendesen lefut az `onEmailSent()` callbackkel — ami a `B2BQualifyForm`-ban már most is "qualified"-ra állítja a státuszt és elmenti a szerverre.
 
-### Scope
-- 2 fájl a charge-wizard-ai projektben
+### Hatás
+- Az email sikeres küldése után a lead automatikusan "Minősített" kategóriába kerül
+- A felhasználó nem kap téves "Email küldési hiba" üzenetet sikeres küldés után
 
