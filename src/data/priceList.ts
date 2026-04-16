@@ -40,7 +40,7 @@ export const priceList: ProductPrice[] = [
   { name: "Easee Socket Caps", price: 5000, category: "kiegészítő" },
   
   // Zaptec
-  { name: "Zaptec Go 22kW", price: 353000, category: "töltő" },
+  { name: "Zaptec Go 22kW", price: 299000, originalPrice: 353000, category: "töltő" },
   { name: "Zaptec Solar MID", price: 505000, category: "töltő" },
   { name: "Zaptec Pro MID", price: 589000, category: "töltő" },
   { name: "Zaptec Front Cover", price: 19000, category: "kiegészítő" },
