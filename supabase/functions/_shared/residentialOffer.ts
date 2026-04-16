@@ -137,7 +137,7 @@ function getLoadManagementPackage(productName: string): LoadManagementPackage | 
   if (productName.includes("Easee")) {
     return {
       name: "Easee Equalizer Terhelésmenedzsment",
-      price: 143000,
+      price: 140000,
       url: "https://evionor.hu/collections/all/products/easee-equalizer-amp-csomag-ev-mero?_pos=9&_fid=c1e909eaa&_ss=c",
     };
   }
