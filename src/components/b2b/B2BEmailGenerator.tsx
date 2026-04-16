@@ -512,7 +512,7 @@ export function B2BEmailGenerator({
                                                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                                         <tr><td style="padding-bottom: 8px;"><a href="${prodUrl}" style="color: #0a2540; font-size: 15px; font-weight: 700; text-decoration: none; border-bottom: 2px solid #0071e3;">${product}</a></td></tr>
                                                         <tr><td>
-                                                            ${hasDiscount || origPrice ? `<span style="color: #94a3b8; text-decoration: line-through; font-size: 13px; font-weight: 400; margin-right: 8px;">${formatPrice(Math.round((origPrice || originalPrice) / 1.27))} + áfa</span>` : ""}
+                                                            ${hasDiscount ? `<span style="color: #94a3b8; text-decoration: line-through; font-size: 13px; font-weight: 400; margin-right: 8px;">${formatPrice(Math.round(originalPrice / 1.27))} + áfa</span>` : ""}
                                                             <span style="color: #0071e3; font-size: 22px; font-weight: 800;">${formatPrice(Math.round(discountedPrice / 1.27))}</span>
                                                             <span style="color: #64748b; font-size: 13px; font-weight: 500;"> + áfa</span>
                                                             ${hasDiscount ? `<span style="color: #059669; font-size: 12px; font-weight: 600; margin-left: 8px;">-${discountPercent}%</span>` : ""}
