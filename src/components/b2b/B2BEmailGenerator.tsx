@@ -59,7 +59,7 @@ const INSTALLATION_DISCOUNTS: Record<number, { discount: number; label: string }
 
 const LOAD_MANAGERS = [
   { brand: "Zaptec", name: "Zaptec Sense GEN CT Clamp Csomag", netPrice: 99450, grossPrice: Math.round(99450 * 1.27), url: "https://evionor.hu/collections/all/products/zaptec-sense-gen-ct-clamp-csomag-ev-mero?_pos=14&_fid=c1e909eaa&_ss=c" },
-  { brand: "Easee", name: "Easee Equalizer Amp Csomag", netPrice: 110074, grossPrice: Math.round(110074 * 1.27), url: "https://evionor.hu/collections/all/products/easee-equalizer-amp-csomag-ev-mero" },
+  { brand: "Easee", name: "Easee Equalizer Amp Csomag", netPrice: 110000, grossPrice: 140000, url: "https://evionor.hu/collections/all/products/easee-equalizer-amp-csomag-ev-mero" },
   { brand: "Charge Amps", name: "Charge Amps Amp Guard", netPrice: 103937, grossPrice: Math.round(103937 * 1.27), url: "https://evionor.hu/collections/all/products/charge-amps-amp-guard-63a-ev-mero?_pos=10&_fid=53fe77cfa&_ss=c" },
 ];
 
