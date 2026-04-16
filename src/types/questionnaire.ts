@@ -55,7 +55,7 @@ export const chargerTemplates: ChargerTemplate[] = [
     location: "any",
     hasSolar: false,
     products: ["Zaptec Go 22kW"],
-    basePrice: 353000
+    basePrice: 299000
   },
   {
     id: "template3a",
