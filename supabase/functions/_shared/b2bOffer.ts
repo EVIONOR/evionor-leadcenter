@@ -38,7 +38,7 @@ export function buildB2BAutoEmail(input: B2BAutoEmailInput): { html: string; sub
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>B2B EV-Töltő Ajánlat</title>
+    <title>Üzleti EV-Töltő Ajánlat</title>
     <style>
         @media only screen and (max-width: 620px) {
             .email-container { width: 100% !important; }
@@ -48,7 +48,7 @@ export function buildB2BAutoEmail(input: B2BAutoEmailInput): { html: string; sub
 </head>
 <body style="margin: 0; padding: 0; width: 100%; background-color: #f0f2f5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;">
     <div style="display: none; font-size: 1px; line-height: 1px; max-height: 0; overflow: hidden;">
-        B2B EV-töltő ajánlat – ${displayName}
+        Üzleti EV-töltő ajánlat – ${displayName}
     </div>
     <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f0f2f5;">
         <tr>
@@ -72,7 +72,7 @@ export function buildB2BAutoEmail(input: B2BAutoEmailInput): { html: string; sub
                                     </td>
                                 </tr>
                             </table>
-                            <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 700;">B2B EV-Töltő Ajánlat</h1>
+                            <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 700;">Üzleti EV-Töltő Ajánlat</h1>
                             <p style="margin: 8px 0 0 0; color: rgba(255,255,255,0.85); font-size: 14px;">Személyre szabott üzleti megoldás</p>
                         </td>
                     </tr>
