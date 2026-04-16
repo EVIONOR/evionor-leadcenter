@@ -7,10 +7,8 @@ interface B2BAutoEmailInput {
   phone: string;
 }
 
-const ZAPTEC_GO_GROSS = 299000;
+const ZAPTEC_GO_GROSS = 353000;
 const ZAPTEC_GO_NET = Math.round(ZAPTEC_GO_GROSS / 1.27);
-const ZAPTEC_GO_ORIGINAL_GROSS = 353000;
-const ZAPTEC_GO_ORIGINAL_NET = Math.round(ZAPTEC_GO_ORIGINAL_GROSS / 1.27);
 
 const ZAPTEC_SENSE_NET = 99450;
 const ZAPTEC_SENSE_GROSS = Math.round(ZAPTEC_SENSE_NET * 1.27);
@@ -134,12 +132,10 @@ export function buildB2BAutoEmail(input: B2BAutoEmailInput): { html: string; sub
                                                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                                         <tr><td style="padding-bottom: 8px;"><a href="https://evionor.hu/collections/all/products/zaptec-go-evtlt" style="color: #0a2540; font-size: 15px; font-weight: 700; text-decoration: none; border-bottom: 2px solid #0071e3;">Zaptec Go 22kW</a></td></tr>
                                                         <tr><td>
-                                                            <span style="color: #94a3b8; font-size: 16px; font-weight: 500; text-decoration: line-through;">${fmtPrice(ZAPTEC_GO_ORIGINAL_NET)}</span>
-                                                            <span style="color: #0071e3; font-size: 22px; font-weight: 800;"> ${fmtPrice(ZAPTEC_GO_NET)}</span>
+                                                            <span style="color: #0071e3; font-size: 22px; font-weight: 800;">${fmtPrice(ZAPTEC_GO_NET)}</span>
                                                             <span style="color: #64748b; font-size: 13px; font-weight: 500;"> + áfa</span>
                                                             <br/>
-                                                            <span style="color: #94a3b8; font-size: 12px; font-weight: 400; text-decoration: line-through;">${fmtPrice(ZAPTEC_GO_ORIGINAL_GROSS)}</span>
-                                                            <span style="color: #94a3b8; font-size: 12px; font-weight: 400;"> bruttó: ${fmtPrice(ZAPTEC_GO_GROSS)}</span>
+                                                            <span style="color: #94a3b8; font-size: 12px; font-weight: 400;">bruttó: ${fmtPrice(ZAPTEC_GO_GROSS)}</span>
                                                         </td></tr>
                                                     </table>
                                                 </td>
@@ -222,11 +218,9 @@ export function buildB2BAutoEmail(input: B2BAutoEmailInput): { html: string; sub
                                                         <tr>
                                                             <td style="color: #0a2540; font-size: 14px; font-weight: 700;">Töltő nettó:</td>
                                                             <td style="text-align: right;">
-                                                                <span style="color: #94a3b8; font-size: 14px; text-decoration: line-through;">${fmtPrice(ZAPTEC_GO_ORIGINAL_NET)}</span>
-                                                                <span style="color: #0071e3; font-size: 20px; font-weight: 800;"> ${fmtPrice(ZAPTEC_GO_NET)}</span>
+                                                                <span style="color: #0071e3; font-size: 20px; font-weight: 800;">${fmtPrice(ZAPTEC_GO_NET)}</span>
                                                                 <span style="color: #64748b; font-size: 12px;"> + áfa</span>
-                                                                <br/><span style="color: #94a3b8; font-size: 11px; text-decoration: line-through;">${fmtPrice(ZAPTEC_GO_ORIGINAL_GROSS)}</span>
-                                                                <span style="color: #94a3b8; font-size: 11px;"> bruttó: ${fmtPrice(ZAPTEC_GO_GROSS)}</span>
+                                                                <br/><span style="color: #94a3b8; font-size: 11px;">bruttó: ${fmtPrice(ZAPTEC_GO_GROSS)}</span>
                                                             </td>
                                                         </tr>
                                                         <tr>
