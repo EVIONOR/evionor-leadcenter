@@ -230,7 +230,8 @@ export function B2BEmailGenerator({
         return normalized.split(" ").every(w => pn.includes(w));
       });
     }
-    return product?.price || 0;
+    // B2B uses original (full) price — discounts are applied separately
+    return product?.originalPrice || product?.price || 0;
   };
 
   const findOriginalPrice = (productName: string): number | null => {

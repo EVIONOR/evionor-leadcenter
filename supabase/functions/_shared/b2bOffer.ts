@@ -7,10 +7,8 @@ interface B2BAutoEmailInput {
   phone: string;
 }
 
-const ZAPTEC_GO_GROSS = 299000;
+const ZAPTEC_GO_GROSS = 353000;
 const ZAPTEC_GO_NET = Math.round(ZAPTEC_GO_GROSS / 1.27);
-const ZAPTEC_GO_ORIGINAL_GROSS = 353000;
-const ZAPTEC_GO_ORIGINAL_NET = Math.round(ZAPTEC_GO_ORIGINAL_GROSS / 1.27);
 
 const ZAPTEC_SENSE_NET = 99450;
 const ZAPTEC_SENSE_GROSS = Math.round(ZAPTEC_SENSE_NET * 1.27);
