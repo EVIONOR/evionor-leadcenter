@@ -113,8 +113,9 @@ export default function LeadManager() {
         const PAGE = 1000;
         let offset = 0;
         let all: QuestionnaireResponse[] = [];
+        const tableName = language === "ro" ? "questionnaire_responses_ro" : "questionnaire_responses";
         while (true) {
-          const result = await queryEvionorTable<QuestionnaireResponse>("questionnaire_responses", {
+          const result = await queryEvionorTable<QuestionnaireResponse>(tableName, {
             limit: PAGE,
             offset,
             select: "id,name,email,phone,location,timeline,car_brand,car_model,phases,status,created_at",
@@ -144,7 +145,7 @@ export default function LeadManager() {
 
     fetchAllForFalse();
     return () => { cancelled = true; };
-  }, [statusFilter]);
+  }, [statusFilter, language]);
 
   // Paginate false leads from cache
   useEffect(() => {
@@ -166,6 +167,7 @@ export default function LeadManager() {
           limit: itemsPerPage,
           offset,
           status: statusFilter !== "all" ? statusFilter : undefined,
+          language,
         });
 
         if (!result?.data) throw new Error("No data received");
@@ -193,7 +195,7 @@ export default function LeadManager() {
 
     fetchResponses();
     return () => { cancelled = true; };
-  }, [statusFilter, currentPage, itemsPerPage]);
+  }, [statusFilter, currentPage, itemsPerPage, language]);
 
   const handleStatusChange = async (id: string, newStatus: LeadStatus) => {
     try {
@@ -206,7 +208,7 @@ export default function LeadManager() {
         setResponses((prev) => prev.map((r) => (r.id === id ? { ...r, status: newStatus } : r)));
       }
 
-      await updateQuestionnaireStatus(id, newStatus);
+      await updateQuestionnaireStatus(id, newStatus, language);
 
       toast({
         title: "Státusz frissítve",
@@ -221,6 +223,7 @@ export default function LeadManager() {
         limit: itemsPerPage,
         offset,
         status: statusFilter !== "all" ? statusFilter : undefined,
+        language,
       });
 
       if (result?.data) {
@@ -256,7 +259,7 @@ export default function LeadManager() {
 
     // Update status to "Qualified" immediately
     try {
-      await updateQuestionnaireStatus(response.id, "qualified");
+      await updateQuestionnaireStatus(response.id, "qualified", language);
 
       // Optimistically update UI
       if (statusFilter !== "all" && statusFilter !== "qualified") {
