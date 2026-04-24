@@ -384,8 +384,32 @@ export default function LeadManager() {
             <div>
               <h1 className="text-lg font-semibold text-[#0a2540] tracking-tight">Lead Manager</h1>
               <p className="text-xs text-muted-foreground">
-                {totalCount} lead{totalCount !== 1 ? "" : ""}
+                {totalCount} lead{totalCount !== 1 ? "" : ""} · {language === "ro" ? "Román" : "Magyar"}
               </p>
+            </div>
+
+            {/* Language switcher */}
+            <div className="ml-3 flex items-center gap-1 bg-slate-100 rounded-full p-1">
+              <button
+                onClick={async () => { await setLanguage("hu"); await setCurrentPage(1); }}
+                className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
+                  language === "hu"
+                    ? "bg-white text-[#0a2540] shadow-sm"
+                    : "text-slate-500 hover:text-slate-700"
+                }`}
+              >
+                🇭🇺 HU
+              </button>
+              <button
+                onClick={async () => { await setLanguage("ro"); await setCurrentPage(1); }}
+                className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
+                  language === "ro"
+                    ? "bg-white text-[#0a2540] shadow-sm"
+                    : "text-slate-500 hover:text-slate-700"
+                }`}
+              >
+                🇷🇴 RO
+              </button>
             </div>
           </div>
 
