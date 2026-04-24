@@ -4,6 +4,8 @@ interface VerifiedUser {
   userId: string;
 }
 
+export type EvionorLanguage = "hu" | "ro";
+
 export interface EvionorQuestionnaireLead {
   car_brand: string;
   car_model: string;
@@ -11,6 +13,7 @@ export interface EvionorQuestionnaireLead {
   email: string;
   id: string;
   km_per_year: number;
+  language?: EvionorLanguage;
   location: string;
   name: string;
   phases: string;
