@@ -654,8 +654,8 @@ export function buildResidentialOffer(
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 16px;">
                 <tr>
                   <td style="padding: 14px;">
-                    <p style="margin: 0 0 8px 0;"><a href="${productUrl}" style="color: #0a2540; font-size: 15px; font-weight: 700; text-decoration: none; border-bottom: 2px solid #0071e3; display: inline-block;">${escapeHtml(getDisplayName(product))}</a></p>
-                    <p style="margin: 0; color: #0071e3; font-size: 20px; font-weight: 800;">${originalPrice ? `<span style="color: #94a3b8; text-decoration: line-through; font-size: 14px; font-weight: 400; margin-right: 8px;">${formatPrice(originalPrice)}</span>` : ""}${formatPrice(chargerPrice)}</p>
+                    <p style="margin: 0 0 8px 0;"><a href="${productUrl}" style="color: #0a2540; font-size: 15px; font-weight: 700; text-decoration: none; border-bottom: 2px solid #0071e3; display: inline-block;">${escapeHtml(getDisplayName(product, language))}</a></p>
+                    <p style="margin: 0; color: #0071e3; font-size: 20px; font-weight: 800;">${originalPrice ? `<span style="color: #94a3b8; text-decoration: line-through; font-size: 14px; font-weight: 400; margin-right: 8px;">${formatPriceLocalized(originalPrice, language)}</span>` : ""}${formatPriceLocalized(chargerPrice, language)}</p>
                   </td>
                 </tr>
               </table>
