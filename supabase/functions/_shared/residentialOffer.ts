@@ -309,8 +309,46 @@ function getCartUrl(productName: string): string {
   return cartUrls[productName] || "https://evionor.hu/webshop/";
 }
 
-function getDisplayName(name: string): string {
+function getDisplayName(name: string, language: ResidentialLanguage = "hu"): string {
+  if (language === "ro") {
+    // Remove "22kW" / "11kW" / "7.4kW" suffix and replace with "stație de încărcare"
+    return name.replace(/\s*-?\s*(22kW|11kW|7\.4kW)\s*/g, " ").replace(/\s+/g, " ").trim() + " stație de încărcare";
+  }
   return name.replace(/22kW/g, "EV·TÖLTŐ");
+}
+
+// HUF -> RON conversion rate (1 RON ≈ 80 HUF)
+const HUF_TO_RON_RATE = 80;
+
+function formatPriceLocalized(price: number, language: ResidentialLanguage = "hu"): string {
+  if (language === "ro") {
+    const ron = Math.round(price / HUF_TO_RON_RATE);
+    return new Intl.NumberFormat("ro-RO", {
+      style: "currency",
+      currency: "RON",
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(ron);
+  }
+  return formatPrice(price);
+}
+
+function getLocalizedTemplateName(templateName: string, language: ResidentialLanguage = "hu"): string {
+  if (language !== "ro") return templateName;
+  // Patterns like:
+  // "3 fázis - Standard - Zaptec Go 22kW" -> "Zaptec Go stație de încărcare EV trifazată până la 22kW"
+  // "1 fázis - Standard - AMINA 1 - 7.4kW" -> "AMINA 1 stație de încărcare EV monofazată până la 7.4kW"
+  // "1/3 fázis - Standard - Charge Amps Halo 11kW" -> "Charge Amps Halo stație de încărcare EV mono/trifazată până la 11kW"
+  // "3 fázis - Napelemes - Zaptec Solar MID 22kW" -> "Zaptec Solar MID stație de încărcare EV trifazată cu integrare solară până la 22kW"
+  const map: Record<string, string> = {
+    "3 fázis - Standard - Zaptec Go 22kW": "Zaptec Go stație de încărcare EV trifazată până la 22kW",
+    "3 fázis - Standard - Easee Charge Up 22kW": "Easee Charge Up stație de încărcare EV trifazată până la 22kW",
+    "3 fázis - Standard - Charge Amps Luna 22kW": "Charge Amps Luna stație de încărcare EV trifazată până la 22kW",
+    "1 fázis - Standard - AMINA 1 - 7.4kW": "AMINA 1 stație de încărcare EV monofazată până la 7.4kW",
+    "1/3 fázis - Standard - Charge Amps Halo 11kW": "Charge Amps Halo stație de încărcare EV mono/trifazată până la 11kW",
+    "3 fázis - Napelemes - Zaptec Solar MID 22kW": "Zaptec Solar MID stație de încărcare EV trifazată cu integrare solară până la 22kW",
+  };
+  return map[templateName] || templateName;
 }
 
 function getChargerImageUrl(productName: string): string {
