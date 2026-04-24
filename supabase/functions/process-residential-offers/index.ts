@@ -91,14 +91,13 @@ Deno.serve(async (req) => {
       }
 
       try {
-        const offerInput = normalizeResidentialLead(lead);
         const language = lead.language || "hu";
-        // Skip PDF generation for RO leads (PDF template is HU-only).
-        const renderedOffer =
+        const offerInput = { ...normalizeResidentialLead(lead), language };
+        // Skip PDF generation for RO leads (PDF/quote template is HU-only).
+        const offer =
           language === "ro"
-            ? buildResidentialOfferWithQuotes({ ...offerInput, language })
-            : buildResidentialOfferWithQuotes(offerInput);
-        const offer = await renderedOffer;
+            ? buildResidentialOffer(offerInput)
+            : await buildResidentialOfferWithQuotes(offerInput);
 
         if (mode === "test-send") {
           for (const testEmail of testRecipients) {
