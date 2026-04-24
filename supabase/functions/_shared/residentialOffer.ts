@@ -309,8 +309,46 @@ function getCartUrl(productName: string): string {
   return cartUrls[productName] || "https://evionor.hu/webshop/";
 }
 
-function getDisplayName(name: string): string {
+function getDisplayName(name: string, language: ResidentialLanguage = "hu"): string {
+  if (language === "ro") {
+    // Remove "22kW" / "11kW" / "7.4kW" suffix and replace with "stație de încărcare"
+    return name.replace(/\s*-?\s*(22kW|11kW|7\.4kW)\s*/g, " ").replace(/\s+/g, " ").trim() + " stație de încărcare";
+  }
   return name.replace(/22kW/g, "EV·TÖLTŐ");
+}
+
+// HUF -> RON conversion rate (1 RON ≈ 80 HUF)
+const HUF_TO_RON_RATE = 80;
+
+function formatPriceLocalized(price: number, language: ResidentialLanguage = "hu"): string {
+  if (language === "ro") {
+    const ron = Math.round(price / HUF_TO_RON_RATE);
+    return new Intl.NumberFormat("ro-RO", {
+      style: "currency",
+      currency: "RON",
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(ron);
+  }
+  return formatPrice(price);
+}
+
+function getLocalizedTemplateName(templateName: string, language: ResidentialLanguage = "hu"): string {
+  if (language !== "ro") return templateName;
+  // Patterns like:
+  // "3 fázis - Standard - Zaptec Go 22kW" -> "Zaptec Go stație de încărcare EV trifazată până la 22kW"
+  // "1 fázis - Standard - AMINA 1 - 7.4kW" -> "AMINA 1 stație de încărcare EV monofazată până la 7.4kW"
+  // "1/3 fázis - Standard - Charge Amps Halo 11kW" -> "Charge Amps Halo stație de încărcare EV mono/trifazată până la 11kW"
+  // "3 fázis - Napelemes - Zaptec Solar MID 22kW" -> "Zaptec Solar MID stație de încărcare EV trifazată cu integrare solară până la 22kW"
+  const map: Record<string, string> = {
+    "3 fázis - Standard - Zaptec Go 22kW": "Zaptec Go stație de încărcare EV trifazată până la 22kW",
+    "3 fázis - Standard - Easee Charge Up 22kW": "Easee Charge Up stație de încărcare EV trifazată până la 22kW",
+    "3 fázis - Standard - Charge Amps Luna 22kW": "Charge Amps Luna stație de încărcare EV trifazată până la 22kW",
+    "1 fázis - Standard - AMINA 1 - 7.4kW": "AMINA 1 stație de încărcare EV monofazată până la 7.4kW",
+    "1/3 fázis - Standard - Charge Amps Halo 11kW": "Charge Amps Halo stație de încărcare EV mono/trifazată până la 11kW",
+    "3 fázis - Napelemes - Zaptec Solar MID 22kW": "Zaptec Solar MID stație de încărcare EV trifazată cu integrare solară până la 22kW",
+  };
+  return map[templateName] || templateName;
 }
 
 function getChargerImageUrl(productName: string): string {
@@ -593,7 +631,7 @@ export function buildResidentialOffer(
           <tr>
             <td style="padding: 16px 16px 6px 16px; border-bottom: 2px solid #e2e8f0;">
               <p style="margin: 0 0 2px 0; color: #64748b; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">${m.recommendedCharger} ${templateIndex + 1}</p>
-              <h2 style="margin: 0; color: #0a2540; font-size: 16px; font-weight: 700; letter-spacing: -0.3px;">${escapeHtml(template.name)}</h2>
+              <h2 style="margin: 0; color: #0a2540; font-size: 16px; font-weight: 700; letter-spacing: -0.3px;">${escapeHtml(getLocalizedTemplateName(template.name, language))}</h2>
             </td>
           </tr>
           <tr>
@@ -605,7 +643,7 @@ export function buildResidentialOffer(
                 <tr>
                   <td align="center" style="padding: 12px; background-color: #ffffff; border-radius: 10px; border: 1px solid #e2e8f0;">
                     <a href="${productUrl}" style="display: inline-block; text-decoration: none;">
-                      <img src="${getChargerImageUrl(product)}" alt="${escapeHtml(getDisplayName(product))}" width="240" style="max-width: 240px; width: 100%; height: auto; display: block; margin: 0 auto; border: 0;" />
+                      <img src="${getChargerImageUrl(product)}" alt="${escapeHtml(getDisplayName(product, language))}" width="240" style="max-width: 240px; width: 100%; height: auto; display: block; margin: 0 auto; border: 0;" />
                     </a>
                   </td>
                 </tr>
@@ -616,8 +654,8 @@ export function buildResidentialOffer(
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 16px;">
                 <tr>
                   <td style="padding: 14px;">
-                    <p style="margin: 0 0 8px 0;"><a href="${productUrl}" style="color: #0a2540; font-size: 15px; font-weight: 700; text-decoration: none; border-bottom: 2px solid #0071e3; display: inline-block;">${escapeHtml(getDisplayName(product))}</a></p>
-                    <p style="margin: 0; color: #0071e3; font-size: 20px; font-weight: 800;">${originalPrice ? `<span style="color: #94a3b8; text-decoration: line-through; font-size: 14px; font-weight: 400; margin-right: 8px;">${formatPrice(originalPrice)}</span>` : ""}${formatPrice(chargerPrice)}</p>
+                    <p style="margin: 0 0 8px 0;"><a href="${productUrl}" style="color: #0a2540; font-size: 15px; font-weight: 700; text-decoration: none; border-bottom: 2px solid #0071e3; display: inline-block;">${escapeHtml(getDisplayName(product, language))}</a></p>
+                    <p style="margin: 0; color: #0071e3; font-size: 20px; font-weight: 800;">${originalPrice ? `<span style="color: #94a3b8; text-decoration: line-through; font-size: 14px; font-weight: 400; margin-right: 8px;">${formatPriceLocalized(originalPrice, language)}</span>` : ""}${formatPriceLocalized(chargerPrice, language)}</p>
                   </td>
                 </tr>
               </table>
@@ -642,7 +680,7 @@ export function buildResidentialOffer(
                           ? `
                       <tr>
                         <td style="padding: 8px 0; width: 65%;"><a href="${loadManagementPackage.url}" target="_blank" style="color: #0a2540; font-size: 13px; font-weight: 600; text-decoration: none; border-bottom: 2px solid #0071e3; display: inline-block;">${escapeHtml(loadManagementPackage.name)}</a></td>
-                        <td style="padding: 8px 0 8px 10px; color: #0071e3; font-size: 15px; font-weight: 800; text-align: right;">${formatPrice(loadManagementPackage.price)}</td>
+                        <td style="padding: 8px 0 8px 10px; color: #0071e3; font-size: 15px; font-weight: 800; text-align: right;">${formatPriceLocalized(loadManagementPackage.price, language)}</td>
                       </tr>
                       `
                           : ""
@@ -652,7 +690,7 @@ export function buildResidentialOffer(
                           ? `
                       <tr>
                         <td style="padding: 8px 0; width: 65%;"><a href="${installationPackage.url}" target="_blank" style="color: #0a2540; font-size: 13px; font-weight: 600; text-decoration: none; border-bottom: 2px solid #0071e3; display: inline-block;">${escapeHtml(installationPackage.name)}</a></td>
-                        <td style="padding: 8px 0 8px 10px; color: #0071e3; font-size: 15px; font-weight: 800; text-align: right;">${formatPrice(installationPrice)}</td>
+                        <td style="padding: 8px 0 8px 10px; color: #0071e3; font-size: 15px; font-weight: 800; text-align: right;">${formatPriceLocalized(installationPrice, language)}</td>
                       </tr>
                       ${
                         isThreePhase
@@ -692,7 +730,7 @@ export function buildResidentialOffer(
                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                       <tr>
                         <td style="padding: 0 0 12px 0; color: #0a2540; font-size: 14px; font-weight: 700;">${m.chargerPriceLabel}</td>
-                        <td style="padding: 0 0 12px 0; color: #0071e3; font-size: 20px; font-weight: 800; text-align: right;">${originalPrice ? `<span style="color: #94a3b8; text-decoration: line-through; font-size: 14px; font-weight: 400; margin-right: 8px;">${formatPrice(originalPrice)}</span>` : ""}${formatPrice(chargerPrice)}</td>
+                        <td style="padding: 0 0 12px 0; color: #0071e3; font-size: 20px; font-weight: 800; text-align: right;">${originalPrice ? `<span style="color: #94a3b8; text-decoration: line-through; font-size: 14px; font-weight: 400; margin-right: 8px;">${formatPriceLocalized(originalPrice, language)}</span>` : ""}${formatPriceLocalized(chargerPrice, language)}</td>
                       </tr>
                     </table>
                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
@@ -733,7 +771,7 @@ export function buildResidentialOffer(
                       (item) => `
                   <tr>
                     <td style="padding: 8px 0; color: #4a5568; font-size: 13px; width: 65%; border-bottom: 1px solid #f1f5f9;">${escapeHtml(item)}</td>
-                    <td style="padding: 8px 0 8px 10px; color: #0a2540; font-size: 14px; font-weight: 600; text-align: right; border-bottom: 1px solid #f1f5f9;">${formatPrice(additionalItemPrices[item] || 0)}</td>
+                    <td style="padding: 8px 0 8px 10px; color: #0a2540; font-size: 14px; font-weight: 600; text-align: right; border-bottom: 1px solid #f1f5f9;">${formatPriceLocalized(additionalItemPrices[item] || 0, language)}</td>
                   </tr>
                   `,
                     )

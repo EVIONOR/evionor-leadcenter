@@ -92,7 +92,12 @@ Deno.serve(async (req) => {
 
       try {
         const language = lead.language || "hu";
-        const offerInput = { ...normalizeResidentialLead(lead), language };
+        const baseInput = normalizeResidentialLead(lead);
+        // RO automation: no installation in offer (HU keeps installation as before).
+        const offerInput =
+          language === "ro"
+            ? { ...baseInput, language, needsInstallation: false }
+            : { ...baseInput, language };
         // Skip PDF generation for RO leads (PDF/quote template is HU-only).
         const offer =
           language === "ro"
