@@ -5,6 +5,7 @@ import {
   buildResidentialOfferWithQuotes,
   normalizeResidentialLead,
 } from "../_shared/residentialOfferServer.ts";
+import { buildResidentialOffer } from "../_shared/residentialOffer.ts";
 import { requireEvionorAdmin, type EvionorQuestionnaireLead } from "../_shared/evionorAdmin.ts";
 import { sendHtmlEmail } from "../_shared/sendMail.ts";
 import { getResidentialAutomationEnabled } from "../_shared/settings.ts";
