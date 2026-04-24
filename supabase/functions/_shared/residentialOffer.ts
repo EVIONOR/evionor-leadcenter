@@ -631,7 +631,7 @@ export function buildResidentialOffer(
           <tr>
             <td style="padding: 16px 16px 6px 16px; border-bottom: 2px solid #e2e8f0;">
               <p style="margin: 0 0 2px 0; color: #64748b; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">${m.recommendedCharger} ${templateIndex + 1}</p>
-              <h2 style="margin: 0; color: #0a2540; font-size: 16px; font-weight: 700; letter-spacing: -0.3px;">${escapeHtml(template.name)}</h2>
+              <h2 style="margin: 0; color: #0a2540; font-size: 16px; font-weight: 700; letter-spacing: -0.3px;">${escapeHtml(getLocalizedTemplateName(template.name, language))}</h2>
             </td>
           </tr>
           <tr>
