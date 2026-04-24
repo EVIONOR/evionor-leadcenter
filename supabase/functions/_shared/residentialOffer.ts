@@ -730,7 +730,7 @@ export function buildResidentialOffer(
                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                       <tr>
                         <td style="padding: 0 0 12px 0; color: #0a2540; font-size: 14px; font-weight: 700;">${m.chargerPriceLabel}</td>
-                        <td style="padding: 0 0 12px 0; color: #0071e3; font-size: 20px; font-weight: 800; text-align: right;">${originalPrice ? `<span style="color: #94a3b8; text-decoration: line-through; font-size: 14px; font-weight: 400; margin-right: 8px;">${formatPrice(originalPrice)}</span>` : ""}${formatPrice(chargerPrice)}</td>
+                        <td style="padding: 0 0 12px 0; color: #0071e3; font-size: 20px; font-weight: 800; text-align: right;">${originalPrice ? `<span style="color: #94a3b8; text-decoration: line-through; font-size: 14px; font-weight: 400; margin-right: 8px;">${formatPriceLocalized(originalPrice, language)}</span>` : ""}${formatPriceLocalized(chargerPrice, language)}</td>
                       </tr>
                     </table>
                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
