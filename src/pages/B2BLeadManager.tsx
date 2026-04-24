@@ -362,7 +362,33 @@ export default function B2BLeadManager() {
             </Button>
             <div>
               <h1 className="text-lg font-semibold text-foreground tracking-tight">B2B Lead Manager</h1>
-              <p className="text-xs text-muted-foreground">{isFalseFilter ? allFalseLeads.length : totalCount} B2B lead</p>
+              <p className="text-xs text-muted-foreground">
+                {isFalseFilter ? allFalseLeads.length : totalCount} B2B lead · {language === "ro" ? "Román" : "Magyar"}
+              </p>
+            </div>
+
+            {/* Language switcher */}
+            <div className="ml-3 flex items-center gap-1 bg-muted rounded-full p-1">
+              <button
+                onClick={async () => { await setLanguage("hu"); await setCurrentPage(1); }}
+                className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
+                  language === "hu"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                🇭🇺 HU
+              </button>
+              <button
+                onClick={async () => { await setLanguage("ro"); await setCurrentPage(1); }}
+                className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
+                  language === "ro"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                🇷🇴 RO
+              </button>
             </div>
           </div>
           <div className="flex items-center gap-2">
