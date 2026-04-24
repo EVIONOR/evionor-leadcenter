@@ -63,6 +63,7 @@ export function normalizeResidentialLead(lead: EvionorQuestionnaireLead): Reside
     infrastructureDetails: "",
     infrastructureDevelopment: false,
     installLocation: "Garázs",
+    language: lead.language || "hu",
     loadManagement: true,
     mountingSurface: "",
     needsApp: true,

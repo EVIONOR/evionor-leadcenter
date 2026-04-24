@@ -5,6 +5,7 @@ import {
   buildResidentialOfferWithQuotes,
   normalizeResidentialLead,
 } from "../_shared/residentialOfferServer.ts";
+import { buildResidentialOffer } from "../_shared/residentialOffer.ts";
 import { requireEvionorAdmin, type EvionorQuestionnaireLead } from "../_shared/evionorAdmin.ts";
 import { sendHtmlEmail } from "../_shared/sendMail.ts";
 import { getResidentialAutomationEnabled } from "../_shared/settings.ts";
@@ -90,16 +91,21 @@ Deno.serve(async (req) => {
       }
 
       try {
-        const offerInput = normalizeResidentialLead(lead);
-        const renderedOffer = await buildResidentialOfferWithQuotes(offerInput);
+        const language = lead.language || "hu";
+        const offerInput = { ...normalizeResidentialLead(lead), language };
+        // Skip PDF generation for RO leads (PDF/quote template is HU-only).
+        const offer =
+          language === "ro"
+            ? buildResidentialOffer(offerInput)
+            : await buildResidentialOfferWithQuotes(offerInput);
 
         if (mode === "test-send") {
           for (const testEmail of testRecipients) {
             await sendHtmlEmail({
               cc: [],
               from: `${offerInput.senderName} - EVIONOR <hello@notifications.evionor.hu>`,
-              html: renderedOffer.html,
-              subject: `[TESZT] ${renderedOffer.subject}`,
+              html: offer.html,
+              subject: `[TESZT] ${offer.subject}`,
               to: testEmail,
             });
           }
@@ -108,11 +114,11 @@ Deno.serve(async (req) => {
           await sendHtmlEmail({
             cc: ["info@evionor.hu"],
             from: `${offerInput.senderName} - EVIONOR <hello@notifications.evionor.hu>`,
-            html: renderedOffer.html,
-            subject: renderedOffer.subject,
+            html: offer.html,
+            subject: offer.subject,
             to: lead.email,
           });
-          await markLeadAsAutoContacted(lead.id);
+          await markLeadAsAutoContacted(lead.id, language);
           result.sent += 1;
         }
       } catch (error) {
