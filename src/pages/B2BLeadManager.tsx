@@ -73,6 +73,11 @@ export default function B2BLeadManager() {
     ] as const).withDefault("new"),
   );
 
+  const [language, setLanguage] = useQueryState(
+    "lang",
+    parseAsStringLiteral(["hu", "ro"] as const).withDefault("hu"),
+  );
+
   const [currentPage, setCurrentPage] = useQueryState("page", parseAsInteger.withDefault(1));
   const [itemsPerPage, setItemsPerPage] = useQueryState("perPage", parseAsInteger.withDefault(15));
   const [allFalseLeads, setAllFalseLeads] = useState<B2BLeadWithStatus[]>([]);
@@ -97,12 +102,13 @@ export default function B2BLeadManager() {
     })();
   }, []);
 
-  const fetchAllB2BLeads = async (): Promise<B2BQuestionnaireResponse[]> => {
+  const fetchAllB2BLeads = async (lang: "hu" | "ro" = "hu"): Promise<B2BQuestionnaireResponse[]> => {
     const PAGE = 1000;
     let offset = 0;
     const all: B2BQuestionnaireResponse[] = [];
+    const tableName = lang === "ro" ? "b2b_questionnaire_responses_ro" : "b2b_questionnaire_responses";
     while (true) {
-      const result = await queryEvionorTable<B2BQuestionnaireResponse>("b2b_questionnaire_responses", {
+      const result = await queryEvionorTable<B2BQuestionnaireResponse>(tableName, {
         limit: PAGE,
         offset,
         select: "id, company_name, name, email, phone, fleet_count, km_per_year, charging_stations, home_chargers, phases, location, timeline, usage_environment, data_consent, created_at",
