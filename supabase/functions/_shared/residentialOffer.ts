@@ -13,9 +13,12 @@ export const residentialAdditionalItems = [
   "Type 2-es fejtartó",
 ] as const;
 
+export type ResidentialLanguage = "hu" | "ro";
+
 export interface ResidentialOfferInput extends QuestionnaireData {
   additionalItems?: string[];
   carDisplayText?: string;
+  language?: ResidentialLanguage;
   selectedTemplateIds?: string[];
   senderName?: string;
 }
