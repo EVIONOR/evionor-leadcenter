@@ -643,7 +643,7 @@ export function buildResidentialOffer(
                 <tr>
                   <td align="center" style="padding: 12px; background-color: #ffffff; border-radius: 10px; border: 1px solid #e2e8f0;">
                     <a href="${productUrl}" style="display: inline-block; text-decoration: none;">
-                      <img src="${getChargerImageUrl(product)}" alt="${escapeHtml(getDisplayName(product))}" width="240" style="max-width: 240px; width: 100%; height: auto; display: block; margin: 0 auto; border: 0;" />
+                      <img src="${getChargerImageUrl(product)}" alt="${escapeHtml(getDisplayName(product, language))}" width="240" style="max-width: 240px; width: 100%; height: auto; display: block; margin: 0 auto; border: 0;" />
                     </a>
                   </td>
                 </tr>
