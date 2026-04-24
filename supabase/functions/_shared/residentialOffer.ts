@@ -336,10 +336,14 @@ function getChargerImageUrl(productName: string): string {
   return "";
 }
 
-function getLoadManagementPackage(productName: string): LoadManagementPackage | null {
+function getLoadManagementPackage(
+  productName: string,
+  language: ResidentialLanguage = "hu",
+): LoadManagementPackage | null {
+  const m = getMessages(language);
   if (productName.includes("Zaptec")) {
     return {
-      name: "Zaptec Sense Terhelésmenedzsment",
+      name: m.loadMgmtZaptec,
       price: 127000,
       url: "https://evionor.hu/collections/all/products/zaptec-sense-gen-ct-clamp-csomag-ev-mero?_pos=14&_fid=c1e909eaa&_ss=c",
     };
@@ -347,7 +351,7 @@ function getLoadManagementPackage(productName: string): LoadManagementPackage | 
 
   if (productName.includes("Easee")) {
     return {
-      name: "Easee Equalizer Terhelésmenedzsment",
+      name: m.loadMgmtEasee,
       price: 140000,
       url: "https://evionor.hu/collections/all/products/easee-equalizer-amp-csomag-ev-mero?_pos=9&_fid=c1e909eaa&_ss=c",
     };
@@ -355,7 +359,7 @@ function getLoadManagementPackage(productName: string): LoadManagementPackage | 
 
   if (productName.includes("Charge Amps")) {
     return {
-      name: "Charge Amps Amp Guard Terhelésmenedzsment",
+      name: m.loadMgmtChargeAmps,
       price: 132000,
       url: "https://evionor.hu/collections/all/products/charge-amps-amp-guard-63a-ev-mero?_pos=10&_fid=53fe77cfa&_ss=c",
     };
@@ -364,17 +368,21 @@ function getLoadManagementPackage(productName: string): LoadManagementPackage | 
   return null;
 }
 
-function getInstallationPackage(productName: string): InstallationPackage {
+function getInstallationPackage(
+  productName: string,
+  language: ResidentialLanguage = "hu",
+): InstallationPackage {
+  const m = getMessages(language);
   if (productName.includes("AMINA 1") || productName.includes("Amina 1") || productName.includes("Charge Amps Halo")) {
     return {
-      name: "Egyfázisú töltőtelepítés",
+      name: m.installationOnePhase,
       price: 199000,
       url: "https://evionor.hu/collections/all?filter.p.product_type=Telep%C3%ADt%C3%A9s",
     };
   }
 
   return {
-    name: "Háromfázisú töltőtelepítés",
+    name: m.installationThreePhase,
     price: 219000,
     url: "https://evionor.hu/collections/all/products/haromfazisu-toltotelepites-csomag?_pos=2&_fid=45b4bccd7&_ss=c",
   };
@@ -429,113 +437,76 @@ function findOriginalPrice(productName: string): number | null {
 }
 
 function isCompanyName(name: string): boolean {
-  const companyIndicators = ["kft", "bt", "zrt", "nyrt", "ltd", "inc", "corp", "gmbh", "kkt", "ev"];
+  const companyIndicators = ["kft", "bt", "zrt", "nyrt", "ltd", "inc", "corp", "gmbh", "kkt", "ev", "srl", "sa"];
   const lowerName = name.toLowerCase();
   return companyIndicators.some((indicator) => lowerName.includes(indicator)) || name.includes(".");
 }
 
-function getGreeting(name: string): string {
+function getGreeting(name: string, language: ResidentialLanguage = "hu"): string {
+  const m = getMessages(language);
   if (isCompanyName(name)) {
-    return "Tisztelt Ügyfelünk!";
+    return m.greetingCompany;
   }
-
-  return `Tisztelt ${name}!`;
+  return m.greeting(name);
 }
 
-function getCharacteristics(productName: string): string {
-  if (productName.includes("Easee Charge Up")) {
-    return `
-      <li style="font-size: 14px;">Fázisok száma: 1/3 fázis kompatibilis</li>
-      <li style="font-size: 14px;">Töltési áramerősség: 6–32 A között állítható</li>
-      <li style="font-size: 14px;">Biztonság: Beépített hibaáram védelem</li>
-      <li style="font-size: 14px;">Hitelesítés: RFID/NFC vagy mobilalkalmazás</li>
-      <li style="font-size: 14px;">Kapcsolódás: Bluetooth, WiFi és 4G LTE-M (eSIM)</li>
-      <li style="font-size: 14px;">Okos funkciók: Terhelésmenedzsment kompatibilis</li>
-      <li style="font-size: 14px;">Extra funkciók: Lágy indítás, okosotthon integráció</li>
-      <li style="font-size: 14px;">Töltési adatok: Részletes töltési statisztikák</li>
-      <li style="font-size: 14px;">Szoftverfrissítések: Automatikus frissítés LTE-n</li>
-      <li style="font-size: 14px;">Védettség: IP54, kültéri használatra</li>
-      <li style="font-size: 14px; background-color: #d1fae5; padding: 4px 8px; border-radius: 6px; font-weight: 700; color: #065f46;">✓ Gyártói garancia 5 év</li>
-    `;
+function buildCharLi(text: string, highlight = false): string {
+  if (highlight) {
+    return `<li style="font-size: 14px; background-color: #d1fae5; padding: 4px 8px; border-radius: 6px; font-weight: 700; color: #065f46;">${text}</li>`;
   }
+  return `<li style="font-size: 14px;">${text}</li>`;
+}
 
-  if (productName.includes("Zaptec Solar MID")) {
-    return `
-      <li style="font-size: 14px;">Fázisok száma: 1/3 fázis kompatibilis</li>
-      <li style="font-size: 14px;">Töltési áramerősség: 6–32 A között állítható</li>
-      <li style="font-size: 14px;">Biztonság: Beépített hibaáram védelem</li>
-      <li style="font-size: 14px;">Hitelesítés: RFID/NFC vagy mobilalkalmazás</li>
-      <li style="font-size: 14px;">Kapcsolódás: Bluetooth, WiFi és 4G LTE-M (eSIM)</li>
-      <li style="font-size: 14px;">Okos funkciók: Terhelésmenedzsment kompatibilis</li>
-      <li style="font-size: 14px;">Extra funkciók: Lágy indítás, okosotthon integráció</li>
-      <li style="font-size: 14px;">Töltési adatok: Részletes töltési statisztikák</li>
-      <li style="font-size: 14px;">Szoftverfrissítések: Automatikus frissítés LTE-n</li>
-      <li style="font-size: 14px;">Védettség: IP54, kültéri használatra</li>
-      <li style="font-size: 14px; background-color: #d1fae5; padding: 4px 8px; border-radius: 6px; font-weight: 700; color: #065f46;">✓ Gyártói garancia 5 év</li>
-    `;
-  }
+function getCharacteristics(productName: string, language: ResidentialLanguage = "hu"): string {
+  const c = getMessages(language).char;
+  const standardSmart = [
+    c.phases1or3,
+    c.amperage6to32,
+    c.safety,
+    c.authRfidApp,
+    c.connectivity,
+    c.smartLoad,
+    c.extraSoftStart,
+    c.stats,
+    c.otaLte,
+    c.ip54,
+  ];
 
-  if (productName.includes("Zaptec Go 22kW") || (productName.includes("Zaptec Go") && !productName.includes("Solar"))) {
-    return `
-      <li style="font-size: 14px;">Fázisok száma: 1/3 fázis kompatibilis</li>
-      <li style="font-size: 14px;">Töltési áramerősség: 6–32 A között állítható</li>
-      <li style="font-size: 14px;">Biztonság: Beépített hibaáram védelem</li>
-      <li style="font-size: 14px;">Hitelesítés: RFID/NFC vagy mobilalkalmazás</li>
-      <li style="font-size: 14px;">Kapcsolódás: Bluetooth, WiFi és 4G LTE-M (eSIM)</li>
-      <li style="font-size: 14px;">Okos funkciók: Terhelésmenedzsment kompatibilis</li>
-      <li style="font-size: 14px;">Extra funkciók: Lágy indítás, okosotthon integráció</li>
-      <li style="font-size: 14px;">Töltési adatok: Részletes töltési statisztikák</li>
-      <li style="font-size: 14px;">Szoftverfrissítések: Automatikus frissítés LTE-n</li>
-      <li style="font-size: 14px;">Védettség: IP54, kültéri használatra</li>
-      <li style="font-size: 14px; background-color: #d1fae5; padding: 4px 8px; border-radius: 6px; font-weight: 700; color: #065f46;">✓ Gyártói garancia 5 év</li>
-    `;
+  if (
+    productName.includes("Easee Charge Up") ||
+    productName.includes("Zaptec Solar MID") ||
+    productName.includes("Zaptec Go 22kW") ||
+    (productName.includes("Zaptec Go") && !productName.includes("Solar")) ||
+    productName.includes("Charge Amps Luna")
+  ) {
+    return standardSmart.map((item) => buildCharLi(item)).join("") + buildCharLi(c.warranty, true);
   }
 
   if (productName.includes("Amina 1") || productName.includes("AMINA 1")) {
-    return `
-      <li style="font-size: 14px;">Töltési áramerősség: 6–32 A között állítható</li>
-      <li style="font-size: 14px;">Biztonság: Beépített hibaáram védelem</li>
-      <li style="font-size: 14px;">Applikáció: Nem támogatott</li>
-      <li style="font-size: 14px;">Terhelésmenedzsment: nem támogatott</li>
-      <li style="font-size: 14px;">Egyszerű "Plug & Charge" töltés 7,4kW-ig</li>
-      <li style="font-size: 14px;">Védettség: IP54, kültéri használatra</li>
-      <li style="font-size: 14px; background-color: #d1fae5; padding: 4px 8px; border-radius: 6px; font-weight: 700; color: #065f46;">✓ Gyártói garancia 5 év</li>
-    `;
+    return [c.amperage6to32, c.safety, c.aminaApp, c.aminaLoad, c.aminaPlugCharge, c.ip54]
+      .map((item) => buildCharLi(item))
+      .join("") + buildCharLi(c.warranty, true);
   }
 
   if (productName.includes("Charge Amps Halo")) {
-    return `
-      <li style="font-size: 14px;">Fázisok száma: 1/3 fázis kompatibilis</li>
-      <li style="font-size: 14px;">Töltési áram: 1 fázis 6-32 A / 3 fázis 6-16A</li>
-      <li style="font-size: 14px;">Biztonság: Beépített hibaáram védelem</li>
-      <li style="font-size: 14px;">Hitelesítés: RFID</li>
-      <li style="font-size: 14px;">Kapcsolódás: WiFi és RFID</li>
-      <li style="font-size: 14px;">Szabályzás: Terhelés menedzsment kompatibilis</li>
-      <li style="font-size: 14px;">Extra funkciók: Extra 220V konnektor</li>
-      <li style="font-size: 14px;">Szoftverfrissítések: Automatikus frissítések</li>
-      <li style="font-size: 14px;">Védettség kültérre: IP66 töltőtest, IP44 csatlakozó</li>
-      <li style="font-size: 14px; background-color: #d1fae5; padding: 4px 8px; border-radius: 6px; font-weight: 700; color: #065f46;">✓ Gyártói garancia 5 év</li>
-    `;
-  }
-
-  if (productName.includes("Charge Amps Luna")) {
-    return `
-      <li style="font-size: 14px;">Fázisok száma: 1/3 fázis kompatibilis</li>
-      <li style="font-size: 14px;">Töltési áramerősség: 6–32 A között állítható</li>
-      <li style="font-size: 14px;">Biztonság: Beépített hibaáram védelem</li>
-      <li style="font-size: 14px;">Hitelesítés: RFID/NFC vagy mobilalkalmazás</li>
-      <li style="font-size: 14px;">Kapcsolódás: Bluetooth, WiFi és 4G LTE-M (eSIM)</li>
-      <li style="font-size: 14px;">Okos funkciók: Terhelésmenedzsment kompatibilis</li>
-      <li style="font-size: 14px;">Extra funkciók: Lágy indítás, okosotthon integráció</li>
-      <li style="font-size: 14px;">Töltési adatok: Részletes töltési statisztikák</li>
-      <li style="font-size: 14px;">Szoftverfrissítések: Automatikus frissítés LTE-n</li>
-      <li style="font-size: 14px;">Védettség: IP54, kültéri használatra</li>
-      <li style="font-size: 14px; background-color: #d1fae5; padding: 4px 8px; border-radius: 6px; font-weight: 700; color: #065f46;">✓ Gyártói garancia 5 év</li>
-    `;
+    return [
+      c.phases1or3,
+      c.haloAmperage,
+      c.safety,
+      c.haloAuth,
+      c.haloConn,
+      c.haloLoad,
+      c.haloExtra,
+      c.haloOta,
+      c.haloIp,
+    ]
+      .map((item) => buildCharLi(item))
+      .join("") + buildCharLi(c.warranty, true);
   }
 
   return "";
 }
+
 
 function escapeHtml(value: string): string {
   return value
