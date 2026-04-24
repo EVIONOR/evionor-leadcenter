@@ -771,7 +771,7 @@ export function buildResidentialOffer(
                       (item) => `
                   <tr>
                     <td style="padding: 8px 0; color: #4a5568; font-size: 13px; width: 65%; border-bottom: 1px solid #f1f5f9;">${escapeHtml(item)}</td>
-                    <td style="padding: 8px 0 8px 10px; color: #0a2540; font-size: 14px; font-weight: 600; text-align: right; border-bottom: 1px solid #f1f5f9;">${formatPrice(additionalItemPrices[item] || 0)}</td>
+                    <td style="padding: 8px 0 8px 10px; color: #0a2540; font-size: 14px; font-weight: 600; text-align: right; border-bottom: 1px solid #f1f5f9;">${formatPriceLocalized(additionalItemPrices[item] || 0, language)}</td>
                   </tr>
                   `,
                     )
