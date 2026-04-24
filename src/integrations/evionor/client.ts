@@ -43,7 +43,13 @@ async function getAccessToken(): Promise<string> {
  * Query EVIONOR database tables through the edge function
  */
 export async function queryEvionorTable<T>(
-  table: "product_clicks" | "questionnaire_responses" | "roi_calculator_results" | "b2b_questionnaire_responses",
+  table:
+    | "product_clicks"
+    | "questionnaire_responses"
+    | "questionnaire_responses_ro"
+    | "roi_calculator_results"
+    | "b2b_questionnaire_responses"
+    | "b2b_questionnaire_responses_ro",
   options?: {
     limit?: number;
     offset?: number;
@@ -91,14 +97,17 @@ export async function getQuestionnaireResponses(options?: {
   limit?: number;
   offset?: number;
   status?: string;
+  language?: "hu" | "ro";
 }) {
   const filters: Record<string, EvionorFilterValue> = {};
-  
+
   if (options?.status && options.status !== 'all') {
     filters.status = options.status;
   }
 
-  return queryEvionorTable<QuestionnaireResponse>("questionnaire_responses", { 
+  const table = options?.language === "ro" ? "questionnaire_responses_ro" : "questionnaire_responses";
+
+  return queryEvionorTable<QuestionnaireResponse>(table, {
     limit: options?.limit || 20,
     offset: options?.offset || 0,
     filters: Object.keys(filters).length > 0 ? filters : undefined,
@@ -116,13 +125,15 @@ export async function getRoiCalculatorResults(limit = 100) {
 /**
  * Update questionnaire response status
  */
-export async function updateQuestionnaireStatus(id: string, status: string) {
+export async function updateQuestionnaireStatus(id: string, status: string, language: "hu" | "ro" = "hu") {
   const access_token = await getAccessToken();
+
+  const table = language === "ro" ? "questionnaire_responses_ro" : "questionnaire_responses";
 
   const { data, error } = await supabase.functions.invoke<{ data: QuestionnaireResponse }>("query-evionor", {
     body: {
       action: "update",
-      table: "questionnaire_responses",
+      table,
       access_token,
       update: {
         id,
@@ -291,8 +302,10 @@ export async function runResidentialAutomationTestSend(): Promise<ResidentialAut
 export async function getB2BQuestionnaireResponses(options?: {
   limit?: number;
   offset?: number;
+  language?: "hu" | "ro";
 }) {
-  return queryEvionorTable<B2BQuestionnaireResponse>("b2b_questionnaire_responses", {
+  const table = options?.language === "ro" ? "b2b_questionnaire_responses_ro" : "b2b_questionnaire_responses";
+  return queryEvionorTable<B2BQuestionnaireResponse>(table, {
     limit: options?.limit || 20,
     offset: options?.offset || 0,
     order: { column: 'created_at', ascending: false }

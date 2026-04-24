@@ -8,7 +8,9 @@ const corsHeaders = {
 // Allowed tables whitelist
 const ALLOWED_TABLES = new Set([
   "questionnaire_responses",
+  "questionnaire_responses_ro",
   "b2b_questionnaire_responses",
+  "b2b_questionnaire_responses_ro",
   "product_clicks",
   "roi_calculator_results",
   "saved_questionnaire_responses",
