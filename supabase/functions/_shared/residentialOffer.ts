@@ -1015,11 +1015,18 @@ export function buildResidentialOffer(
                   <td style="padding-top: 24px;">
                     <p style="margin: 0 0 20px 0; color: #4a5568; font-size: 14px; line-height: 1.6;">${m.closingQuestion}</p>
                     <p style="margin: 0 0 6px 0; color: #64748b; font-size: 13px;">${m.regards}</p>
-                    <p style="margin: 0 0 14px 0; color: #0a2540; font-size: 14px; font-weight: 700;">${escapeHtml(senderName)}</p>
+                    ${
+                      language === "ro"
+                        ? `<p style="margin: 0 0 14px 0; color: #0a2540; font-size: 14px; font-weight: 700;">Ionuț Niculescu</p>
+                    <p style="margin: 0 0 6px 0; color: #0a2540; font-size: 13px; font-weight: 700;">Specialist încărcare EV</p>
+                    <p style="margin: 0 0 4px 0;"><a href="mailto:info@evionor.ro" style="color: #0071e3; font-size: 13px; text-decoration: none;">info@evionor.ro</a></p>
+                    <p style="margin: 0;"><a href="https://www.evionor.ro" style="color: #0071e3; font-size: 13px; text-decoration: none;">www.evionor.ro</a></p>`
+                        : `<p style="margin: 0 0 14px 0; color: #0a2540; font-size: 14px; font-weight: 700;">${escapeHtml(senderName)}</p>
                     <p style="margin: 0 0 6px 0; color: #0a2540; font-size: 13px; font-weight: 700;">${m.teamLine}</p>
                     <p style="margin: 0 0 4px 0;"><a href="tel:+36205819166" style="color: #0071e3; font-size: 13px; text-decoration: none;">+36 20 581 9166</a></p>
                     <p style="margin: 0 0 4px 0;"><a href="mailto:info@evionor.hu" style="color: #0071e3; font-size: 13px; text-decoration: none;">info@evionor.hu</a></p>
-                    <p style="margin: 0;"><a href="https://www.evionor.hu" style="color: #0071e3; font-size: 13px; text-decoration: none;">www.evionor.hu</a></p>
+                    <p style="margin: 0;"><a href="https://www.evionor.hu" style="color: #0071e3; font-size: 13px; text-decoration: none;">www.evionor.hu</a></p>`
+                    }
                   </td>
                 </tr>
               </table>
