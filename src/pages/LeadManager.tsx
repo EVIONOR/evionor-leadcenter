@@ -67,6 +67,11 @@ export default function LeadManager() {
     ] as const).withDefault("new"),
   );
 
+  const [language, setLanguage] = useQueryState(
+    "lang",
+    parseAsStringLiteral(["hu", "ro"] as const).withDefault("hu"),
+  );
+
   const [currentPage, setCurrentPage] = useQueryState("page", parseAsInteger.withDefault(1));
   const [itemsPerPage, setItemsPerPage] = useQueryState("perPage", parseAsInteger.withDefault(15));
   const [allFalseLeads, setAllFalseLeads] = useState<QuestionnaireResponse[]>([]);
