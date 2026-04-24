@@ -91,15 +91,21 @@ Deno.serve(async (req) => {
 
       try {
         const offerInput = normalizeResidentialLead(lead);
-        const renderedOffer = await buildResidentialOfferWithQuotes(offerInput);
+        const language = lead.language || "hu";
+        // Skip PDF generation for RO leads (PDF template is HU-only).
+        const renderedOffer =
+          language === "ro"
+            ? buildResidentialOfferWithQuotes({ ...offerInput, language })
+            : buildResidentialOfferWithQuotes(offerInput);
+        const offer = await renderedOffer;
 
         if (mode === "test-send") {
           for (const testEmail of testRecipients) {
             await sendHtmlEmail({
               cc: [],
               from: `${offerInput.senderName} - EVIONOR <hello@notifications.evionor.hu>`,
-              html: renderedOffer.html,
-              subject: `[TESZT] ${renderedOffer.subject}`,
+              html: offer.html,
+              subject: `[TESZT] ${offer.subject}`,
               to: testEmail,
             });
           }
@@ -108,11 +114,11 @@ Deno.serve(async (req) => {
           await sendHtmlEmail({
             cc: ["info@evionor.hu"],
             from: `${offerInput.senderName} - EVIONOR <hello@notifications.evionor.hu>`,
-            html: renderedOffer.html,
-            subject: renderedOffer.subject,
+            html: offer.html,
+            subject: offer.subject,
             to: lead.email,
           });
-          await markLeadAsAutoContacted(lead.id);
+          await markLeadAsAutoContacted(lead.id, language);
           result.sent += 1;
         }
       } catch (error) {
