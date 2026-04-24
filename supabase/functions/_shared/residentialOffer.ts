@@ -680,7 +680,7 @@ export function buildResidentialOffer(
                           ? `
                       <tr>
                         <td style="padding: 8px 0; width: 65%;"><a href="${loadManagementPackage.url}" target="_blank" style="color: #0a2540; font-size: 13px; font-weight: 600; text-decoration: none; border-bottom: 2px solid #0071e3; display: inline-block;">${escapeHtml(loadManagementPackage.name)}</a></td>
-                        <td style="padding: 8px 0 8px 10px; color: #0071e3; font-size: 15px; font-weight: 800; text-align: right;">${formatPrice(loadManagementPackage.price)}</td>
+                        <td style="padding: 8px 0 8px 10px; color: #0071e3; font-size: 15px; font-weight: 800; text-align: right;">${formatPriceLocalized(loadManagementPackage.price, language)}</td>
                       </tr>
                       `
                           : ""
