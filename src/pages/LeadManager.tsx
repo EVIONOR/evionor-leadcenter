@@ -67,6 +67,11 @@ export default function LeadManager() {
     ] as const).withDefault("new"),
   );
 
+  const [language, setLanguage] = useQueryState(
+    "lang",
+    parseAsStringLiteral(["hu", "ro"] as const).withDefault("hu"),
+  );
+
   const [currentPage, setCurrentPage] = useQueryState("page", parseAsInteger.withDefault(1));
   const [itemsPerPage, setItemsPerPage] = useQueryState("perPage", parseAsInteger.withDefault(15));
   const [allFalseLeads, setAllFalseLeads] = useState<QuestionnaireResponse[]>([]);
@@ -108,8 +113,9 @@ export default function LeadManager() {
         const PAGE = 1000;
         let offset = 0;
         let all: QuestionnaireResponse[] = [];
+        const tableName = language === "ro" ? "questionnaire_responses_ro" : "questionnaire_responses";
         while (true) {
-          const result = await queryEvionorTable<QuestionnaireResponse>("questionnaire_responses", {
+          const result = await queryEvionorTable<QuestionnaireResponse>(tableName, {
             limit: PAGE,
             offset,
             select: "id,name,email,phone,location,timeline,car_brand,car_model,phases,status,created_at",
@@ -139,7 +145,7 @@ export default function LeadManager() {
 
     fetchAllForFalse();
     return () => { cancelled = true; };
-  }, [statusFilter]);
+  }, [statusFilter, language]);
 
   // Paginate false leads from cache
   useEffect(() => {
@@ -161,6 +167,7 @@ export default function LeadManager() {
           limit: itemsPerPage,
           offset,
           status: statusFilter !== "all" ? statusFilter : undefined,
+          language,
         });
 
         if (!result?.data) throw new Error("No data received");
@@ -188,7 +195,7 @@ export default function LeadManager() {
 
     fetchResponses();
     return () => { cancelled = true; };
-  }, [statusFilter, currentPage, itemsPerPage]);
+  }, [statusFilter, currentPage, itemsPerPage, language]);
 
   const handleStatusChange = async (id: string, newStatus: LeadStatus) => {
     try {
@@ -201,7 +208,7 @@ export default function LeadManager() {
         setResponses((prev) => prev.map((r) => (r.id === id ? { ...r, status: newStatus } : r)));
       }
 
-      await updateQuestionnaireStatus(id, newStatus);
+      await updateQuestionnaireStatus(id, newStatus, language);
 
       toast({
         title: "Státusz frissítve",
@@ -216,6 +223,7 @@ export default function LeadManager() {
         limit: itemsPerPage,
         offset,
         status: statusFilter !== "all" ? statusFilter : undefined,
+        language,
       });
 
       if (result?.data) {
@@ -251,7 +259,7 @@ export default function LeadManager() {
 
     // Update status to "Qualified" immediately
     try {
-      await updateQuestionnaireStatus(response.id, "qualified");
+      await updateQuestionnaireStatus(response.id, "qualified", language);
 
       // Optimistically update UI
       if (statusFilter !== "all" && statusFilter !== "qualified") {
@@ -376,8 +384,32 @@ export default function LeadManager() {
             <div>
               <h1 className="text-lg font-semibold text-[#0a2540] tracking-tight">Lead Manager</h1>
               <p className="text-xs text-muted-foreground">
-                {totalCount} lead{totalCount !== 1 ? "" : ""}
+                {totalCount} lead{totalCount !== 1 ? "" : ""} · {language === "ro" ? "Román" : "Magyar"}
               </p>
+            </div>
+
+            {/* Language switcher */}
+            <div className="ml-3 flex items-center gap-1 bg-slate-100 rounded-full p-1">
+              <button
+                onClick={async () => { await setLanguage("hu"); await setCurrentPage(1); }}
+                className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
+                  language === "hu"
+                    ? "bg-white text-[#0a2540] shadow-sm"
+                    : "text-slate-500 hover:text-slate-700"
+                }`}
+              >
+                🇭🇺 HU
+              </button>
+              <button
+                onClick={async () => { await setLanguage("ro"); await setCurrentPage(1); }}
+                className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
+                  language === "ro"
+                    ? "bg-white text-[#0a2540] shadow-sm"
+                    : "text-slate-500 hover:text-slate-700"
+                }`}
+              >
+                🇷🇴 RO
+              </button>
             </div>
           </div>
 

@@ -73,6 +73,11 @@ export default function B2BLeadManager() {
     ] as const).withDefault("new"),
   );
 
+  const [language, setLanguage] = useQueryState(
+    "lang",
+    parseAsStringLiteral(["hu", "ro"] as const).withDefault("hu"),
+  );
+
   const [currentPage, setCurrentPage] = useQueryState("page", parseAsInteger.withDefault(1));
   const [itemsPerPage, setItemsPerPage] = useQueryState("perPage", parseAsInteger.withDefault(15));
   const [allFalseLeads, setAllFalseLeads] = useState<B2BLeadWithStatus[]>([]);
@@ -97,12 +102,13 @@ export default function B2BLeadManager() {
     })();
   }, []);
 
-  const fetchAllB2BLeads = async (): Promise<B2BQuestionnaireResponse[]> => {
+  const fetchAllB2BLeads = async (lang: "hu" | "ro" = "hu"): Promise<B2BQuestionnaireResponse[]> => {
     const PAGE = 1000;
     let offset = 0;
     const all: B2BQuestionnaireResponse[] = [];
+    const tableName = lang === "ro" ? "b2b_questionnaire_responses_ro" : "b2b_questionnaire_responses";
     while (true) {
-      const result = await queryEvionorTable<B2BQuestionnaireResponse>("b2b_questionnaire_responses", {
+      const result = await queryEvionorTable<B2BQuestionnaireResponse>(tableName, {
         limit: PAGE,
         offset,
         select: "id, company_name, name, email, phone, fleet_count, km_per_year, charging_stations, home_chargers, phases, location, timeline, usage_environment, data_consent, created_at",
@@ -147,7 +153,7 @@ export default function B2BLeadManager() {
       if (isInitialLoad.current) setLoading(true);
       try {
         const statusMap = await fetchQualifications();
-        const allLeads = await fetchAllB2BLeads();
+        const allLeads = await fetchAllB2BLeads(language);
         const leadsWithStatus: B2BLeadWithStatus[] = allLeads.map((lead) => {
           const qual = statusMap.get(lead.id);
           return { ...lead, qualification_status: (qual?.status as B2BLeadStatus) || "new", qualification_id: qual?.id || null };
@@ -167,7 +173,7 @@ export default function B2BLeadManager() {
     };
     fetchFalse();
     return () => { cancelled = true; };
-  }, [statusFilter]);
+  }, [statusFilter, language]);
 
   // Paginate false leads from cache
   useEffect(() => {
@@ -187,7 +193,7 @@ export default function B2BLeadManager() {
         const offset = (currentPage - 1) * itemsPerPage;
         const statusMap = await fetchQualifications();
 
-        const result = await getB2BQuestionnaireResponses({ limit: 200, offset: 0 });
+        const result = await getB2BQuestionnaireResponses({ limit: 200, offset: 0, language });
         if (!result?.data) throw new Error("No data received");
 
         const leadsWithStatus: B2BLeadWithStatus[] = result.data.map((lead) => {
@@ -214,14 +220,13 @@ export default function B2BLeadManager() {
     };
     fetchNormal();
     return () => { cancelled = true; };
-  }, [currentPage, statusFilter, itemsPerPage]);
+  }, [currentPage, statusFilter, itemsPerPage, language]);
 
   const fetchResponses = async () => {
     qualificationsCache.current = null; // force refresh
     if (isFalseFilter) {
-      // re-trigger by toggling a dummy state - just refetch
       const statusMap = await fetchQualifications(true);
-      const allLeads = await fetchAllB2BLeads();
+      const allLeads = await fetchAllB2BLeads(language);
       const leadsWithStatus: B2BLeadWithStatus[] = allLeads.map((lead) => {
         const qual = statusMap.get(lead.id);
         return { ...lead, qualification_status: (qual?.status as B2BLeadStatus) || "new", qualification_id: qual?.id || null };
@@ -234,7 +239,7 @@ export default function B2BLeadManager() {
     } else {
       const offset = (currentPage - 1) * itemsPerPage;
       const statusMap = await fetchQualifications(true);
-      const result = await getB2BQuestionnaireResponses({ limit: 200, offset: 0 });
+      const result = await getB2BQuestionnaireResponses({ limit: 200, offset: 0, language });
       if (!result?.data) return;
       const leadsWithStatus: B2BLeadWithStatus[] = result.data.map((lead) => {
         const qual = statusMap.get(lead.id);
@@ -357,7 +362,33 @@ export default function B2BLeadManager() {
             </Button>
             <div>
               <h1 className="text-lg font-semibold text-foreground tracking-tight">B2B Lead Manager</h1>
-              <p className="text-xs text-muted-foreground">{isFalseFilter ? allFalseLeads.length : totalCount} B2B lead</p>
+              <p className="text-xs text-muted-foreground">
+                {isFalseFilter ? allFalseLeads.length : totalCount} B2B lead · {language === "ro" ? "Román" : "Magyar"}
+              </p>
+            </div>
+
+            {/* Language switcher */}
+            <div className="ml-3 flex items-center gap-1 bg-muted rounded-full p-1">
+              <button
+                onClick={async () => { await setLanguage("hu"); await setCurrentPage(1); }}
+                className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
+                  language === "hu"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                🇭🇺 HU
+              </button>
+              <button
+                onClick={async () => { await setLanguage("ro"); await setCurrentPage(1); }}
+                className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
+                  language === "ro"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                🇷🇴 RO
+              </button>
             </div>
           </div>
           <div className="flex items-center gap-2">
