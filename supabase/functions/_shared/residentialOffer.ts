@@ -974,6 +974,10 @@ export function buildResidentialOffer(
               ${additionalInstallationSection}
               ${groundworkSection}
               ${standardInstallationSection}
+              ${
+                language === "ro"
+                  ? ""
+                  : `
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 32px; background-color: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden;">
                 <tr>
                   <td style="padding: 16px 16px 6px 16px; border-bottom: 2px solid #e2e8f0;">
@@ -988,6 +992,8 @@ export function buildResidentialOffer(
                   </td>
                 </tr>
               </table>
+              `
+              }
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 32px; background-color: #f0f9ff; border-radius: 12px; border: 1px solid #bae6fd;">
                 <tr>
                   <td style="padding: 16px 16px 6px 16px; border-bottom: 2px solid #bae6fd;">
