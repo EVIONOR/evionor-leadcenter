@@ -2,7 +2,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.80.0";
 import { corsHeaders } from "../_shared/cors.ts";
 import { requireEvionorAdmin } from "../_shared/evionorAdmin.ts";
 import { sendHtmlEmail } from "../_shared/sendMail.ts";
-import { buildB2BAutoEmail } from "../_shared/b2bOffer.ts";
+import { buildB2BAutoEmail, type B2BLanguage } from "../_shared/b2bOffer.ts";
 
 const B2B_AUTOMATION_KEY = "b2b_automation_enabled";
 const B2B_AUTO_GROUP_KEY = "b2b_auto_group_enabled";
@@ -40,6 +40,50 @@ async function getSetting(key: string): Promise<boolean> {
   return (data.value as Record<string, unknown>).enabled === true;
 }
 
+interface RawB2BLead {
+  id: string;
+  company_name: string | null;
+  name: string | null;
+  email: string | null;
+  phone: string | null;
+}
+
+interface MultilangLead extends RawB2BLead {
+  language: B2BLanguage;
+}
+
+async function fetchAllB2BLeads(
+  evionorClient: ReturnType<typeof createEvionorClient>,
+): Promise<MultilangLead[]> {
+  const out: MultilangLead[] = [];
+
+  // Hungarian leads
+  const { data: huLeads } = await evionorClient
+    .from("b2b_questionnaire_responses")
+    .select("id, company_name, name, email, phone")
+    .order("created_at", { ascending: true });
+
+  for (const lead of (huLeads || []) as RawB2BLead[]) {
+    out.push({ ...lead, language: "hu" });
+  }
+
+  // Romanian leads (table may not yet exist — swallow errors gracefully)
+  const { data: roLeads, error: roError } = await evionorClient
+    .from("b2b_questionnaire_responses_ro")
+    .select("id, company_name, name, email, phone")
+    .order("created_at", { ascending: true });
+
+  if (roError) {
+    console.warn("[process-b2b-offers] RO B2B table not available:", roError.message);
+  } else {
+    for (const lead of (roLeads || []) as RawB2BLead[]) {
+      out.push({ ...lead, language: "ro" });
+    }
+  }
+
+  return out;
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -64,26 +108,20 @@ Deno.serve(async (req) => {
     const localClient = createLocalClient();
     const evionorClient = createEvionorClient();
 
-    // Step 1: Auto-group - if enabled, create qualification records for new B2B leads
+    // Step 1: Auto-group - if enabled, create qualification records for new B2B leads (HU + RO)
     const autoGroupEnabled = await getSetting(B2B_AUTO_GROUP_KEY);
     let autoGrouped = 0;
 
     if (autoGroupEnabled) {
-      // Get all B2B leads from EVIONOR
-      const { data: b2bLeads } = await evionorClient
-        .from("b2b_questionnaire_responses")
-        .select("id, company_name, name, email, phone")
-        .order("created_at", { ascending: true });
+      const allLeads = await fetchAllB2BLeads(evionorClient);
 
-      // Get all existing qualifications
       const { data: existingQuals } = await localClient
         .from("b2b_qualifications")
         .select("source_b2b_id");
 
       const existingIds = new Set((existingQuals || []).map((q: { source_b2b_id: string | null }) => q.source_b2b_id));
 
-      // Create qualification records for new leads that don't have one
-      const newLeads = (b2bLeads || []).filter((l: { id: string }) => !existingIds.has(l.id));
+      const newLeads = allLeads.filter((l) => !existingIds.has(l.id));
 
       for (const lead of newLeads) {
         const { error } = await localClient.from("b2b_qualifications").insert({
@@ -92,16 +130,17 @@ Deno.serve(async (req) => {
           contact_name: lead.name,
           email: lead.email,
           phone: lead.phone,
+          language: lead.language,
           status: "auto_email",
         });
         if (!error) autoGrouped++;
       }
     }
 
-    // Step 2: Fetch leads with status "auto_email"
+    // Step 2: Fetch leads with status "auto_email" — including language
     const { data: autoEmailLeads, error: fetchError } = await localClient
       .from("b2b_qualifications")
-      .select("id, source_b2b_id, company_name, contact_name, email, phone, status")
+      .select("id, source_b2b_id, company_name, contact_name, email, phone, status, language")
       .eq("status", "auto_email");
 
     if (fetchError) throw fetchError;
@@ -127,12 +166,16 @@ Deno.serve(async (req) => {
       }
 
       try {
-        const offer = buildB2BAutoEmail({
-          companyName: lead.company_name || "",
-          contactName: lead.contact_name || lead.email,
-          email: lead.email,
-          phone: lead.phone || "",
-        });
+        const language: B2BLanguage = lead.language === "ro" ? "ro" : "hu";
+        const offer = buildB2BAutoEmail(
+          {
+            companyName: lead.company_name || "",
+            contactName: lead.contact_name || lead.email,
+            email: lead.email,
+            phone: lead.phone || "",
+          },
+          language,
+        );
 
         await sendHtmlEmail({
           cc: ["info@evionor.hu"],

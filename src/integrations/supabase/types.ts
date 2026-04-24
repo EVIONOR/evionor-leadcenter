@@ -35,6 +35,7 @@ export type Database = {
           has_wifi: boolean | null
           has_wifi_at_panel: boolean | null
           id: string
+          language: string
           lead_temperature: string | null
           location_type: string | null
           main_fuse: string | null
@@ -76,6 +77,7 @@ export type Database = {
           has_wifi?: boolean | null
           has_wifi_at_panel?: boolean | null
           id?: string
+          language?: string
           lead_temperature?: string | null
           location_type?: string | null
           main_fuse?: string | null
@@ -117,6 +119,7 @@ export type Database = {
           has_wifi?: boolean | null
           has_wifi_at_panel?: boolean | null
           id?: string
+          language?: string
           lead_temperature?: string | null
           location_type?: string | null
           main_fuse?: string | null
