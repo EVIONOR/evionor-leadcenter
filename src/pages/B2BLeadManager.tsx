@@ -153,7 +153,7 @@ export default function B2BLeadManager() {
       if (isInitialLoad.current) setLoading(true);
       try {
         const statusMap = await fetchQualifications();
-        const allLeads = await fetchAllB2BLeads();
+        const allLeads = await fetchAllB2BLeads(language);
         const leadsWithStatus: B2BLeadWithStatus[] = allLeads.map((lead) => {
           const qual = statusMap.get(lead.id);
           return { ...lead, qualification_status: (qual?.status as B2BLeadStatus) || "new", qualification_id: qual?.id || null };
@@ -173,7 +173,7 @@ export default function B2BLeadManager() {
     };
     fetchFalse();
     return () => { cancelled = true; };
-  }, [statusFilter]);
+  }, [statusFilter, language]);
 
   // Paginate false leads from cache
   useEffect(() => {
@@ -193,7 +193,7 @@ export default function B2BLeadManager() {
         const offset = (currentPage - 1) * itemsPerPage;
         const statusMap = await fetchQualifications();
 
-        const result = await getB2BQuestionnaireResponses({ limit: 200, offset: 0 });
+        const result = await getB2BQuestionnaireResponses({ limit: 200, offset: 0, language });
         if (!result?.data) throw new Error("No data received");
 
         const leadsWithStatus: B2BLeadWithStatus[] = result.data.map((lead) => {
@@ -220,14 +220,13 @@ export default function B2BLeadManager() {
     };
     fetchNormal();
     return () => { cancelled = true; };
-  }, [currentPage, statusFilter, itemsPerPage]);
+  }, [currentPage, statusFilter, itemsPerPage, language]);
 
   const fetchResponses = async () => {
     qualificationsCache.current = null; // force refresh
     if (isFalseFilter) {
-      // re-trigger by toggling a dummy state - just refetch
       const statusMap = await fetchQualifications(true);
-      const allLeads = await fetchAllB2BLeads();
+      const allLeads = await fetchAllB2BLeads(language);
       const leadsWithStatus: B2BLeadWithStatus[] = allLeads.map((lead) => {
         const qual = statusMap.get(lead.id);
         return { ...lead, qualification_status: (qual?.status as B2BLeadStatus) || "new", qualification_id: qual?.id || null };
@@ -240,7 +239,7 @@ export default function B2BLeadManager() {
     } else {
       const offset = (currentPage - 1) * itemsPerPage;
       const statusMap = await fetchQualifications(true);
-      const result = await getB2BQuestionnaireResponses({ limit: 200, offset: 0 });
+      const result = await getB2BQuestionnaireResponses({ limit: 200, offset: 0, language });
       if (!result?.data) return;
       const leadsWithStatus: B2BLeadWithStatus[] = result.data.map((lead) => {
         const qual = statusMap.get(lead.id);
