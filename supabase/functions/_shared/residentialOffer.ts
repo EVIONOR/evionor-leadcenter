@@ -905,8 +905,14 @@ export function buildResidentialOffer(
                       <tr><td style="color: #0a2540; font-size: 14px; font-weight: 600; padding: 0 0 12px 0;">${escapeHtml(input.contactName)}</td></tr>
                       <tr><td style="color: #64748b; font-size: 11px; padding: 6px 0 2px 0; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">${m.labelEmail}</td></tr>
                       <tr><td style="color: #0a2540; font-size: 14px; font-weight: 500; padding: 0 0 12px 0;">${escapeHtml(input.email)}</td></tr>
+                      ${
+                        language === "ro"
+                          ? ""
+                          : `
                       <tr><td style="color: #64748b; font-size: 11px; padding: 6px 0 2px 0; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">${m.labelPhone}</td></tr>
                       <tr><td style="color: #0a2540; font-size: 14px; font-weight: 500; padding: 0 0 12px 0;">${escapeHtml(input.phoneNumber)}</td></tr>
+                      `
+                      }
                       <tr><td style="color: #64748b; font-size: 11px; padding: 6px 0 2px 0; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">${m.labelVehicle}</td></tr>
                       <tr><td style="color: #0a2540; font-size: 14px; font-weight: 500; padding: 0 0 12px 0;">${escapeHtml(carDisplayText)}</td></tr>
                       ${
