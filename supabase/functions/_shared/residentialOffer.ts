@@ -317,12 +317,12 @@ function getDisplayName(name: string, language: ResidentialLanguage = "hu"): str
   return name.replace(/22kW/g, "EV·TÖLTŐ");
 }
 
-// HUF -> RON conversion rate (1 RON ≈ 80 HUF)
-const HUF_TO_RON_RATE = 80;
+// HUF→RON with VAT correction: strip HU 27% ÁFA, convert ÷80, add RO 19% TVA
+const HUF_TO_RON = (1 / 80) / 1.27 * 1.19;
 
 function formatPriceLocalized(price: number, language: ResidentialLanguage = "hu"): string {
   if (language === "ro") {
-    const ron = Math.round(price / HUF_TO_RON_RATE);
+    const ron = Math.round(price * HUF_TO_RON);
     return new Intl.NumberFormat("ro-RO", {
       style: "currency",
       currency: "RON",
