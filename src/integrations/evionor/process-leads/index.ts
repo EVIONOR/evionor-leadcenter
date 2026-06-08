@@ -425,9 +425,9 @@ const cartUrls = {
 	"Charge Amps Luna 22kW":
 		"https://evionor.hu/products/charge-amps-luna-22kw-ev-charger-installation-bundle",
 	"Zaptec Go 22kW":
-		"https://evionor.hu/collections/all/products/zaptec-go-2-home-ev-charger-22kw2kw-ev-charger-installation-bundle?_pos=8&_fid=5b9cabd46&_ss=c",
+		"https://evionor.hu/collections/all/products/zaptec-go-22kw-ev-charger-installation-bundle?_pos=8&_fid=5b9cabd46&_ss=c",
 	"Zaptec Solar MID":
-		"https://evionor.hu/products/zaptec-go-2-home-ev-charger-22kw2kw-ev-charger-installation-bundle",
+		"https://evionor.hu/products/zaptec-go-22kw-ev-charger-installation-bundle",
 	"Easee Charge Up 22kW":
 		"https://evionor.hu/products/easee-charge-up-22kw-ev-charger-installation-bundle",
 };
