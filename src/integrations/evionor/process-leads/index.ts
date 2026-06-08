@@ -364,21 +364,21 @@ const getLoadManagementPackage = (productName) => {
 		return {
 			name: "Zaptec Sense Terhelésmenedzsment",
 			price: 127000,
-			url: "https://evionor.hu/collections/all/products/zaptec-sense-gen-ct-clamp-csomag-ev-mero",
+			url: "https://evionor.hu/collections/all/products/zaptec-sense-gen-ct-clamp-bundle",
 		};
 	}
 	if (productName.includes("Easee")) {
 		return {
 			name: "Easee Equalizer Terhelésmenedzsment",
 			price: 143000,
-			url: "https://evionor.hu/collections/all/products/easee-equalizer-amp-csomag-ev-mero",
+			url: "https://evionor.hu/collections/all/products/easee-equalizer-amp-bundle-load-meter",
 		};
 	}
 	if (productName.includes("Charge Amps")) {
 		return {
 			name: "Charge Amps Amp Guard Terhelésmenedzsment",
 			price: 132000,
-			url: "https://evionor.hu/collections/all/products/charge-amps-amp-guard-63a-ev-mero",
+			url: "https://evionor.hu/collections/all/products/charge-amps-amp-guard-63a-load-meter",
 		};
 	}
 	return null;
@@ -400,36 +400,36 @@ const getInstallationPackage = (productName) => {
 	return {
 		name: "Háromfázisú töltőtelepítés",
 		price: 219000,
-		url: "https://evionor.hu/collections/all/products/haromfazisu-toltotelepites-csomag?_pos=2&_fid=45b4bccd7&_ss=c",
+		url: "https://evionor.hu/collections/all/products/three-phase-ev-charger-installation?_pos=2&_fid=45b4bccd7&_ss=c",
 	};
 };
 // Product URLs
 const productUrls = {
 	"Charge Amps Halo 11kW":
-		"https://evionor.hu/collections/all/products/charge-amps-halo-7-4kw-ev-tolto",
+		"https://evionor.hu/collections/all/products/charge-amps-halo-ev-charger-7-4kw-11kw",
 	"Charge Amps Luna 22kW":
-		"https://evionor.hu/collections/all/products/charge-amps-luna-22kw-ev-tolto",
+		"https://evionor.hu/collections/all/products/charge-amps-luna-ev-charger-22kw",
 	"AMINA 1 - 7.4kW":
-		"https://evionor.hu/collections/all/products/amina-1-evtlt",
+		"https://evionor.hu/collections/all/products/amina-1-home-ev-charger-7kw",
 	"Easee Charge Up 22kW":
-		"https://evionor.hu/collections/all/products/easee-charge-up-evtlt",
+		"https://evionor.hu/collections/all/products/easee-charge-up-home-ev-charger-22kw",
 	"Zaptec Go 22kW":
-		"https://evionor.hu/collections/all/products/zaptec-go-evtlt",
-	"Zaptec Solar MID": "https://evionor.hu/collections/all/products/zaptec-go-2",
+		"https://evionor.hu/collections/all/products/zaptec-go-home-ev-charger-22kw",
+	"Zaptec Solar MID": "https://evionor.hu/collections/all/products/zaptec-go-2-home-ev-charger-22kw",
 };
 const cartUrls = {
 	"AMINA 1 - 7.4kW":
-		"https://evionor.hu/products/amina-1-1-fazisu-tolto-telepitessel",
+		"https://evionor.hu/products/amina-1-ev-charger-7kw-installation-bundle",
 	"Charge Amps Halo 11kW":
-		"https://evionor.hu/products/charge-amps-halo-7-4kw-11kw-ev-tolto-telepites-csomag",
+		"https://evionor.hu/products/charge-amps-halo-ev-charger-installation-bundle",
 	"Charge Amps Luna 22kW":
-		"https://evionor.hu/products/charge-amps-luna-22kw-ev-tolto-telepites-csomag",
+		"https://evionor.hu/products/charge-amps-luna-22kw-ev-charger-installation-bundle",
 	"Zaptec Go 22kW":
-		"https://evionor.hu/collections/all/products/zaptec-go-22kw-telepitesi-csomagban?_pos=8&_fid=5b9cabd46&_ss=c",
+		"https://evionor.hu/collections/all/products/zaptec-go-2-home-ev-charger-22kw2kw-ev-charger-installation-bundle?_pos=8&_fid=5b9cabd46&_ss=c",
 	"Zaptec Solar MID":
-		"https://evionor.hu/products/zaptec-go-22kw-ev-tolto-telepitesi-csomgaban",
+		"https://evionor.hu/products/zaptec-go-2-home-ev-charger-22kw2kw-ev-charger-installation-bundle",
 	"Easee Charge Up 22kW":
-		"https://evionor.hu/products/easee-charge-up-22kw-ev-tolto-telepitesi-csomgaban",
+		"https://evionor.hu/products/easee-charge-up-22kw-ev-charger-installation-bundle",
 };
 // Megjelenítési név: 22kW → EV·TÖLTŐ
 const getDisplayName = (name) => name.replace(/22kW/g, "EV·TÖLTŐ");

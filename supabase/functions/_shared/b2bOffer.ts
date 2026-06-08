@@ -312,7 +312,7 @@ export function buildB2BAutoEmail(
                                         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 16px;">
                                             <tr>
                                                 <td align="center" style="padding: 12px; background-color: #ffffff; border-radius: 10px; border: 1px solid #e2e8f0;">
-                                                    <a href="https://evionor.hu/collections/all/products/zaptec-go-evtlt" style="display: inline-block; text-decoration: none;">
+                                                    <a href="https://evionor.hu/collections/all/products/zaptec-go-home-ev-charger-22kw" style="display: inline-block; text-decoration: none;">
                                                         <img src="https://evionor.hu/cdn/shop/files/Zaptec_Go_Home_Charging_2329.webp?v=1762272030&width=600" alt="Zaptec Go 22kW" width="240" style="max-width: 240px; width: 100%; height: auto; display: block; border: 0;" />
                                                     </a>
                                                 </td>
@@ -323,7 +323,7 @@ export function buildB2BAutoEmail(
                                             <tr>
                                                 <td style="padding: 14px;">
                                                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-                                                        <tr><td style="padding-bottom: 8px;"><a href="https://evionor.hu/collections/all/products/zaptec-go-evtlt" style="color: #0a2540; font-size: 15px; font-weight: 700; text-decoration: none; border-bottom: 2px solid #0071e3;">Zaptec Go 22kW</a></td></tr>
+                                                        <tr><td style="padding-bottom: 8px;"><a href="https://evionor.hu/collections/all/products/zaptec-go-home-ev-charger-22kw" style="color: #0a2540; font-size: 15px; font-weight: 700; text-decoration: none; border-bottom: 2px solid #0071e3;">Zaptec Go 22kW</a></td></tr>
                                                         <tr><td>
                                                             <span style="color: #0071e3; font-size: 22px; font-weight: 800;">${fmtPrice(ZAPTEC_GO_NET, language)}</span>
                                                             <span style="color: #64748b; font-size: 13px; font-weight: 500;"> ${t.vatPlus}</span>
@@ -391,7 +391,7 @@ export function buildB2BAutoEmail(
                                                     <p style="margin: 0 0 8px 0; color: #0a2540; font-size: 13px; font-weight: 700; text-transform: uppercase;">${t.loadMgmt}</p>
                                                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                                         <tr>
-                                                            <td style="color: #4a5568; font-size: 13px; padding: 4px 0;"><a href="https://evionor.hu/collections/all/products/zaptec-sense-gen-ct-clamp-csomag-ev-mero" style="color: #0071e3; text-decoration: none; border-bottom: 1px solid #0071e3;">${t.loadMgmtProduct}</a></td>
+                                                            <td style="color: #4a5568; font-size: 13px; padding: 4px 0;"><a href="https://evionor.hu/collections/all/products/zaptec-sense-gen-ct-clamp-bundle" style="color: #0071e3; text-decoration: none; border-bottom: 1px solid #0071e3;">${t.loadMgmtProduct}</a></td>
                                                             <td style="color: #0a2540; font-size: 14px; font-weight: 600; text-align: right;">
                                                                 ${fmtPrice(ZAPTEC_SENSE_NET, language)} ${t.vatPlus}
                                                                 <br/><span style="color: #94a3b8; font-size: 11px; font-weight: 400;">${t.gross} ${fmtPrice(ZAPTEC_SENSE_GROSS, language)}</span>
@@ -450,7 +450,7 @@ export function buildB2BAutoEmail(
                                                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top: 12px;">
                                                         <tr>
                                                             <td align="center">
-                                                                <a href="https://evionor.hu/collections/all/products/zaptec-go-evtlt" style="display: inline-block; background-color: #0071e3; color: #ffffff; padding: 12px 28px; border-radius: 10px; text-decoration: none; font-size: 14px; font-weight: 700;">${t.viewProduct}</a>
+                                                                <a href="https://evionor.hu/collections/all/products/zaptec-go-home-ev-charger-22kw" style="display: inline-block; background-color: #0071e3; color: #ffffff; padding: 12px 28px; border-radius: 10px; text-decoration: none; font-size: 14px; font-weight: 700;">${t.viewProduct}</a>
                                                             </td>
                                                         </tr>
                                                     </table>
