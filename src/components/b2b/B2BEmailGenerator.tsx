@@ -58,9 +58,9 @@ const INSTALLATION_DISCOUNTS: Record<number, { discount: number; label: string }
 };
 
 const LOAD_MANAGERS = [
-  { brand: "Zaptec", name: "Zaptec Sense GEN CT Clamp Csomag", netPrice: 99450, grossPrice: Math.round(99450 * 1.27), url: "https://evionor.hu/collections/all/products/zaptec-sense-gen-ct-clamp-csomag-ev-mero?_pos=14&_fid=c1e909eaa&_ss=c" },
-  { brand: "Easee", name: "Easee Equalizer Amp Csomag", netPrice: 110074, grossPrice: 140000, url: "https://evionor.hu/collections/all/products/easee-equalizer-amp-csomag-ev-mero" },
-  { brand: "Charge Amps", name: "Charge Amps Amp Guard", netPrice: 103937, grossPrice: Math.round(103937 * 1.27), url: "https://evionor.hu/collections/all/products/charge-amps-amp-guard-63a-ev-mero?_pos=10&_fid=53fe77cfa&_ss=c" },
+  { brand: "Zaptec", name: "Zaptec Sense GEN CT Clamp Csomag", netPrice: 99450, grossPrice: Math.round(99450 * 1.27), url: "https://evionor.hu/collections/all/products/zaptec-sense-gen-ct-clamp-bundle?_pos=14&_fid=c1e909eaa&_ss=c" },
+  { brand: "Easee", name: "Easee Equalizer Amp Csomag", netPrice: 110074, grossPrice: 140000, url: "https://evionor.hu/collections/all/products/easee-equalizer-amp-bundle-load-meter" },
+  { brand: "Charge Amps", name: "Charge Amps Amp Guard", netPrice: 103937, grossPrice: Math.round(103937 * 1.27), url: "https://evionor.hu/collections/all/products/charge-amps-amp-guard-63a-load-meter?_pos=10&_fid=53fe77cfa&_ss=c" },
 ];
 
 const detectLoadManager = (templates: ChargerTemplate[]): typeof LOAD_MANAGERS[0] | null => {
@@ -74,12 +74,12 @@ const detectLoadManager = (templates: ChargerTemplate[]): typeof LOAD_MANAGERS[0
 };
 
 const productUrls: Record<string, string> = {
-  "Charge Amps Halo 11kW": "https://evionor.hu/collections/all/products/charge-amps-halo-7-4kw-ev-tolto",
-  "Charge Amps Luna 22kW": "https://evionor.hu/collections/all/products/charge-amps-luna-22kw-ev-tolto",
-  "AMINA 1 - 7.4kW": "https://evionor.hu/collections/all/products/amina-1-evtlt",
-  "Easee Charge Up 22kW": "https://evionor.hu/collections/all/products/easee-charge-up-evtlt",
-  "Zaptec Go 22kW": "https://evionor.hu/collections/all/products/zaptec-go-evtlt",
-  "Zaptec Solar MID": "https://evionor.hu/collections/all/products/zaptec-go-2",
+  "Charge Amps Halo 11kW": "https://evionor.hu/collections/all/products/charge-amps-halo-ev-charger-7-4kw-11kw",
+  "Charge Amps Luna 22kW": "https://evionor.hu/collections/all/products/charge-amps-luna-ev-charger-22kw",
+  "AMINA 1 - 7.4kW": "https://evionor.hu/collections/all/products/amina-1-home-ev-charger-7kw",
+  "Easee Charge Up 22kW": "https://evionor.hu/collections/all/products/easee-charge-up-home-ev-charger-22kw",
+  "Zaptec Go 22kW": "https://evionor.hu/collections/all/products/zaptec-go-home-ev-charger-22kw",
+  "Zaptec Solar MID": "https://evionor.hu/collections/all/products/zaptec-go-2-home-ev-charger-22kw",
 };
 
 const getChargerImageUrl = (productName: string): string => {
