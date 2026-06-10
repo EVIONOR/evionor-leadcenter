@@ -46,6 +46,7 @@ export interface ChargerTemplate {
   basePrice?: number;
 }
 
+// AUTO-SYNCED FROM SHOPIFY — Do not edit manually!
 export const chargerTemplates: ChargerTemplate[] = [
   {
     id: "template3b",
@@ -55,7 +56,7 @@ export const chargerTemplates: ChargerTemplate[] = [
     location: "any",
     hasSolar: false,
     products: ["Zaptec Go 22kW"],
-    basePrice: 299000
+    basePrice: 234000
   },
   {
     id: "template3a",
@@ -65,7 +66,7 @@ export const chargerTemplates: ChargerTemplate[] = [
     location: "any",
     hasSolar: false,
     products: ["Easee Charge Up 22kW"],
-    basePrice: 359000
+    basePrice: 238000
   },
   {
     id: "template3c",
@@ -75,7 +76,7 @@ export const chargerTemplates: ChargerTemplate[] = [
     location: "any",
     hasSolar: false,
     products: ["Charge Amps Luna 22kW"],
-    basePrice: 365000
+    basePrice: 232000
   },
   {
     id: "template2",
@@ -85,7 +86,7 @@ export const chargerTemplates: ChargerTemplate[] = [
     location: "outdoor",
     hasSolar: false,
     products: ["AMINA 1 - 7.4kW"],
-    basePrice: 195000
+    basePrice: 167000
   },
   {
     id: "template1",
@@ -95,7 +96,7 @@ export const chargerTemplates: ChargerTemplate[] = [
     location: "indoor",
     hasSolar: false,
     products: ["Charge Amps Halo 11kW"],
-    basePrice: 299000
+    basePrice: 222000
   },
   {
     id: "template4",
@@ -105,6 +106,6 @@ export const chargerTemplates: ChargerTemplate[] = [
     location: "any",
     hasSolar: true,
     products: ["Zaptec Solar MID"],
-    basePrice: 505000
-  }
+    basePrice: 335000
+  },
 ];
