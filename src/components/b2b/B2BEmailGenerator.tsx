@@ -58,9 +58,9 @@ const INSTALLATION_DISCOUNTS: Record<number, { discount: number; label: string }
 };
 
 const LOAD_MANAGERS = [
-  { brand: "Zaptec", name: "Zaptec Sense GEN CT Clamp Csomag", netPrice: 99450, grossPrice: Math.round(99450 * 1.27), url: "https://evionor.hu/collections/all/products/zaptec-sense-gen-ct-clamp-bundle?_pos=14&_fid=c1e909eaa&_ss=c" },
-  { brand: "Easee", name: "Easee Equalizer Amp Csomag", netPrice: 110074, grossPrice: 140000, url: "https://evionor.hu/collections/all/products/easee-equalizer-amp-bundle-load-meter" },
-  { brand: "Charge Amps", name: "Charge Amps Amp Guard", netPrice: 103937, grossPrice: Math.round(103937 * 1.27), url: "https://evionor.hu/collections/all/products/charge-amps-amp-guard-63a-load-meter?_pos=10&_fid=53fe77cfa&_ss=c" },
+  { brand: "Zaptec", name: "Zaptec Sense GEN CT Clamp Csomag", netPrice: 63780, grossPrice: 81000, url: "https://evionor.hu/collections/all/products/zaptec-sense-gen-ct-clamp-bundle?_pos=14&_fid=c1e909eaa&_ss=c" },
+  { brand: "Easee", name: "Easee Equalizer Amp Csomag", netPrice: 81890, grossPrice: 104000, url: "https://evionor.hu/collections/all/products/easee-equalizer-amp-bundle-load-meter" },
+  { brand: "Charge Amps", name: "Charge Amps Amp Guard", netPrice: 68504, grossPrice: 87000, url: "https://evionor.hu/collections/all/products/charge-amps-amp-guard-63a-load-meter?_pos=10&_fid=53fe77cfa&_ss=c" },
 ];
 
 const detectLoadManager = (templates: ChargerTemplate[]): typeof LOAD_MANAGERS[0] | null => {
