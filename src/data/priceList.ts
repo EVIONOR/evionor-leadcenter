@@ -24,7 +24,6 @@ export const priceList: ProductPrice[] = [
   { name: "Easee Front Cover", price: 12000, originalPrice: 18000, category: "kiegészítő" },
   { name: "Easee Equalizer", price: 37000, originalPrice: 54000, category: "mérő" },
   { name: "Easee Equalizer P1", price: 37000, originalPrice: 54000, category: "mérő" },
-  { name: "Easee Equalizer Solar", price: 104000, originalPrice: 149000, category: "mérő" },
   { name: "Easee U-Hook Prémium", price: 32000, originalPrice: 47000, category: "kiegészítő" },
   { name: "Easee U-Hook Standard", price: 16000, originalPrice: 23000, category: "kiegészítő" },
   { name: "Easee RFID Tag", price: 18000, originalPrice: 27000, category: "kiegészítő" },
