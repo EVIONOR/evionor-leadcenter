@@ -10,10 +10,10 @@ interface B2BAutoEmailInput {
 
 export type B2BLanguage = "hu" | "ro";
 
-const ZAPTEC_GO_GROSS = 353000;
+const ZAPTEC_GO_GROSS = 234000;
 const ZAPTEC_GO_NET = Math.round(ZAPTEC_GO_GROSS / 1.27);
 
-const ZAPTEC_SENSE_NET = 99450;
+const ZAPTEC_SENSE_NET = 63780;
 const ZAPTEC_SENSE_GROSS = Math.round(ZAPTEC_SENSE_NET * 1.27);
 
 const INSTALLATION_GROSS = 219000;
