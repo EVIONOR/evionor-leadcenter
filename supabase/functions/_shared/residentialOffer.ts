@@ -382,7 +382,7 @@ function getLoadManagementPackage(
   if (productName.includes("Zaptec")) {
     return {
       name: m.loadMgmtZaptec,
-      price: 127000,
+      price: 81000,
       url: "https://evionor.hu/collections/all/products/zaptec-sense-gen-ct-clamp-bundle?_pos=14&_fid=c1e909eaa&_ss=c",
     };
   }
@@ -390,7 +390,7 @@ function getLoadManagementPackage(
   if (productName.includes("Easee")) {
     return {
       name: m.loadMgmtEasee,
-      price: 140000,
+      price: 104000,
       url: "https://evionor.hu/collections/all/products/easee-equalizer-amp-bundle-load-meter?_pos=9&_fid=c1e909eaa&_ss=c",
     };
   }
@@ -398,7 +398,7 @@ function getLoadManagementPackage(
   if (productName.includes("Charge Amps")) {
     return {
       name: m.loadMgmtChargeAmps,
-      price: 132000,
+      price: 87000,
       url: "https://evionor.hu/collections/all/products/charge-amps-amp-guard-63a-load-meter?_pos=10&_fid=53fe77cfa&_ss=c",
     };
   }
