@@ -329,26 +329,32 @@ const priceList = [
 	{
 		name: "AMINA 1 - 7.4kW",
 		price: 167000,
+		originalPrice: 239000,
 	},
 	{
 		name: "Easee Charge Up 22kW",
 		price: 238000,
+		originalPrice: 341000,
 	},
 	{
 		name: "Zaptec Go 22kW",
 		price: 234000,
+		originalPrice: 335000,
 	},
 	{
 		name: "Zaptec Solar MID",
 		price: 335000,
+		originalPrice: 479000,
 	},
 	{
 		name: "Charge Amps Luna 22kW",
 		price: 232000,
+		originalPrice: 332000,
 	},
 	{
 		name: "Charge Amps Halo 11kW",
 		price: 222000,
+		originalPrice: 318000,
 	},
 ];
 const formatPrice = (price) => {
@@ -364,6 +370,7 @@ const getLoadManagementPackage = (productName) => {
 		return {
 			name: "Zaptec Sense Terhelésmenedzsment",
 			price: 81000,
+			originalPrice: 117000,
 			url: "https://evionor.hu/collections/all/products/zaptec-sense-gen-ct-clamp-bundle",
 		};
 	}
@@ -371,6 +378,7 @@ const getLoadManagementPackage = (productName) => {
 		return {
 			name: "Easee Equalizer Terhelésmenedzsment",
 			price: 104000,
+			originalPrice: 149000,
 			url: "https://evionor.hu/collections/all/products/easee-equalizer-amp-bundle-load-meter",
 		};
 	}
@@ -378,6 +386,7 @@ const getLoadManagementPackage = (productName) => {
 		return {
 			name: "Charge Amps Amp Guard Terhelésmenedzsment",
 			price: 87000,
+			originalPrice: 125000,
 			url: "https://evionor.hu/collections/all/products/charge-amps-amp-guard-63a-load-meter",
 		};
 	}
@@ -460,6 +469,20 @@ const getChargerImageUrl = (productName) => {
 		return "https://evionor.hu/cdn/shop/files/PACKSHOTSHALOwCableFrontTransparentHR.webp?v=1760611158&width=600";
 	}
 	return "";
+};
+const findProductOriginalPrice = (productName) => {
+	const normalizedSearch = productName
+		.toLowerCase()
+		.replace(/\s+/g, " ")
+		.trim();
+	const product = priceList.find((p) => {
+		const normalizedProductName = p.name.toLowerCase().replace(/\s+/g, " ");
+		return (
+			normalizedProductName === normalizedSearch ||
+			normalizedProductName.includes(normalizedSearch)
+		);
+	});
+	return product?.originalPrice || null;
 };
 const findProductPrice = (productName) => {
 	const normalizedSearch = productName
@@ -647,9 +670,7 @@ function generateEmailHtml(data) {
               <td style="padding-bottom: 6px;"><a href="${productUrl}" style="color: #111827; font-size: 15px; font-weight: 600; text-decoration: none; border-bottom: 2px solid #0071e3; word-wrap: break-word; word-break: break-word; display: inline-block;">${getDisplayName(product)}</a></td>
             </tr>
             <tr>
-              <td style="color: #0071e3; font-size: 17px; font-weight: 700;">${formatPrice(
-								chargerPrice,
-							)}</td>
+              <td style="color: #0071e3; font-size: 17px; font-weight: 700;">${(() => { const op = findProductOriginalPrice(product); return op ? `<span style="color: #94a3b8; text-decoration: line-through; font-size: 13px; font-weight: 400; margin-right: 6px;">${formatPrice(op)}</span>` : ""; })()}${formatPrice(chargerPrice)}</td>
             </tr>
           </table>
         </div>
@@ -673,7 +694,7 @@ function generateEmailHtml(data) {
 								? `
             <tr>
               <td style="padding: 6px 0; width: 65%;"><a href="${loadManagementPackage.url}" target="_blank" style="color: #111827; font-size: 13px; font-weight: 500; text-decoration: none; border-bottom: 2px solid #0071e3; word-wrap: break-word; word-break: break-word; display: inline-block;">${loadManagementPackage.name}</a></td>
-              <td style="padding: 6px 0 6px 10px; color: #0071e3; font-size: 15px; font-weight: 700; text-align: right;">${formatPrice(loadManagementPackage.price)}</td>
+              <td style="padding: 6px 0 6px 10px; color: #0071e3; font-size: 15px; font-weight: 700; text-align: right;">${loadManagementPackage.originalPrice ? `<span style="color: #94a3b8; text-decoration: line-through; font-size: 12px; font-weight: 400; margin-right: 6px;">${formatPrice(loadManagementPackage.originalPrice)}</span>` : ""}${formatPrice(loadManagementPackage.price)}</td>
             </tr>
             `
 								: ""
@@ -710,7 +731,7 @@ function generateEmailHtml(data) {
           <table width="100%" cellpadding="0" cellspacing="0" border="0">
             <tr style="border-bottom: 2px solid #0071e3;">
               <td style="padding: 10px 0; color: #111827; font-size: 14px; font-weight: 700;">Töltő ára:</td>
-              <td style="padding: 10px 0 10px 10px; color: #0071e3; font-size: 17px; font-weight: 700; text-align: right;">${formatPrice(chargerPrice)}</td>
+              <td style="padding: 10px 0 10px 10px; color: #0071e3; font-size: 17px; font-weight: 700; text-align: right;">${(() => { const op = findProductOriginalPrice(product); return op ? `<span style="color: #94a3b8; text-decoration: line-through; font-size: 13px; font-weight: 400; margin-right: 6px;">${formatPrice(op)}</span>` : ""; })()}${formatPrice(chargerPrice)}</td>
             </tr>
           </table>
           <div style="text-align: center; margin-top: 16px;">
