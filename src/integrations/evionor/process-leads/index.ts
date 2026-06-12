@@ -328,27 +328,27 @@ Deno.serve(async (req) => {
 const priceList = [
 	{
 		name: "AMINA 1 - 7.4kW",
-		price: 248000,
+		price: 167000,
 	},
 	{
 		name: "Easee Charge Up 22kW",
-		price: 359000,
+		price: 238000,
 	},
 	{
 		name: "Zaptec Go 22kW",
-		price: 275000,
+		price: 234000,
 	},
 	{
 		name: "Zaptec Solar MID",
-		price: 505000,
+		price: 335000,
 	},
 	{
 		name: "Charge Amps Luna 22kW",
-		price: 365000,
+		price: 232000,
 	},
 	{
 		name: "Charge Amps Halo 11kW",
-		price: 299000,
+		price: 222000,
 	},
 ];
 const formatPrice = (price) => {
@@ -363,21 +363,21 @@ const getLoadManagementPackage = (productName) => {
 	if (productName.includes("Zaptec")) {
 		return {
 			name: "Zaptec Sense Terhelésmenedzsment",
-			price: 127000,
+			price: 81000,
 			url: "https://evionor.hu/collections/all/products/zaptec-sense-gen-ct-clamp-bundle",
 		};
 	}
 	if (productName.includes("Easee")) {
 		return {
 			name: "Easee Equalizer Terhelésmenedzsment",
-			price: 143000,
+			price: 104000,
 			url: "https://evionor.hu/collections/all/products/easee-equalizer-amp-bundle-load-meter",
 		};
 	}
 	if (productName.includes("Charge Amps")) {
 		return {
 			name: "Charge Amps Amp Guard Terhelésmenedzsment",
-			price: 132000,
+			price: 87000,
 			url: "https://evionor.hu/collections/all/products/charge-amps-amp-guard-63a-load-meter",
 		};
 	}
