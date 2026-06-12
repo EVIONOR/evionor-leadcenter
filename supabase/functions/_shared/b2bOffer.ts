@@ -11,15 +11,18 @@ interface B2BAutoEmailInput {
 export type B2BLanguage = "hu" | "ro";
 
 const ZAPTEC_GO_GROSS = 234000;
+const ZAPTEC_GO_ORIGINAL = 335000;
 const ZAPTEC_GO_NET = Math.round(ZAPTEC_GO_GROSS / 1.27);
 
 const ZAPTEC_SENSE_NET = 63780;
+const ZAPTEC_SENSE_ORIGINAL = 117000;
 const ZAPTEC_SENSE_GROSS = Math.round(ZAPTEC_SENSE_NET * 1.27);
 
 const INSTALLATION_GROSS = 219000;
 const INSTALLATION_NET = Math.round(INSTALLATION_GROSS / 1.27);
 
 const TOTAL_GROSS = ZAPTEC_GO_GROSS + ZAPTEC_SENSE_GROSS + INSTALLATION_GROSS;
+const TOTAL_ORIGINAL = ZAPTEC_GO_ORIGINAL + ZAPTEC_SENSE_ORIGINAL + INSTALLATION_GROSS;
 const TOTAL_NET = Math.round(TOTAL_GROSS / 1.27);
 
 function fmtPrice(price: number, language: B2BLanguage): string {
@@ -325,10 +328,9 @@ export function buildB2BAutoEmail(
                                                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                                         <tr><td style="padding-bottom: 8px;"><a href="https://evionor.hu/collections/all/products/zaptec-go-home-ev-charger-22kw" style="color: #0a2540; font-size: 15px; font-weight: 700; text-decoration: none; border-bottom: 2px solid #0071e3;">Zaptec Go 22kW</a></td></tr>
                                                         <tr><td>
-                                                            <span style="color: #0071e3; font-size: 22px; font-weight: 800;">${fmtPrice(ZAPTEC_GO_NET, language)}</span>
-                                                            <span style="color: #64748b; font-size: 13px; font-weight: 500;"> ${t.vatPlus}</span>
+                                                            <span style="color: #94a3b8; text-decoration: line-through; font-size: 14px; font-weight: 400; margin-right: 8px;">${fmtPrice(ZAPTEC_GO_ORIGINAL, language)}</span><span style="color: #0071e3; font-size: 22px; font-weight: 800;">${fmtPrice(ZAPTEC_GO_GROSS, language)}</span>
                                                             <br/>
-                                                            <span style="color: #94a3b8; font-size: 12px; font-weight: 400;">${t.gross} ${fmtPrice(ZAPTEC_GO_GROSS, language)}</span>
+                                                            <span style="color: #64748b; font-size: 12px; font-weight: 400;">${t.vatPlus}: ${fmtPrice(ZAPTEC_GO_NET, language)}</span>
                                                         </td></tr>
                                                     </table>
                                                 </td>
@@ -393,8 +395,8 @@ export function buildB2BAutoEmail(
                                                         <tr>
                                                             <td style="color: #4a5568; font-size: 13px; padding: 4px 0;"><a href="https://evionor.hu/collections/all/products/zaptec-sense-gen-ct-clamp-bundle" style="color: #0071e3; text-decoration: none; border-bottom: 1px solid #0071e3;">${t.loadMgmtProduct}</a></td>
                                                             <td style="color: #0a2540; font-size: 14px; font-weight: 600; text-align: right;">
-                                                                ${fmtPrice(ZAPTEC_SENSE_NET, language)} ${t.vatPlus}
-                                                                <br/><span style="color: #94a3b8; font-size: 11px; font-weight: 400;">${t.gross} ${fmtPrice(ZAPTEC_SENSE_GROSS, language)}</span>
+                                                                <span style="color: #94a3b8; text-decoration: line-through; font-size: 12px; font-weight: 400; margin-right: 6px;">${fmtPrice(ZAPTEC_SENSE_ORIGINAL, language)}</span>${fmtPrice(ZAPTEC_SENSE_GROSS, language)}
+                                                                <br/><span style="color: #64748b; font-size: 11px; font-weight: 400;">${t.vatPlus}: ${fmtPrice(ZAPTEC_SENSE_NET, language)}</span>
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -411,9 +413,8 @@ export function buildB2BAutoEmail(
                                                         <tr>
                                                             <td style="color: #0a2540; font-size: 14px; font-weight: 700;">${t.chargerNet}</td>
                                                             <td style="text-align: right;">
-                                                                <span style="color: #0071e3; font-size: 20px; font-weight: 800;">${fmtPrice(ZAPTEC_GO_NET, language)}</span>
-                                                                <span style="color: #64748b; font-size: 12px;"> ${t.vatPlus}</span>
-                                                                <br/><span style="color: #94a3b8; font-size: 11px;">${t.gross} ${fmtPrice(ZAPTEC_GO_GROSS, language)}</span>
+                                                                <span style="color: #94a3b8; text-decoration: line-through; font-size: 13px; font-weight: 400; margin-right: 6px;">${fmtPrice(ZAPTEC_GO_ORIGINAL, language)}</span><span style="color: #0071e3; font-size: 20px; font-weight: 800;">${fmtPrice(ZAPTEC_GO_GROSS, language)}</span>
+                                                                <br/><span style="color: #64748b; font-size: 11px;">${t.vatPlus}: ${fmtPrice(ZAPTEC_GO_NET, language)}</span>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -427,9 +428,8 @@ export function buildB2BAutoEmail(
                                                         <tr>
                                                             <td style="color: #0a2540; font-size: 14px; font-weight: 700; padding-top: 8px;">${t.loadMgmtNet}</td>
                                                             <td style="text-align: right; padding-top: 8px;">
-                                                                <span style="color: #059669; font-size: 16px; font-weight: 700;">${fmtPrice(ZAPTEC_SENSE_NET, language)}</span>
-                                                                <span style="color: #64748b; font-size: 12px;"> ${t.vatPlus}</span>
-                                                                <br/><span style="color: #94a3b8; font-size: 11px;">${t.gross} ${fmtPrice(ZAPTEC_SENSE_GROSS, language)}</span>
+                                                                <span style="color: #94a3b8; text-decoration: line-through; font-size: 12px; font-weight: 400; margin-right: 6px;">${fmtPrice(ZAPTEC_SENSE_ORIGINAL, language)}</span><span style="color: #059669; font-size: 16px; font-weight: 700;">${fmtPrice(ZAPTEC_SENSE_GROSS, language)}</span>
+                                                                <br/><span style="color: #64748b; font-size: 11px;">${t.vatPlus}: ${fmtPrice(ZAPTEC_SENSE_NET, language)}</span>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -438,9 +438,8 @@ export function buildB2BAutoEmail(
                                                                     <tr>
                                                                         <td style="color: #0a2540; font-size: 16px; font-weight: 800; padding-top: 4px;">${t.totalNet}</td>
                                                                         <td style="text-align: right; padding-top: 4px;">
-                                                                            <span style="color: #0071e3; font-size: 22px; font-weight: 800;">${fmtPrice(TOTAL_NET, language)}</span>
-                                                                            <span style="color: #64748b; font-size: 13px;"> ${t.vatPlus}</span>
-                                                                            <br/><span style="color: #94a3b8; font-size: 12px;">${t.gross} ${fmtPrice(TOTAL_GROSS, language)}</span>
+                                                                            <span style="color: #94a3b8; text-decoration: line-through; font-size: 14px; font-weight: 400; margin-right: 8px;">${fmtPrice(TOTAL_ORIGINAL, language)}</span><span style="color: #0071e3; font-size: 22px; font-weight: 800;">${fmtPrice(TOTAL_GROSS, language)}</span>
+                                                                            <br/><span style="color: #64748b; font-size: 12px;">${t.vatPlus}: ${fmtPrice(TOTAL_NET, language)}</span>
                                                                         </td>
                                                                     </tr>
                                                                 </table>
