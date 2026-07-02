@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { chargerTemplates, ChargerTemplate } from "@/types/questionnaire";
 import { formatPrice, priceList } from "@/data/priceList";
+import { useMarketData } from "@/hooks/useMarketData";
 import { supabase } from "@/integrations/supabase/client";
 import { generateQuotePdf } from "@/lib/generateQuotePdf";
 import { Copy, Mail, X, Loader2 } from "lucide-react";
@@ -201,6 +202,40 @@ export function B2BEmailGenerator({
   notes,
   onEmailSent,
 }: B2BEmailGeneratorProps) {
+  const { formatPrice: fmtMarketPrice, getPrice, getCompareAtPrice, getProductUrl, getLink, currencySymbol, market } = useMarketData();
+  // Shadow the imported formatPrice with market-aware version — all existing calls auto-update
+  const formatPrice = fmtMarketPrice;
+
+  // Dynamic product URLs from Supabase market_links (replaces hardcoded evionor.hu URLs)
+  const PRODUCT_HANDLES: Record<string, string> = {
+    "Charge Amps Halo 11kW": "charge-amps-halo-ev-charger-7-4kw-11kw",
+    "Charge Amps Luna 22kW": "charge-amps-luna-ev-charger-22kw",
+    "AMINA 1 - 7.4kW": "amina-1-home-ev-charger-7kw",
+    "Easee Charge Up 22kW": "easee-charge-up-home-ev-charger-22kw",
+    "Zaptec Go 22kW": "zaptec-go-home-ev-charger-22kw",
+    "Zaptec Solar MID": "zaptec-go-2-home-ev-charger-22kw",
+  };
+  const dynamicProductUrls = Object.fromEntries(
+    Object.entries(PRODUCT_HANDLES).map(([name, handle]) => [name, getProductUrl(handle)])
+  );
+  // Dynamic load manager prices and URLs
+  const dynamicLoadManagers = LOAD_MANAGERS.map((lm) => {
+    const handleMap: Record<string, string> = {
+      "Zaptec Sense GEN CT Clamp Csomag": "zaptec-sense-gen-ct-clamp-bundle",
+      "Easee Equalizer Amp Csomag": "easee-equalizer-amp-bundle-load-meter",
+      "Charge Amps Amp Guard": "charge-amps-amp-guard-63a-load-meter",
+    };
+    const handle = handleMap[lm.name];
+    if (!handle) return lm;
+    const price = getPrice(handle);
+    return {
+      ...lm,
+      grossPrice: price ?? lm.grossPrice,
+      netPrice: price ? Math.round(price / 1.27) : lm.netPrice,
+      url: getProductUrl(handle),
+    };
+  });
+
   const [selectedTemplates, setSelectedTemplates] = useState<ChargerTemplate[]>([]);
   const [discountPercent, setDiscountPercent] = useState(0);
   const [includeInstallation, setIncludeInstallation] = useState(false);
@@ -288,7 +323,17 @@ export function B2BEmailGenerator({
     }
     setIsGenerating(true);
 
-    const loadManagerRaw = includeLoadManagement ? detectLoadManager(selectedTemplates) : null;
+    // Use dynamic load managers with market-aware prices/URLs
+    const detectDynamicLoadManager = (templates: ChargerTemplate[]) => {
+      for (const t of templates) {
+        const product = t.products[0].toLowerCase();
+        if (product.includes("zaptec")) return dynamicLoadManagers[0];
+        if (product.includes("easee")) return dynamicLoadManagers[1];
+        if (product.includes("charge amps")) return dynamicLoadManagers[2];
+      }
+      return dynamicLoadManagers[0];
+    };
+    const loadManagerRaw = includeLoadManagement ? detectDynamicLoadManager(selectedTemplates) : null;
     const loadManager = loadManagerRaw ? {
       ...loadManagerRaw,
       netPrice: Math.round(loadManagerRaw.netPrice * (1 - loadManagementDiscount / 100)),
@@ -341,7 +386,7 @@ export function B2BEmailGenerator({
           customerCity: city,
           customerZip: zipCode,
           items,
-          productUrl: productUrls[product],
+          productUrl: dynamicProductUrls[product] || getProductUrl(product.toLowerCase().replace(/\s+/g, "-")),
         });
 
         const fileName = `b2b-ajanlat-${(companyName || contactName).replace(/[^a-zA-Z0-9]/g, "-").toLowerCase()}-${product.replace(/[^a-zA-Z0-9]/g, "-").toLowerCase()}-${Date.now()}.pdf`;
@@ -481,7 +526,7 @@ export function B2BEmailGenerator({
       const origPrice = findOriginalPrice(product);
       const hasDiscount = discountPercent > 0;
       const imgUrl = getChargerImageUrl(product);
-      const prodUrl = productUrls[product] || "https://evionor.hu/webshop/";
+      const prodUrl = dynamicProductUrls[product] || getProductUrl(product.toLowerCase().replace(/\s+/g, "-")) || (getLink("shop") + "/");
 
       return `
                             ${idx > 0 ? '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 28px 0;"><tr><td style="height: 1px; background: linear-gradient(90deg, transparent 0%, #cbd5e1 30%, #cbd5e1 70%, transparent 100%);"></td></tr></table>' : ""}
@@ -932,8 +977,20 @@ export function B2BEmailGenerator({
             {includeLoadManagement && (
               <div className="space-y-2 pl-6">
                 <div className="text-xs text-muted-foreground bg-muted p-2 rounded">
-                  <p className="font-medium">🔌 {detectLoadManager(selectedTemplates)?.name || "Terhelésmenedzser"}</p>
-                  <p>{formatPrice(detectLoadManager(selectedTemplates)?.grossPrice || 0)}</p>
+                  <p className="font-medium">🔌 {(() => {
+                    const p = selectedTemplates[0]?.products[0]?.toLowerCase() || "";
+                    if (p.includes("zaptec")) return dynamicLoadManagers[0];
+                    if (p.includes("easee")) return dynamicLoadManagers[1];
+                    if (p.includes("charge amps")) return dynamicLoadManagers[2];
+                    return dynamicLoadManagers[0];
+                  })()?.name || "Terhelésmenedzser"}</p>
+                  <p>{formatPrice((() => {
+                    const p = selectedTemplates[0]?.products[0]?.toLowerCase() || "";
+                    if (p.includes("zaptec")) return dynamicLoadManagers[0];
+                    if (p.includes("easee")) return dynamicLoadManagers[1];
+                    if (p.includes("charge amps")) return dynamicLoadManagers[2];
+                    return dynamicLoadManagers[0];
+                  })()?.grossPrice || 0)}</p>
                 </div>
                 <div className="space-y-1.5">
                   <Label className="text-xs">Terhelésmenedzsment kedvezmény (%)</Label>
