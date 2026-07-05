@@ -233,8 +233,13 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
     setIsSending(true);
 
     try {
+      const {
+        data: { session },
+      } = await evionorAuth.auth.getSession();
+
       const { data: emailData, error } = await supabase.functions.invoke("send-email", {
         body: {
+          access_token: session?.access_token,
           from: `${senderName} - EVIONOR <hello@notifications.evionor.hu>`,
           html: generatedEmail,
           subject: emailSubject,

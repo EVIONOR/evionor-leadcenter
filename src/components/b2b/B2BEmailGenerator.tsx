@@ -10,9 +10,22 @@ import { chargerTemplates, ChargerTemplate } from "@/types/questionnaire";
 import { formatPrice, priceList } from "@/data/priceList";
 import { useMarketData } from "@/hooks/useMarketData";
 import { supabase } from "@/integrations/supabase/client";
+import { evionorAuth } from "@/integrations/evionor/auth-client";
 import { generateQuotePdf } from "@/lib/generateQuotePdf";
 import { Copy, Mail, X, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+
+function blobToBase64(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const result = reader.result as string;
+      resolve(result.split(",")[1] ?? "");
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
 
 const LOCATION_TYPE_LABELS: Record<string, string> = {
   family_house: "Családi ház",
@@ -390,10 +403,20 @@ export function B2BEmailGenerator({
         });
 
         const fileName = `b2b-ajanlat-${(companyName || contactName).replace(/[^a-zA-Z0-9]/g, "-").toLowerCase()}-${product.replace(/[^a-zA-Z0-9]/g, "-").toLowerCase()}-${Date.now()}.pdf`;
-        const { error: uploadError } = await supabase.storage.from("quotes").upload(fileName, pdfBlob, { contentType: "application/pdf", upsert: true });
-        if (!uploadError) {
-          const { data: urlData } = supabase.storage.from("quotes").getPublicUrl(fileName);
-          quoteUrls[product] = urlData.publicUrl;
+        const pdfBase64 = await blobToBase64(pdfBlob);
+        const {
+          data: { session },
+        } = await evionorAuth.auth.getSession();
+
+        const { data: uploadData, error: uploadError } = await supabase.functions.invoke<{
+          success: boolean;
+          publicUrl?: string;
+          error?: string;
+        }>("upload-quote", {
+          body: { access_token: session?.access_token, fileName, pdfBase64 },
+        });
+        if (!uploadError && uploadData?.success && uploadData.publicUrl) {
+          quoteUrls[product] = uploadData.publicUrl;
         }
       } catch (err) {
         console.error("PDF error:", err);
@@ -788,8 +811,13 @@ export function B2BEmailGenerator({
     if (!generatedEmail || !email) return;
     setIsSending(true);
     try {
+      const {
+        data: { session },
+      } = await evionorAuth.auth.getSession();
+
       const { data: emailData, error } = await supabase.functions.invoke("send-email", {
         body: {
+          access_token: session?.access_token,
           to: email,
           subject: emailSubject || `EV-töltő ajánlat vállalati ügyfeleknek – ${companyName || contactName}`,
           html: generatedEmail,

@@ -1,16 +1,14 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { sendHtmlEmail } from "../_shared/sendMail.ts";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+import { corsHeaders } from "../_shared/cors.ts";
+import { requireEvionorAdmin } from "../_shared/evionorAdmin.ts";
 
 interface SendEmailRequest {
   to: string;
   subject: string;
   html: string;
   from?: string;
+  access_token?: string;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -22,7 +20,18 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     console.log("Received email send request");
 
-    const { to, subject, html, from }: SendEmailRequest = await req.json();
+    const { to, subject, html, from, access_token }: SendEmailRequest = await req.json();
+
+    try {
+      await requireEvionorAdmin(access_token);
+    } catch (authError) {
+      const message = authError instanceof Error ? authError.message : "Authentication required";
+      return new Response(
+        JSON.stringify({ success: false, error: message }),
+        { status: 401, headers: { "Content-Type": "application/json", ...corsHeaders } },
+      );
+    }
+
     const cc = ["info@evionor.hu"];
 
     if (!to || !subject || !html) {

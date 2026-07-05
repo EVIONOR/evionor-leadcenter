@@ -1,1 +1,0 @@
-ALTER TABLE public.b2b_qualifications ADD COLUMN distance_from_panel text DEFAULT NULL;
