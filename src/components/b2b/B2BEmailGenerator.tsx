@@ -73,8 +73,8 @@ const INSTALLATION_DISCOUNTS: Record<number, { discount: number; label: string }
 
 const LOAD_MANAGERS = [
   { brand: "Zaptec", name: "Zaptec Sense GEN CT Clamp Csomag", netPrice: 77953, grossPrice: 99000, url: "https://evionor.hu/collections/all/products/zaptec-sense-gen-ct-clamp-bundle?_pos=14&_fid=c1e909eaa&_ss=c" },
-  { brand: "Easee", name: "Easee Equalizer Amp Csomag", netPrice: 100000, grossPrice: 127000, url: "https://evionor.hu/collections/all/products/easee-equalizer-amp-bundle-load-meter" },
-  { brand: "Charge Amps", name: "Charge Amps Amp Guard", netPrice: 83465, grossPrice: 106000, url: "https://evionor.hu/collections/all/products/charge-amps-amp-guard-63a-load-meter?_pos=10&_fid=53fe77cfa&_ss=c" },
+  { brand: "Easee", name: "Easee Equalizer Amp Csomag", netPrice: 94488, grossPrice: 120000, url: "https://evionor.hu/collections/all/products/easee-equalizer-amp-bundle-load-meter" },
+  { brand: "Charge Amps", name: "Charge Amps Amp Guard", netPrice: 73228, grossPrice: 93000, url: "https://evionor.hu/collections/all/products/charge-amps-amp-guard-63a-load-meter?_pos=10&_fid=53fe77cfa&_ss=c" },
 ];
 
 const detectLoadManager = (templates: ChargerTemplate[]): typeof LOAD_MANAGERS[0] | null => {
