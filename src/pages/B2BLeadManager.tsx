@@ -132,7 +132,7 @@ export default function B2BLeadManager() {
     });
     const qualifications = qualResult?.data || [];
     const statusMap = new Map<string, { status: string; id: string }>();
-    qualifications.forEach((q: any) => {
+    qualifications.forEach((q: Record<string, string>) => {
       if (q.source_b2b_id) {
         statusMap.set(q.source_b2b_id, { status: q.status || "new", id: q.id });
       }
@@ -300,7 +300,7 @@ export default function B2BLeadManager() {
   };
 
   const handleStatusFilterChange = async (value: string) => {
-    await setStatusFilter(value as any);
+    await setStatusFilter(value as string);
     await setCurrentPage(1);
   };
 
