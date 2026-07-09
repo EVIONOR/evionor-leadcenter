@@ -135,7 +135,7 @@ function getLoadManagementPackage(productName: string): LoadManagementPackage | 
   if (productName.includes("Zaptec")) {
     return {
       name: "Zaptec Sense Terhelésmenedzsment",
-      price: 81000,
+      price: 99000,
       url: "https://evionor.hu/collections/all/products/zaptec-sense-gen-ct-clamp-bundle?_pos=14&_fid=c1e909eaa&_ss=c",
     };
   }
@@ -143,7 +143,7 @@ function getLoadManagementPackage(productName: string): LoadManagementPackage | 
   if (productName.includes("Easee")) {
     return {
       name: "Easee Equalizer Terhelésmenedzsment",
-      price: 104000,
+      price: 127000,
       url: "https://evionor.hu/collections/all/products/easee-equalizer-amp-bundle-load-meter?_pos=9&_fid=c1e909eaa&_ss=c",
     };
   }
@@ -151,7 +151,7 @@ function getLoadManagementPackage(productName: string): LoadManagementPackage | 
   if (productName.includes("Charge Amps")) {
     return {
       name: "Charge Amps Amp Guard Terhelésmenedzsment",
-      price: 87000,
+      price: 106000,
       url: "https://evionor.hu/collections/all/products/charge-amps-amp-guard-63a-load-meter?_pos=10&_fid=53fe77cfa&_ss=c",
     };
   }
