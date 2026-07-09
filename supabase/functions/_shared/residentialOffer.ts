@@ -390,7 +390,7 @@ function getLoadManagementPackage(
   if (productName.includes("Easee")) {
     return {
       name: m.loadMgmtEasee,
-      price: 127000,
+      price: 120000,
       url: "https://evionor.hu/collections/all/products/easee-equalizer-amp-bundle-load-meter?_pos=9&_fid=c1e909eaa&_ss=c",
     };
   }
@@ -398,7 +398,7 @@ function getLoadManagementPackage(
   if (productName.includes("Charge Amps")) {
     return {
       name: m.loadMgmtChargeAmps,
-      price: 106000,
+      price: 93000,
       url: "https://evionor.hu/collections/all/products/charge-amps-amp-guard-63a-load-meter?_pos=10&_fid=53fe77cfa&_ss=c",
     };
   }
