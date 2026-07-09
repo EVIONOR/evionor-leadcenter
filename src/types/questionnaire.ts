@@ -56,7 +56,7 @@ export const chargerTemplates: ChargerTemplate[] = [
     location: "any",
     hasSolar: false,
     products: ["Zaptec Go 22kW"],
-    basePrice: 234000
+    basePrice: 251000
   },
   {
     id: "template3a",
@@ -66,7 +66,7 @@ export const chargerTemplates: ChargerTemplate[] = [
     location: "any",
     hasSolar: false,
     products: ["Easee Charge Up 22kW"],
-    basePrice: 238000
+    basePrice: 256000
   },
   {
     id: "template3c",
@@ -76,7 +76,7 @@ export const chargerTemplates: ChargerTemplate[] = [
     location: "any",
     hasSolar: false,
     products: ["Charge Amps Luna 22kW"],
-    basePrice: 232000
+    basePrice: 249000
   },
   {
     id: "template2",
@@ -86,7 +86,7 @@ export const chargerTemplates: ChargerTemplate[] = [
     location: "outdoor",
     hasSolar: false,
     products: ["AMINA 1 - 7.4kW"],
-    basePrice: 167000
+    basePrice: 179000
   },
   {
     id: "template1",
@@ -96,7 +96,7 @@ export const chargerTemplates: ChargerTemplate[] = [
     location: "indoor",
     hasSolar: false,
     products: ["Charge Amps Halo 11kW"],
-    basePrice: 222000
+    basePrice: 239000
   },
   {
     id: "template4",
@@ -106,6 +106,6 @@ export const chargerTemplates: ChargerTemplate[] = [
     location: "any",
     hasSolar: true,
     products: ["Zaptec Solar MID"],
-    basePrice: 335000
+    basePrice: 359000
   },
 ];
