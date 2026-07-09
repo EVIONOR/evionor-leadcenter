@@ -235,7 +235,7 @@ export interface SavedQuestionnaireResponseInsert {
 export interface LeadManagerSetting {
   id: string;
   setting_key: string;
-  setting_value: any;
+  setting_value: Record<string, unknown>;
   updated_at: string;
   updated_by: string | null;
 }
@@ -261,7 +261,7 @@ export interface B2BQuestionnaireResponse {
 export interface LeadManagerSettingInsert {
   id?: string;
   setting_key: string;
-  setting_value: any;
+  setting_value: Record<string, unknown>;
   updated_at?: string;
   updated_by?: string | null;
 }
