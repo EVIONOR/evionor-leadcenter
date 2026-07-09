@@ -7,7 +7,7 @@ import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { chargerTemplates, ChargerTemplate } from "@/types/questionnaire";
-import { formatPrice, priceList } from "@/data/priceList";
+import { priceList } from "@/data/priceList";
 import { useMarketData } from "@/hooks/useMarketData";
 import { supabase } from "@/integrations/supabase/client";
 import { evionorAuth } from "@/integrations/evionor/auth-client";
@@ -77,24 +77,7 @@ const LOAD_MANAGERS = [
   { brand: "Charge Amps", name: "Charge Amps Amp Guard", netPrice: 83465, grossPrice: 106000, url: "https://evionor.hu/collections/all/products/charge-amps-amp-guard-63a-load-meter?_pos=10&_fid=53fe77cfa&_ss=c" },
 ];
 
-const detectLoadManager = (templates: ChargerTemplate[]): typeof LOAD_MANAGERS[0] | null => {
-  for (const t of templates) {
-    const product = t.products[0].toLowerCase();
-    if (product.includes("zaptec")) return LOAD_MANAGERS[0];
-    if (product.includes("easee")) return LOAD_MANAGERS[1];
-    if (product.includes("charge amps")) return LOAD_MANAGERS[2];
-  }
-  return LOAD_MANAGERS[0]; // default
-};
-
-const productUrls: Record<string, string> = {
-  "Charge Amps Halo 11kW": "https://evionor.hu/collections/all/products/charge-amps-halo-ev-charger-7-4kw-11kw",
-  "Charge Amps Luna 22kW": "https://evionor.hu/collections/all/products/charge-amps-luna-ev-charger-22kw",
-  "AMINA 1 - 7.4kW": "https://evionor.hu/collections/all/products/amina-1-home-ev-charger-7kw",
-  "Easee Charge Up 22kW": "https://evionor.hu/collections/all/products/easee-charge-up-home-ev-charger-22kw",
-  "Zaptec Go 22kW": "https://evionor.hu/collections/all/products/zaptec-go-home-ev-charger-22kw",
-  "Zaptec Solar MID": "https://evionor.hu/collections/all/products/zaptec-go-2-home-ev-charger-22kw",
-};
+// productUrls and detectLoadManager replaced by dynamic market-aware versions below
 
 const getChargerImageUrl = (productName: string): string => {
   if (productName.includes("Zaptec Solar MID")) return "https://evionor.hu/cdn/shop/files/ZaptecGo2_Productimage_quater_asphaltblack.webp?v=1762325254&width=600";
@@ -205,7 +188,6 @@ export function B2BEmailGenerator({
   address,
   phases,
   mainFuse,
-  distanceFromPanel,
   chargerCount,
   locationType,
   hasOwnElectrician,
@@ -215,7 +197,7 @@ export function B2BEmailGenerator({
   notes,
   onEmailSent,
 }: B2BEmailGeneratorProps) {
-  const { formatPrice: fmtMarketPrice, getPrice, getCompareAtPrice, getProductUrl, getLink, currencySymbol, market } = useMarketData();
+  const { formatPrice: fmtMarketPrice, getPrice, getProductUrl, getLink } = useMarketData();
   // Shadow the imported formatPrice with market-aware version — all existing calls auto-update
   const formatPrice = fmtMarketPrice;
 
@@ -267,6 +249,7 @@ export function B2BEmailGenerator({
       setGeneratedEmail("");
       setEmailSubject("");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [includeLoadManagement, includeInstallation, discountPercent, installationTier, selectedTemplates, loadManagementDiscount]);
 
   const findProductPrice = (productName: string): number => {
@@ -546,7 +529,6 @@ export function B2BEmailGenerator({
       const product = template.products[0];
       const originalPrice = findProductPrice(product);
       const discountedPrice = applyDiscount(originalPrice);
-      const origPrice = findOriginalPrice(product);
       const hasDiscount = discountPercent > 0;
       const imgUrl = getChargerImageUrl(product);
       const prodUrl = dynamicProductUrls[product] || getProductUrl(product.toLowerCase().replace(/\s+/g, "-")) || (getLink("shop") + "/");

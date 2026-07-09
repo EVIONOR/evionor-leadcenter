@@ -21,7 +21,6 @@ import {
   User,
   Loader2,
   Save,
-  Zap,
   Car,
 } from "lucide-react";
 

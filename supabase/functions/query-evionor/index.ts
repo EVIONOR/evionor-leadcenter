@@ -116,14 +116,15 @@ Deno.serve(async (req) => {
     let result;
 
     switch (action) {
-      case "query_table":
+      case "query_table": {
         if (!table) throw new Error("Table name is required");
         const { data, error } = await client.from(table).select("*").limit(100);
         if (error) throw error;
         result = { data, count: data?.length || 0 };
         break;
+      }
 
-      case "custom_query":
+      case "custom_query": {
         if (!query) throw new Error("Query parameters are required");
         const queryBuilder = client.from(query.table).select(query.select || "*", { count: "exact" });
 
@@ -155,8 +156,9 @@ Deno.serve(async (req) => {
         }
         result = { data: customData, count: totalCount || 0 };
         break;
+      }
 
-      case "update":
+      case "update": {
         if (!update || !update.id || !table || !update.data) {
           throw new Error("Update action requires: table, update.id, and update.data");
         }
@@ -169,8 +171,9 @@ Deno.serve(async (req) => {
         if (updateError) throw updateError;
         result = { data: updatedData };
         break;
+      }
 
-      case "insert":
+      case "insert": {
         if (!table || !insertData) throw new Error("Insert action requires: table and data");
         const { data: insertedData, error: insertError } = await client
           .from(table)
@@ -180,8 +183,9 @@ Deno.serve(async (req) => {
         if (insertError) throw insertError;
         result = { data: insertedData };
         break;
+      }
 
-      case "get_setting":
+      case "get_setting": {
         if (!setting_key) throw new Error("Setting key is required");
         const { data: settingData, error: getSettingError } = await client
           .from("lead_manager_settings")
@@ -194,8 +198,9 @@ Deno.serve(async (req) => {
           result = { data: settingData?.setting_value || { enabled: false } };
         }
         break;
+      }
 
-      case "update_setting":
+      case "update_setting": {
         if (!setting_key || setting_value === undefined) {
           throw new Error("Setting key and value are required");
         }
@@ -214,6 +219,7 @@ Deno.serve(async (req) => {
         if (upsertError) throw upsertError;
         result = { data: upsertedSetting };
         break;
+      }
 
       default:
         throw new Error(`Unknown action: ${action}`);
