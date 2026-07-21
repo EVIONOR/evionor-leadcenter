@@ -37,7 +37,7 @@ export const priceList: ProductPrice[] = [
   { name: "Zaptec Pro MID", price: 478550, originalPrice: 563000, category: "töltő" },
   { name: "Zaptec Backplate Pro", price: 18000, originalPrice: 21000, category: "kiegészítő" },
   { name: "Zaptec Charging cable T2-T1", price: 95000, originalPrice: 112000, category: "kábel" },
-  { name: "Zaptec Chill", price: 15000, originalPrice: 15000, category: "kiegészítő" },
+  { name: "Zaptec Chill", price: 13000, originalPrice: 15000, category: "kiegészítő" },
   { name: "Zaptec Cliff", price: 35000, originalPrice: 41000, category: "kiegészítő" },
   { name: "Zaptec Sense HAN", price: 38000, originalPrice: 45000, category: "mérő" },
   { name: "Zaptec Sense Gen", price: 38000, originalPrice: 45000, category: "mérő" },
