@@ -13,7 +13,7 @@ export interface ProductPrice {
 export const priceList: ProductPrice[] = [
   // Amina
   { name: "AMINA 1 - 7.4kW", price: 167000, originalPrice: 239000, category: "töltő" },
-  { name: "Amina S 13kW 20A", price: 172000, originalPrice: 247000, category: "töltő" },
+  { name: "Amina S 13kW 20A", price: 149000, originalPrice: 247000, category: "töltő" },
   { name: "Amina S 22kW 32A", price: 201000, originalPrice: 288000, category: "töltő" },
   { name: "Amina C 22kW", price: 258000, originalPrice: 370000, category: "töltő" },
   { name: "Amina Type2 20A 6m", price: 48000, originalPrice: 69000, category: "kábel" },

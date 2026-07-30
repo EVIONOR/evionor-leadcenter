@@ -59,6 +59,7 @@ const productUrls: Record<string, string> = {
   "Easee Charge Up 22kW": "https://evionor.hu/collections/all/products/easee-charge-up-home-ev-charger-22kw",
   "Zaptec Go 22kW": "https://evionor.hu/collections/all/products/zaptec-go-home-ev-charger-22kw",
   "Zaptec Solar MID": "https://evionor.hu/collections/all/products/zaptec-go-2-home-ev-charger-22kw",
+  "Amina S 13kW 20A": "https://evionor.hu/collections/all/products/amina-s-ev-charger-13-8kw-20a",
 };
 
 const cartUrls: Record<string, string> = {
@@ -68,6 +69,7 @@ const cartUrls: Record<string, string> = {
   "Zaptec Go 22kW": "https://evionor.hu/collections/all/products/zaptec-go-22kw-ev-charger-installation-bundle?_pos=8&_fid=5b9cabd46&_ss=c",
   "Zaptec Solar MID": "https://evionor.hu/products/zaptec-go-22kw-ev-charger-installation-bundle",
   "Easee Charge Up 22kW": "https://evionor.hu/products/easee-charge-up-22kw-ev-charger-installation-bundle",
+  "Amina S 13kW 20A": "https://evionor.hu/products/amina-s-13-8kw-ev-charger-load-management-bundle",
 };
 
 export function getAutomaticResidentialTemplateIds(
@@ -81,14 +83,16 @@ export function getAutomaticResidentialTemplateIds(
     return ["template4"];
   }
 
-  return ["template3b", "template3a"];
+  // Amina S 20A (template3d) is the lead offer as of 2026-07-30 (Istvan:
+  // 149,000 Ft strategic price), paired with Zaptec Go.
+  return ["template3d", "template3b"];
 }
 
 export function getRecommendedResidentialTemplateId(
   data: Pick<ResidentialOfferInput, "needsApp" | "phases" | "solarIntegration">,
 ): string {
   if (data.solarIntegration !== "nem") return "template4";
-  if (data.phases === "3") return "template3b";
+  if (data.phases === "3") return "template3d";
   if (data.needsApp) return "template1";
   return "template2";
 }
@@ -123,6 +127,9 @@ function getChargerImageUrl(productName: string): string {
   }
   if (productName.includes("AMINA 1") || productName.includes("Amina 1")) {
     return "https://evionor.hu/cdn/shop/files/Amina1-01_b6b7cf86-b2bf-4fee-bfd1-2eed3d1e2273.webp?v=1760611153&width=600";
+  }
+  if (productName.includes("Amina S")) {
+    return "https://evionor.hu/cdn/shop/files/Amina-S-03_1c7e5aa4-b8d9-490c-9dd1-019824d7453e.webp";
   }
   if (productName.includes("Charge Amps Halo")) {
     return "https://evionor.hu/cdn/shop/files/PACKSHOTSHALOwCableFrontTransparentHR.webp?v=1760611158&width=600";
