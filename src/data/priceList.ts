@@ -69,7 +69,7 @@ export const priceList: ProductPrice[] = [
   { name: "Metron Type2 20A 13,8 kW 5M Tesla Vezérléssel", price: 110000, originalPrice: 129000, category: "kábel" },
   { name: "Hordozható Schuko-Type2 5m 6A-16A Töltőkábel Kijelzővel", price: 107000, originalPrice: 126000, category: "kábel" },
   { name: "DEFA eConnect Docking Type 2", price: 18000, originalPrice: 21000, category: "kiegészítő" },
-  { name: "Perific Powerlink DIN - Amina", price: 139000, originalPrice: 163000, category: "mérő" },
+  { name: "Perific Powerlink DIN - Amina", price: 99000, originalPrice: 163000, category: "mérő" },
   { name: "Perific Max 5010+310 DIN License EVI Current Sensor 16", price: 144000, originalPrice: 169000, category: "mérő" },
   { name: "Perific Max 5010+310 DIN License EVI Current Sensor 36", price: 156000, originalPrice: 184000, category: "mérő" },
   { name: "Perific Max 5010+310 DIN License EVI Current Sensor 100", price: 188000, originalPrice: 221000, category: "mérő" },
