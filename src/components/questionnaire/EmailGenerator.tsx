@@ -26,6 +26,11 @@ interface EmailGeneratorProps {
   data: QuestionnaireData;
 }
 
+// template4 (Zaptec Solar MID / Zaptec Go 2) is not offered — no
+// installation-bundle SKU exists for it in the shop (Istvan, 2026-07-30).
+// Hidden from manual selection too, not just the auto-recommendation logic.
+const selectableChargerTemplates = chargerTemplates.filter((template) => template.id !== "template4");
+
 export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorProps) => {
   const { getOnboardChargerKw } = useEVData();
   const onboardChargerKw =
@@ -353,7 +358,7 @@ export const EmailGenerator = ({ data, autoGenerate = false }: EmailGeneratorPro
             )}
 
             <div className="space-y-2">
-              {chargerTemplates.map((template) => {
+              {selectableChargerTemplates.map((template) => {
                 const isSelected = selectedTemplates.some((item) => item.id === template.id);
                 return (
                   <div

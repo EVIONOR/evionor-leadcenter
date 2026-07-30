@@ -65,8 +65,8 @@ const cartUrls: Record<string, string> = {
   "AMINA 1 - 7.4kW": "https://evionor.hu/products/amina-1-ev-charger-7kw-installation-bundle",
   "Charge Amps Halo 11kW": "https://evionor.hu/products/charge-amps-halo-ev-charger-installation-bundle",
   "Charge Amps Luna 22kW": "https://evionor.hu/products/charge-amps-luna-22kw-ev-charger-installation-bundle",
-  "Zaptec Go 22kW": "https://evionor.hu/collections/all/products/zaptec-go-22kw-ev-charger-installation-bundle?_pos=8&_fid=5b9cabd46&_ss=c",
-  "Zaptec Solar MID": "https://evionor.hu/products/zaptec-go-22kw-ev-charger-installation-bundle",
+  "Zaptec Go 22kW": "https://evionor.hu/products/zaptec-go-ev-charger-installation-bundle",
+  "Zaptec Solar MID": "https://evionor.hu/products/zaptec-go-ev-charger-installation-bundle",
   "Easee Charge Up 22kW": "https://evionor.hu/products/easee-charge-up-22kw-ev-charger-installation-bundle",
 };
 
@@ -77,17 +77,16 @@ export function getAutomaticResidentialTemplateIds(
     return ["template2", "template1"];
   }
 
-  if (data.solarIntegration !== "nem") {
-    return ["template4"];
-  }
-
+  // template4 (Zaptec Solar MID / Zaptec Go 2) is not offered — no
+  // installation-bundle SKU exists for it in the shop (Istvan, 2026-07-30).
+  // Solar-integration customers get the same standard 3-phase pair as
+  // everyone else.
   return ["template3b", "template3a"];
 }
 
 export function getRecommendedResidentialTemplateId(
   data: Pick<ResidentialOfferInput, "needsApp" | "phases" | "solarIntegration">,
 ): string {
-  if (data.solarIntegration !== "nem") return "template4";
   if (data.phases === "3") return "template3b";
   if (data.needsApp) return "template1";
   return "template2";
