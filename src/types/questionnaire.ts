@@ -69,6 +69,16 @@ export const chargerTemplates: ChargerTemplate[] = [
     basePrice: 258000
   },
   {
+    id: "template3d",
+    name: "3 fázis - Standard - Amina S 20A",
+    phase: "3",
+    hasApp: false,
+    location: "any",
+    hasSolar: false,
+    products: ["Amina S 13kW 20A"],
+    basePrice: 149000
+  },
+  {
     id: "template3c",
     name: "3 fázis - Standard - Charge Amps Luna 22kW",
     phase: "3",
