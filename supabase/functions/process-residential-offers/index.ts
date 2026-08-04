@@ -8,7 +8,6 @@ import {
 import { buildResidentialOffer } from "../_shared/residentialOffer.ts";
 import { requireEvionorAdmin, type EvionorQuestionnaireLead } from "../_shared/evionorAdmin.ts";
 import { sendHtmlEmail } from "../_shared/sendMail.ts";
-import { getResidentialAutomationEnabled } from "../_shared/settings.ts";
 
 interface ProcessResult {
   blocked: number;
@@ -40,26 +39,22 @@ Deno.serve(async (req) => {
     const body = req.method === "POST" ? await req.json().catch(() => ({})) : {};
     const mode = typeof body.mode === "string" ? body.mode : "scheduled";
 
+    // Automatic offer delivery has moved to evionor-core. Keep the manual
+    // preview/test paths available, but never send scheduled emails here.
+    if (mode === "scheduled") {
+      return jsonResponse(
+        { success: true, mode, message: "Residential email delivery moved to evionor-core", processed: 0 },
+        200,
+      );
+    }
+
     if (mode === "dry-run" || mode === "manual" || mode === "test-send") {
       await requireEvionorAdmin(body.access_token);
     }
 
     const testRecipients = ["misho.shubitidze@travlrd.com", "istvansandornagy@gmail.com"];
 
-    if (mode === "scheduled") {
-      const enabled = await getResidentialAutomationEnabled();
-      if (!enabled) {
-        return jsonResponse(
-          {
-            success: true,
-            mode,
-            message: "Residential automation is disabled",
-            processed: 0,
-          },
-          200,
-        );
-      }
-    } else if (mode !== "dry-run" && mode !== "manual" && mode !== "test-send") {
+    if (mode !== "dry-run" && mode !== "manual" && mode !== "test-send") {
       throw new Error(`Unsupported mode: ${mode}`);
     }
 

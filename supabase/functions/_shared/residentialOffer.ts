@@ -273,9 +273,10 @@ const cartUrls: Record<string, string> = {
   "AMINA 1 - 7.4kW": "https://evionor.hu/products/amina-1-ev-charger-7kw-installation-bundle",
   "Charge Amps Halo 11kW": "https://evionor.hu/products/charge-amps-halo-ev-charger-installation-bundle",
   "Charge Amps Luna 22kW": "https://evionor.hu/products/charge-amps-luna-22kw-ev-charger-installation-bundle",
-  "Zaptec Go 22kW":
-    "https://evionor.hu/collections/all/products/zaptec-go-2-home-ev-charger-22kw2kw-ev-charger-installation-bundle?_pos=8&_fid=5b9cabd46&_ss=c",
-  "Zaptec Solar MID": "https://evionor.hu/products/zaptec-go-2-home-ev-charger-22kw2kw-ev-charger-installation-bundle",
+  "Zaptec Go 22kW": "https://evionor.hu/products/zaptec-go-ev-charger-installation-bundle",
+  // Shopify currently has no dedicated Zaptec Go 2 installation bundle.
+  // Keep this CTA useful by pointing to the exact charger instead of a 404.
+  "Zaptec Solar MID": "https://evionor.hu/products/zaptec-go-2-home-ev-charger-22kw",
   "Easee Charge Up 22kW": "https://evionor.hu/products/easee-charge-up-22kw-ev-charger-installation-bundle",
   "Amina S 13kW 20A": "https://evionor.hu/products/amina-s-13-8kw-ev-charger-load-management-bundle",
 };
@@ -306,11 +307,11 @@ export function getRecommendedResidentialTemplateId(
 }
 
 function getProductUrl(productName: string): string {
-  return productUrls[productName] || "https://evionor.hu/webshop/";
+  return productUrls[productName] || "https://evionor.hu/collections/all";
 }
 
 function getCartUrl(productName: string): string {
-  return cartUrls[productName] || "https://evionor.hu/webshop/";
+  return cartUrls[productName] || "https://evionor.hu/collections/all";
 }
 
 function getDisplayName(name: string, language: ResidentialLanguage = "hu"): string {

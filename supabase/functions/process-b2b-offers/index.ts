@@ -4,7 +4,6 @@ import { requireEvionorAdmin } from "../_shared/evionorAdmin.ts";
 import { sendHtmlEmail } from "../_shared/sendMail.ts";
 import { buildB2BAutoEmail, type B2BLanguage } from "../_shared/b2bOffer.ts";
 
-const B2B_AUTOMATION_KEY = "b2b_automation_enabled";
 const B2B_AUTO_GROUP_KEY = "b2b_auto_group_enabled";
 
 function jsonResponse(body: unknown, status: number) {
@@ -93,16 +92,17 @@ Deno.serve(async (req) => {
     const body = req.method === "POST" ? await req.json().catch(() => ({})) : {};
     const mode = typeof body.mode === "string" ? body.mode : "scheduled";
 
-    if (mode === "manual" || mode === "dry-run") {
-      await requireEvionorAdmin(body.access_token);
+    // Automatic B2B offer delivery has moved to evionor-core. Manual CRM
+    // operations remain available, but the Lead Center scheduler is inert.
+    if (mode === "scheduled") {
+      return jsonResponse(
+        { success: true, mode, message: "B2B email delivery moved to evionor-core", processed: 0 },
+        200,
+      );
     }
 
-    // Check if automation is enabled for scheduled runs
-    if (mode === "scheduled") {
-      const enabled = await getSetting(B2B_AUTOMATION_KEY);
-      if (!enabled) {
-        return jsonResponse({ success: true, mode, message: "B2B automation is disabled", processed: 0 }, 200);
-      }
+    if (mode === "manual" || mode === "dry-run") {
+      await requireEvionorAdmin(body.access_token);
     }
 
     const localClient = createLocalClient();
