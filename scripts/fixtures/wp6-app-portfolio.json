@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "captured_at": "2026-08-14T14:35:00Z",
+  "secret_values_included": false,
+  "apps": [
+    {"app_id":"shopify-b2c","owner":"WP5_HANDOFF","state":"PARKED_OVERLAP","primary_repo":"EVIONOR/evionor-shopify-theme","main_commit":"cc357653e3f0e1ea0577aefc758351a2e3ba97ed","public_url":"https://evionor.hu/pages/calculator","public_asset_state":"OBSERVED_HTML_ONLY","source_contract":"CUSTOM_EVENT_UNVERIFIED_MAPPING","candidate_pr":null},
+    {"app_id":"lead-center","owner":"WP6","state":"BLOCKED_EXTERNAL","primary_repo":"EVIONOR/evionor-leadcenter","main_commit":"30169ade60ce17172fa3771c0dee9945e090febc","public_url":"https://evionor-leadcenter.lovable.app/","public_asset_state":"IDENTITY_BLOCKED","source_contract":"NO_META_SENDER","candidate_pr":null,"related_repos":["EVIONOR/evionor-leadcenter-61bf2af8"]},
+    {"app_id":"charger-offer-wizard","owner":"WP6","state":"PARKED_TIER3","primary_repo":"EVIONOR/charger-offer-wizard-c89ba3bc","main_commit":"1dc99567f609cef417f8d0ae335b4dd15533d174","public_url":"https://charger-offer-wizard.lovable.app/","public_asset_state":"STALE_DEPLOYMENT","source_contract":"SOURCE_FIXED_LIVE_STALE","candidate_pr":null,"related_repos":["EVIONOR/charger-offer-wizard"]},
+    {"app_id":"roi-calculator","owner":"WP6","state":"BLOCKED_EXTERNAL","primary_repo":"EVIONOR/ev-charge-finder-roi-95559","main_commit":"5e96b05efe056b7a739b40bad49aa0ee7fd60690","public_url":null,"public_asset_state":"IDENTITY_BLOCKED","source_contract":"DRAFT_FAIL_CLOSED","candidate_pr":"EVIONOR/ev-charge-finder-roi-95559#2"},
+    {"app_id":"b2b-fleet-calculator","owner":"WP6","state":"BLOCKED_EXTERNAL","primary_repo":"EVIONOR/charge-wizard-ai","main_commit":"25ffc8c5c0de1b7f4de93e52517e49d32cad2afd","public_url":null,"public_asset_state":"IDENTITY_BLOCKED","source_contract":"DRAFT_FAIL_CLOSED","candidate_pr":"EVIONOR/charge-wizard-ai#3"},
+    {"app_id":"consumer-charge-calculator","owner":"WP6","state":"SAFE_ABSENCE","primary_repo":"EVIONOR/villanyauto-kalkulator-csoda","main_commit":"132b58d8df704b2d2ef9ef671f823a9be602c69c","public_url":null,"public_asset_state":"IDENTITY_BLOCKED","source_contract":"NO_META_SENDER","candidate_pr":null},
+    {"app_id":"partner-database","owner":"WP3_HANDOFF","state":"PARKED_OVERLAP","primary_repo":"EVIONOR/evionor-partner-connect","main_commit":"7b06094176efd3b22da5e84353d079ec97536b04","public_url":null,"public_asset_state":"IDENTITY_BLOCKED","source_contract":"NO_META_SENDER","candidate_pr":null,"related_repos":["EVIONOR/evionor-partner-database"]},
+    {"app_id":"evionor-crm","owner":"WP6","state":"PARKED_TIER3","primary_repo":"EVIONOR/evionor-core","main_commit":"2c8fe3b1ee7884762c6493977a81af23325b031c","public_url":null,"public_asset_state":"NOT_PUBLIC_BROWSER_SURFACE","source_contract":"META_LEAD_INGESTION_MERGED_SCHEMA_PARKED","candidate_pr":null},
+    {"app_id":"b2b-checkout","owner":"WP6","state":"SOURCE_CONTRACT_ONLY","primary_repo":"EVIONOR/evionor-b2b-checkout","main_commit":"28bae7b76abf0ef0de6b7042831f35f09066bd8a","public_url":"https://b2b.evionor.com/hu","public_asset_state":"OBSERVED_SOURCE_BOUND","source_contract":"DEFAULT_DENIED_NO_SENDER","candidate_pr":null},
+    {"app_id":"cofidis-checkout","owner":"WP6","state":"SAFE_ABSENCE","primary_repo":"EVIONOR/evionor-installment-checkout","main_commit":"ea88093fa277338b8b5c89cc5207096dec56fad1","public_url":null,"public_asset_state":"IDENTITY_BLOCKED","source_contract":"NO_META_SENDER","candidate_pr":null}
+  ]
+}
