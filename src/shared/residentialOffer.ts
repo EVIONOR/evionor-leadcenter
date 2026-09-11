@@ -142,7 +142,7 @@ function getLoadManagementPackage(productName: string): LoadManagementPackage | 
   if (productName.includes("Zaptec")) {
     return {
       name: "Zaptec Sense Terhelésmenedzsment",
-      price: 99000,
+      price: 121000,
       url: "https://evionor.hu/collections/all/products/zaptec-sense-gen-ct-clamp-bundle?_pos=14&_fid=c1e909eaa&_ss=c",
     };
   }
