@@ -73,7 +73,7 @@ export const priceList: ProductPrice[] = [
   { name: "Perific Max 5010+310 DIN License EVI Current Sensor 16", price: 144000, originalPrice: 169000, category: "mérő" },
   { name: "Perific Max 5010+310 DIN License EVI Current Sensor 36", price: 156000, originalPrice: 184000, category: "mérő" },
   { name: "Perific Max 5010+310 DIN License EVI Current Sensor 100", price: 188000, originalPrice: 221000, category: "mérő" },
-  { name: "Zaptec Sense GEN CT Clamp Csomag", price: 99000, originalPrice: 117000, category: "mérő" },
+  { name: "Zaptec Sense GEN CT Clamp Csomag", price: 121000, originalPrice: 152000, category: "mérő" },
   { name: "Easee Equalizer Amp Csomag", price: 120000, originalPrice: 150000, category: "mérő" },
   { name: "Wall mount for cable Type 2, straight, black", price: 4000, originalPrice: 5000, category: "kiegészítő" },
   { name: "Wall mount for cable Type 2, with angle, black", price: 6000, originalPrice: 7000, category: "kiegészítő" },
