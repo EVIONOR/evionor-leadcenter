@@ -76,7 +76,7 @@ export const chargerTemplates: ChargerTemplate[] = [
     location: "any",
     hasSolar: false,
     products: ["Amina S 13kW 20A"],
-    basePrice: 149000
+    basePrice: 179000
   },
   {
     id: "template3c",
